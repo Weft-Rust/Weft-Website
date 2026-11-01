@@ -1,335 +1,248 @@
+@font-face { font-family: "Weft"; src: url("fonts/weft.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Weft Mono"; src: url("fonts/weft-mono.woff2") format("woff2"); font-display: swap; }
+
+/* The banner's palette, see gen_banner.py. Font sizes stay multiples of 8 px so every font pixel
+   lands on whole screen pixels. */
 :root {
-  --bg-dark: #0a0d14;
-  --bg-card: rgba(12, 16, 24, 0.88);
-  --card-border: rgba(255, 255, 255, 0.12);
-  --accent-orange: #ea7a1f;
-  --accent-cyan: #38bdf8;
-  --accent-pink: #f43f5e;
-  --accent-green: #22c55e;
-  --accent-gold: #fbbf24;
-  --text-main: #f8fafc;
-  --text-dim: #94a3b8;
-  --text-muted: #64748b;
-  --font-pixel: 'Silkscreen', 'Press Start 2P', monospace;
-  --font-pixel-bold: 'Press Start 2P', monospace;
-  --font-body: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --ink: #0e1016;
+  --seam: #14161e;
+  --deep: #1a1e28;
+  --g1: #262c3a;
+  --g2: #343c4e;
+  --g3: #465064;
+  --g4: #606c84;
+  --g5: #8c97ad;
+  --pale: #dee3ee;
+  --a1: #aa681e;
+  --a2: #e09632;
+  --a3: #ffc457;
+  --px: 4px;
 }
 
-* {
+* { box-sizing: border-box; }
+
+html { background: var(--seam); scroll-behavior: smooth; }
+/* On the content and not as scroll-padding on the page: that also covers the sticky header, so
+   focusing the switch made the browser scroll to the top to "reveal" it. */
+main, main * { scroll-margin-top: 56px; }
+
+body {
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
+  color: var(--pale);
+  font: 16px/28px "Weft", monospace;
+  font-kerning: none;
+  font-variant-ligatures: none;
+  -webkit-font-smoothing: none;
+  text-rendering: optimizeSpeed;
+  text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  overflow-x: hidden;
 }
 
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background-color: var(--bg-dark);
-  color: var(--text-main);
-  font-family: var(--font-body);
-  user-select: none;
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+#field { position: fixed; left: 0; top: 0; z-index: -1; image-rendering: pixelated; }
+
+.hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+html[data-audience="player"] [data-for="modder"],
+html[data-audience="modder"] [data-for="player"] { display: none; }
+
+a { color: var(--a3); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+a:hover { color: var(--pale); }
+a:focus-visible, input:focus-visible + span { outline: var(--px) solid var(--pale); outline-offset: 2px; }
+
+h1, h2, h3, p, ul, figure { margin: 0; font-weight: normal; }
+
+h2 { font-size: 32px; line-height: 44px; margin-bottom: 24px; text-shadow: 2px 2px 0 var(--ink); text-wrap: balance; }
+h3 { font-size: 16px; line-height: 28px; color: var(--a3); }
+p + p, .panel + p, p + .panel, ul + p, ol + p, p + ol { margin-top: 16px; }
+
+/* Inside a sentence the fixed width only opens gaps around i and l, so it stays for code blocks. */
+code { font: inherit; color: var(--a3); overflow-wrap: break-word; }
+
+/* Header */
+.bar {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  height: 48px; padding: 0 24px;
+  background: var(--seam);
+  box-shadow: 0 var(--px) 0 var(--ink);
+}
+.bar-name { color: var(--pale); font-size: 24px; line-height: 32px; text-decoration: none; }
+.bar-links { display: flex; gap: 24px; }
+.bar-links a { color: var(--pale); text-decoration: none; }
+.bar-links a:hover { color: var(--a3); }
+
+.toggle { display: flex; margin: 0; padding: 0; border: 0; position: absolute; left: 50%; transform: translateX(-50%); }
+.toggle input { position: absolute; opacity: 0; }
+.toggle label { cursor: pointer; display: block; }
+.toggle span {
+  display: block; padding: 2px 16px 2px;
+  background: var(--g2); color: var(--pale);
+  box-shadow: inset 0 calc(-1 * var(--px)) 0 var(--g1);
+  position: relative; top: var(--px);
+  height: 32px;
+}
+.toggle label:hover span { background: var(--g3); }
+.toggle input:checked + span {
+  background: var(--a2); color: var(--ink);
+  box-shadow: inset 0 var(--px) 0 var(--a3), inset 0 calc(-1 * var(--px)) 0 var(--a1), 0 var(--px) 0 var(--ink);
+  top: 0; height: 36px; padding: 4px 16px;
 }
 
-/* Background Animated Canvas (Fills entire screen) */
-#voxel-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  display: block;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  image-rendering: pixelated;
-  cursor: crosshair;
-}
+/* Everything starts on a whole pixel, or the font's stems smear over three screen pixels: an even
+   page width, padding in steps, and hero text left-aligned because a centered line of an odd
+   width lands on a half pixel. */
+.hero, .sec, .foot { width: 100%; width: round(down, 100%, 2px); }
 
-/* Top Bar */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 48px;
-  background: rgba(10, 13, 20, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24px;
-  z-index: 100;
-}
+/* Hero */
+.hero { min-height: calc(100vh - 52px); display: flex; align-items: center; justify-content: center; padding: 48px 24px; }
+.hero-text { width: 100%; max-width: 600px; }
+/* The title and the tag keep the banner's proportion to each other. */
+h1 { font-size: 120px; line-height: 104px; text-shadow: 4px 4px 0 var(--ink); }
+.tag { font-size: 24px; line-height: 32px; margin-top: 12px; color: var(--a2); text-shadow: 2px 2px 0 var(--ink); }
+.lead { margin-top: 32px; }
+.note { margin-top: 44px; color: var(--g5); }
+.mobile-note { margin-top: 24px; color: var(--a3); }
+.actions { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 28px 32px; align-items: center; }
 
-.logo-pixel {
-  font-family: var(--font-pixel-bold);
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: #ffffff;
-  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8);
-}
-
-.nav-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(234, 122, 31, 0.12);
-  border: 1px solid rgba(234, 122, 31, 0.3);
-  padding: 5px 12px;
-  border-radius: 4px;
-  font-family: var(--font-pixel);
-  font-size: 10px;
-  color: #ffaa5b;
-  letter-spacing: 1px;
-}
-
-.pulse-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--accent-orange);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--accent-orange);
-  animation: pulseDot 1.6s infinite ease-in-out;
-}
-
-@keyframes pulseDot {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
-}
-
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.theme-toggle {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #cbd5e1;
-  font-family: var(--font-pixel);
-  font-size: 10px;
-  padding: 5px 10px;
-  border-radius: 3px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.2s;
-}
-
-.theme-toggle:hover {
-  background: rgba(255, 255, 255, 0.14);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.nav-link {
-  font-family: var(--font-pixel);
-  font-size: 11px;
-  color: #94a3b8;
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
-
-.nav-link:hover {
-  color: #ffffff;
-}
-
-/* Center Card */
-.main-wrapper {
+/* A block seen from the front: lit top edge, side face below, pressing pushes it in. */
+.button {
+  display: inline-flex; align-items: baseline; gap: 16px;
+  padding: 10px 20px;
+  background: var(--a2); color: var(--ink);
+  line-height: 24px; text-decoration: none;
+  box-shadow: inset 0 var(--px) 0 var(--a3), 0 8px 0 var(--a1), 0 12px 0 var(--ink);
   position: relative;
-  z-index: 10;
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  pointer-events: none; /* Let canvas capture interactions around card */
+}
+.button small { font-size: 16px; line-height: 24px; color: #4a2a08; }
+.button small:empty { display: none; }
+.button:hover { background: var(--a3); color: var(--ink); box-shadow: inset 0 var(--px) 0 #ffe0a0, 0 8px 0 var(--a1), 0 12px 0 var(--ink); }
+.button:active { top: 8px; box-shadow: inset 0 var(--px) 0 var(--a3), 0 var(--px) 0 var(--ink); }
+.button[hidden] { display: none; }
+.button.small { padding: 8px 16px; }
+
+.more { color: var(--pale); }
+.more:hover { color: var(--a3); }
+
+/* Sections sit over the field, which goes dark behind anything marked .clear */
+.sec {
+  min-height: 110vh; min-height: round(110vh, 8px);
+  padding: 96px 8vw; padding-inline: round(8vw, 8px);
+  display: flex; flex-direction: column; justify-content: center; gap: 40px;
+}
+.sec.short { min-height: 80vh; min-height: round(80vh, 8px); }
+.copy { width: 100%; max-width: 640px; }
+.copy.wide { max-width: 880px; }
+.left { align-items: flex-start; }
+.right { align-items: flex-end; }
+.center { align-items: center; }
+.center .copy > h2, .center .copy > p { text-wrap: pretty; }
+
+/* The rule stops short of the panel's width, so text and code never sit at different left edges. */
+.sec.split {
+  display: grid; grid-template-columns: minmax(320px, 480px) auto;
+  align-content: center; justify-content: center; align-items: center;
+  gap: 48px; padding-inline: 40px;
+}
+.split.flip { grid-template-columns: auto minmax(320px, 480px); }
+.split.flip .panel { grid-column: 1; grid-row: 1; }
+.split.flip .copy { grid-column: 2; grid-row: 1; }
+
+ul.plain { list-style: none; padding: 0; }
+ul.plain li { padding-left: 24px; position: relative; }
+ul.plain li + li { margin-top: 8px; }
+ul.plain li::before { content: ""; position: absolute; left: 0; top: 10px; width: 8px; height: 8px; background: var(--a2); box-shadow: 0 2px 0 var(--a1); }
+
+ol.steps { list-style: none; padding: 0; counter-reset: step; }
+ol.steps li { counter-increment: step; padding-left: 28px; position: relative; }
+ol.steps li + li { margin-top: 8px; }
+ol.steps li::before { content: counter(step); position: absolute; left: 0; color: var(--a3); }
+
+/* The banner's corner, a three pixel step, on anything framed */
+.panel, .system {
+  clip-path: polygon(
+    calc(var(--px) * 2) 0, calc(100% - var(--px) * 2) 0, calc(100% - var(--px) * 2) var(--px), calc(100% - var(--px)) var(--px),
+    calc(100% - var(--px)) calc(var(--px) * 2), 100% calc(var(--px) * 2), 100% calc(100% - var(--px) * 2), calc(100% - var(--px)) calc(100% - var(--px) * 2),
+    calc(100% - var(--px)) calc(100% - var(--px)), calc(100% - var(--px) * 2) calc(100% - var(--px)), calc(100% - var(--px) * 2) 100%, calc(var(--px) * 2) 100%,
+    calc(var(--px) * 2) calc(100% - var(--px)), var(--px) calc(100% - var(--px)), var(--px) calc(100% - var(--px) * 2), 0 calc(100% - var(--px) * 2),
+    0 calc(var(--px) * 2), var(--px) calc(var(--px) * 2), var(--px) var(--px), calc(var(--px) * 2) var(--px));
 }
 
-.pixel-card {
-  pointer-events: auto;
-  position: relative;
-  width: 100%;
-  max-width: 540px;
-  background: var(--bg-card);
-  border: 2px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 
-    0 16px 48px rgba(0, 0, 0, 0.8),
-    0 0 0 1px rgba(0, 0, 0, 0.9),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
-  padding: 38px 34px 34px;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  text-align: center;
-  animation: cardAppear 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+.panel { background: var(--ink); padding: 20px 24px; overflow-x: auto; }
+.panel { scrollbar-width: thin; scrollbar-color: var(--g3) var(--ink); }
+.panel-name { color: var(--g5); margin-bottom: 8px; }
+.scroll-hint { margin-top: 8px; color: var(--g5); }
+pre { margin: 0; font: 16px/24px "Weft Mono", monospace; tab-size: 4; }
+pre code { font: inherit; color: #b9c1d3; overflow-wrap: normal; }
+.k { color: var(--a2); }
+.s { color: var(--a3); }
+.c { color: var(--g5); }
+.t { color: var(--pale); }
+.n { color: #f0b070; }
+
+/* Screenshot stand-ins */
+.shot {
+  width: 100%; max-width: 560px;
+}
+.frame {
+  aspect-ratio: 16 / 9;
+  background-color: var(--deep);
+  box-shadow: inset 0 0 0 var(--px) var(--g2);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='32' viewBox='0 0 16 8' shape-rendering='crispEdges'%3E%3Cpath fill='%23262c3a' d='M0 7h1v1h-1zM1 7h1v1h-1zM2 6h1v1h-1zM3 6h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM6 4h1v1h-1zM7 4h1v1h-1zM8 3h1v1h-1zM9 3h1v1h-1zM10 2h1v1h-1zM11 2h1v1h-1zM12 1h1v1h-1zM13 1h1v1h-1zM14 0h1v1h-1zM15 0h1v1h-1z'/%3E%3C/svg%3E");
+}
+.shot figcaption { color: var(--g5); margin-top: 8px; }
+
+/* Download */
+.version { color: var(--g5); }
+.version:empty { display: none; }
+.systems { display: grid; gap: 8px; margin-top: 24px; }
+.system { display: grid; grid-template-columns: 112px minmax(0, 1fr) auto; gap: 8px 24px; align-items: start; padding: 16px 24px 20px; background: var(--g1); }
+.system h3 { padding-top: 6px; }
+.how p { padding-top: 6px; }
+.system .panel { margin-top: 12px; padding: 12px 16px; }
+.system.mine { order: -1; box-shadow: inset var(--px) 0 0 var(--a2); }
+.after-systems { margin-top: 24px; }
+
+/* Footer */
+.foot { padding: 40px 8vw 48px; padding-inline: round(8vw, 8px); background: var(--seam); box-shadow: 0 calc(-1 * var(--px)) 0 var(--ink); }
+.foot-links { display: flex; flex-wrap: wrap; gap: 8px 32px; }
+.foot-legal { margin-top: 24px; color: var(--g5); max-width: 880px; }
+
+/* Too narrow for text beside the code: one column, text first, the same left edge for both. */
+@media (max-width: 1320px) {
+  .sec.split, .split.flip { grid-template-columns: minmax(0, 696px); padding-inline: 24px; }
+  .split.flip .panel, .split.flip .copy { grid-column: 1; grid-row: auto; }
 }
 
-@keyframes cardAppear {
-  0% {
-    opacity: 0;
-    transform: translateY(18px) scale(0.97);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+/* A phone on its side: every line of height counts. */
+@media (max-height: 500px) {
+  .bar { position: static; }
+  main, main * { scroll-margin-top: 16px; }
+  .hero { align-items: flex-start; padding-top: 24px; }
+  h1 { font-size: 80px; line-height: 72px; }
+  .tag { font-size: 16px; line-height: 24px; }
+  .lead, .actions { margin-top: 16px; }
 }
 
-.hero-title {
-  font-family: var(--font-pixel-bold);
-  font-size: clamp(34px, 5.5vw, 48px);
-  color: #ffffff;
-  letter-spacing: 4px;
-  line-height: 1.1;
-  text-shadow: 
-    3px 3px 0px #000000,
-    -1px -1px 0px rgba(255, 255, 255, 0.2);
-  margin-bottom: 6px;
+@media (max-width: 1080px) {
+  main, main * { scroll-margin-top: 16px; }
+  .bar { position: static; height: auto; flex-wrap: wrap; padding: 8px 16px 12px; gap: 8px 16px; }
+  .toggle { position: static; transform: none; order: 3; }
+  .sec { padding: 96px 24px; min-height: 90vh; min-height: round(90vh, 8px); gap: 40px; }
 }
 
-.hero-subtitle {
-  font-family: var(--font-pixel);
-  font-size: 11px;
-  color: var(--accent-orange);
-  letter-spacing: 2px;
-  margin-bottom: 24px;
-  text-transform: uppercase;
-}
-
-/* Coming Soon Box */
-.coming-soon-box {
-  position: relative;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-top: 3px solid var(--accent-orange);
-  padding: 22px 20px;
-  border-radius: 4px;
-  margin-bottom: 22px;
-}
-
-.badge-tag {
-  display: inline-block;
-  font-family: var(--font-pixel);
-  font-size: 8px;
-  background: var(--accent-orange);
-  color: #111;
-  padding: 2px 6px;
-  border-radius: 2px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
-}
-
-.coming-soon-heading {
-  font-family: var(--font-pixel-bold);
-  font-size: clamp(20px, 3.5vw, 26px);
-  color: #ffffff;
-  letter-spacing: 1.5px;
-  margin-bottom: 4px;
-  text-shadow: 2px 2px 0px #000;
-}
-
-.coming-soon-sub {
-  font-family: var(--font-pixel);
-  font-size: 12px;
-  color: #cbd5e1;
-  margin-bottom: 12px;
-  letter-spacing: 0.5px;
-}
-
-.coming-soon-desc {
-  font-size: 13.5px;
-  line-height: 1.55;
-  color: #94a3b8;
-  max-width: 440px;
-  margin: 0 auto;
-}
-
-/* Features Row */
-.features-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.feat-tag {
-  font-family: var(--font-pixel);
-  font-size: 9.5px;
-  color: #cbd5e1;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 6px 10px;
-  border-radius: 3px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 2px;
-}
-
-.dot.pink  { background: #f43f5e; box-shadow: 0 0 6px #f43f5e; }
-.dot.green { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
-.dot.cyan  { background: #38bdf8; box-shadow: 0 0 6px #38bdf8; }
-.dot.gold  { background: #fbbf24; box-shadow: 0 0 6px #fbbf24; }
-
-/* Bottom Hint Bar */
-.bottom-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 10px 24px;
-  background: rgba(10, 13, 20, 0.85);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-}
-
-.hint-text {
-  font-family: var(--font-pixel);
-  font-size: 10px;
-  color: #94a3b8;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.sep {
-  color: rgba(255, 255, 255, 0.2);
-}
-
-@media (max-width: 600px) {
-  .hint-text {
-    font-size: 8.5px;
-    gap: 6px;
-  }
-  .navbar {
-    padding: 0 14px;
-  }
-  .pixel-card {
-    padding: 26px 18px 22px;
-  }
+@media (max-width: 640px) {
+  .bar-links { gap: 16px; }
+  .bar-links a[href*="discord"] { display: none; }
+  .hero { align-items: flex-start; padding-top: 128px; }
+  h1 { font-size: 80px; line-height: 72px; }
+  .tag { font-size: 16px; line-height: 24px; }
+  .button { flex-direction: column; gap: 0; }
+  .button.small { flex-direction: row; gap: 16px; }
+  h2 { font-size: 24px; line-height: 36px; margin-bottom: 16px; }
+  .system { grid-template-columns: minmax(0, 1fr); padding-inline: 16px; }
+  .system .button { justify-self: start; }
+  .panel { padding: 16px; }
 }
