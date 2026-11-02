@@ -48,6 +48,16 @@
     hintPanels();
   }
 
+  const arrow = document.querySelector(".scroll-arrow");
+  if (arrow) {
+    arrow.addEventListener("click", (e) => {
+      e.preventDefault();
+      const hero = document.querySelector(".hero");
+      const nextSec = list.find(s => s !== hero && s.getBoundingClientRect().top > 50) || document.querySelector(".sec");
+      if (nextSec) nextSec.scrollIntoView({ behavior: "smooth" });
+    });
+  }
+
   // A panel that scrolls looks like cut off text on a phone unless something says so.
   function hintPanels() {
     for (const panel of document.querySelectorAll(".panel")) {
