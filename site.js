@@ -174,7 +174,9 @@
 
   const sizeMB = bytes => Math.max(1, Math.round(bytes / 1048576));
 
+  let latest = null;
   function applyRelease(release) {
+    latest = release;
     const version = release.tag_name.replace(/^v/, "");
     document.querySelector("[data-version]").textContent = say("js.latest", { version });
     for (const link of document.querySelectorAll("[data-asset]")) {
@@ -188,6 +190,19 @@
       }
     }
     wake();
+  }
+
+  // A system's package switch: its steps, and what its button downloads.
+  for (const input of document.querySelectorAll(".variants input")) {
+    input.addEventListener("change", () => {
+      const row = input.closest(".system");
+      for (const v of row.querySelectorAll("[data-variant]")) v.hidden = v.dataset.variant !== input.value;
+      const link = row.querySelector("[data-asset]");
+      link.dataset.asset = input.value;
+      link.href = "https://github.com/Weft-Rust/Weft/releases/latest";
+      link.querySelector("small").textContent = "";
+      if (latest) applyRelease(latest);
+    });
   }
 
   (async function () {

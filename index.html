@@ -145,12 +145,11 @@
 <span class="k">fn</span> init(r: &amp;<span class="k">mut</span> <span class="t">Registry</span>) {
     r.block(&amp;<span class="t">RUBY_ORE</span>)
         .hardness(<span class="n">3.0</span>)
-        .mineable(<span class="s">"pickaxe"</span>)
-        .needs_tool(tool_tier::<span class="t">IRON</span>)
+        .mined_by(<span class="s">"pickaxe"</span>, tool_tier::<span class="t">IRON</span>)
         .drops(<span class="s">"ruby"</span>, <span class="n">1</span>);
     r.item(&amp;<span class="t">RUBY</span>).tag(<span class="s">"gems/ruby"</span>).tab(&amp;<span class="t">INGREDIENTS</span>);
-    r.ore(&amp;<span class="t">RUBY_ORE</span>).y(-<span class="n">64</span>, <span class="n">16</span>).veins(<span class="n">2</span>).size(<span class="n">5</span>)
-        .replace(<span class="s">"#stone_ore_replaceables"</span>);
+    r.ore(&amp;<span class="t">RUBY_ORE</span>).y(-<span class="n">64</span>, <span class="n">16</span>).veins(<span class="n">2</span>).vein_size(<span class="n">5</span>)
+        .replaces(<span class="s">"#stone_ore_replaceables"</span>);
 }</code></pre></div>
   </section>
 
@@ -175,10 +174,10 @@ r.set(<span class="s">"#planks/*"</span>, &amp;<span class="t">FUEL</span>, <spa
       <p><a href="https://discord.gg/zTEekbrc7U">Report it on Discord</a></p>
     </div>
     <div class="panel clear"><pre><code><span class="c">// Events: batched once per tick, can't be canceled</span>
-r.on(&amp;<span class="t">LEVEL_UP</span>, |b| <span class="k">for</span> e <span class="k">in</span> b.iter() { <span class="c">/* ... */</span> });
+r.on_event(&amp;<span class="t">LEVEL_UP</span>, |b| <span class="k">for</span> e <span class="k">in</span> b.iter() { <span class="c">/* ... */</span> });
 
 <span class="c">// Questions: anyone may say no, any deny wins</span>
-r.intercept(&amp;question::<span class="t">BREAK_BLOCK</span>, |q| {
+r.before_event(&amp;actions::<span class="t">BREAK_BLOCK</span>, |q| {
     <span class="k">if</span> is_protected(q.pos()) {
         <span class="t">Verdict</span>::<span class="t">Deny</span>
     } <span class="k">else</span> {
@@ -226,16 +225,36 @@ r.attribute(&amp;<span class="t">MANA</span>, <span class="n">100.0</span>, <spa
         </div>
         <div class="system" data-os="linux">
           <h3>Linux x64</h3>
-          <div class="how"><p>Needs your GPU's Vulkan driver.</p><div class="panel"><pre><code>tar xf <span class="t">Weft</span>-*-linux-x64.tar.gz
+          <div class="how">
+            <fieldset class="toggle variants">
+              <legend class="hidden">Package</legend>
+              <label><input type="radio" name="linux" value="linux-x64.tar.gz" checked><span>.tar.gz</span></label>
+              <label><input type="radio" name="linux" value="linux-x64.AppImage"><span>AppImage</span></label>
+            </fieldset>
+            <div data-variant="linux-x64.tar.gz"><p>Needs your GPU's Vulkan driver.</p><div class="panel"><pre><code>tar xf <span class="t">Weft</span>-*-linux-x64.tar.gz
 <span class="t">Weft</span>/weft</code></pre></div></div>
-          <a class="button small" data-asset="linux-x64" href="https://github.com/Weft-Rust/Weft/releases/latest"><span>Download</span><small></small></a>
+            <div data-variant="linux-x64.AppImage" hidden><p>The same game as one file. Vulkan, the GPU driver and sound still come from your system.</p><div class="panel"><pre><code>chmod +x <span class="t">Weft</span>-*-linux-x64.AppImage
+./<span class="t">Weft</span>-*-linux-x64.AppImage</code></pre></div></div>
+          </div>
+          <a class="button small" data-asset="linux-x64.tar.gz" href="https://github.com/Weft-Rust/Weft/releases/latest"><span>Download</span><small></small></a>
         </div>
         <div class="system" data-os="macos">
           <h3>macOS</h3>
-          <div class="how"><p>For Apple Silicon on macOS 12 or newer, and Vulkan comes with the game. The game isn't signed by Apple, so the second line clears the quarantine flag.</p><div class="panel"><pre><code>tar xf <span class="t">Weft</span>-*-macos-arm64.tar.gz
+          <div class="how">
+            <fieldset class="toggle variants">
+              <legend class="hidden">Processor</legend>
+              <label><input type="radio" name="macos" value="macos-arm64.tar.gz" checked><span>Apple Silicon</span></label>
+              <label><input type="radio" name="macos" value="macos-x64.tar.gz"><span>Intel</span></label>
+            </fieldset>
+            <p>Vulkan comes with the game. The game isn't signed by Apple, so the second line clears the quarantine flag.</p>
+            <div data-variant="macos-arm64.tar.gz"><div class="panel"><pre><code>tar xf <span class="t">Weft</span>-*-macos-arm64.tar.gz
 xattr -dr com.apple.quarantine <span class="t">Weft</span>
 <span class="t">Weft</span>/weft</code></pre></div></div>
-          <a class="button small" data-asset="macos-arm64" href="https://github.com/Weft-Rust/Weft/releases/latest"><span>Download</span><small></small></a>
+            <div data-variant="macos-x64.tar.gz" hidden><div class="panel"><pre><code>tar xf <span class="t">Weft</span>-*-macos-x64.tar.gz
+xattr -dr com.apple.quarantine <span class="t">Weft</span>
+<span class="t">Weft</span>/weft</code></pre></div></div>
+          </div>
+          <a class="button small" data-asset="macos-arm64.tar.gz" href="https://github.com/Weft-Rust/Weft/releases/latest"><span>Download</span><small></small></a>
         </div>
       </div>
       <p class="after-systems">Weft ships with its own textures. If Minecraft is installed through the official launcher or Prism, Weft builds a resource pack from that copy when it starts. The pack stays on your computer, and you can turn it off in Settings &gt; Resource Packs.</p>
@@ -268,7 +287,7 @@ xattr -dr com.apple.quarantine <span class="t">Weft</span>
   <p class="foot-legal">Not an official Minecraft product. Not approved by or associated with Mojang or Microsoft. Weft contains no Minecraft code or assets.</p>
 </footer>
 
-<script id="i18n" type="application/json">{"js.download": "Download", "js.download_for": "Download for {os}", "js.version": "{version}, {size} MB", "js.latest": "Latest version: {version}", "js.size": "{size} MB", "js.os.windows": "Windows", "js.os.linux": "Linux x64", "js.os.macos": "macOS (Apple Silicon)", "js.mobile": "Weft runs on Windows, Linux and macOS, so you'll need a computer for it.", "js.scroll": "Scroll the code sideways to see the rest."}</script>
+<script id="i18n" type="application/json">{"js.download": "Download", "js.download_for": "Download for {os}", "js.version": "{version}, {size} MB", "js.latest": "Latest version: {version}", "js.size": "{size} MB", "js.os.windows": "Windows", "js.os.linux": "Linux x64", "js.os.macos": "macOS", "js.mobile": "Weft runs on Windows, Linux and macOS, so you'll need a computer for it.", "js.scroll": "Scroll the code sideways to see the rest."}</script>
 <script src="./voxels.js"></script>
 <script src="./site.js"></script>
 </body>

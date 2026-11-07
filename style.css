@@ -85,6 +85,8 @@ code { font: inherit; color: var(--a3); overflow-wrap: break-word; }
   height: 32px;
 }
 .toggle label:hover span { background: var(--g3); }
+/* The same switch picking a download's package, in place. */
+.toggle.variants { position: static; transform: none; margin-bottom: 12px; }
 .toggle input:checked + span {
   background: var(--a2); color: var(--ink);
   box-shadow: inset 0 var(--px) 0 var(--a3), inset 0 calc(-1 * var(--px)) 0 var(--a1), 0 var(--px) 0 var(--ink);
