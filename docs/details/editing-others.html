@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Changing something of another mod - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group" open><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="liquids.html">Liquids</a><a href="effects.html">Status effects and potions</a><a href="recipes-loot.html">Recipes and loot</a><a href="world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a class="current" aria-current="page" href="editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="conditions.html">Conditions</a><a href="attributes.html">Attributes and modifiers</a><a href="poses-and-modes.html">Poses and game modes</a><a href="commands.html">Commands</a><a href="text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="world-blocks.html">Blocks in the world</a><a href="world-entities.html">Entities in the world</a><a href="hitboxes.html">Raycasts and hitboxes</a><a href="particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="../reference/index.html">All reference pages</a><a href="../reference/blocks.html">Blocks</a><a href="../reference/client.html">Client</a><a href="../reference/commands.html">Commands</a><a href="../reference/effects.html">Particles and effects</a><a href="../reference/entities.html">Entities</a><a href="../reference/events.html">Events and steps</a><a href="../reference/items.html">Items</a><a href="../reference/recipes.html">Recipes and loot</a><a href="../reference/registration.html">Registration</a><a href="../reference/ui.html">UI</a><a href="../reference/world.html">World</a><a href="../reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Changing something of another mod</h1>
+<p><code>edit</code>, <code>replace</code> and <code>remove</code> from <a href="../index.html#how-registering-works">How registering works</a>, kind by kind:</p>
+<ul>
+<li><code>r.edit(&amp;base::TORCH).light(5)</code> goes on every state of a block (testmod edits its own torch this way); <code>.state_where("lit=true", |s| s.light(15))</code> on those states only, whatever properties the block has, and <code>.prop(..)</code> adds one. Stairs and slabs a template made are edited like any block. A block's edit says of its item only what it sets (<code>item_texture</code>, <code>no_item()</code>).</li>
+<li>every kind with a builder goes by its handle: entities (<code>r.edit(&amp;PLAYER).attach(&amp;MANA)</code>), menus, particles, sounds, keys, settings, weathers, poses, and so on. What belongs to something goes by its owner's: <code>IRON_ORE.ore()</code>, <code>WATER.liquid()</code>, <code>GRAVEL.loot()</code> or <code>ZOMBIE.loot()</code>, <code>OVERWORLD.terrain()</code>, <code>OVERWORLD.sky(&amp;MOON)</code>, <code>WELL.structure()</code></li>
+<li>what has no handle is named after what made it: recipes <code>&lt;mod&gt;:&lt;kind&gt;/&lt;output&gt;</code>, natural spawns <code>&lt;mod&gt;:&lt;entity&gt;</code>, decorations <code>&lt;mod&gt;:decoration</code>, the second of each <code>/2</code> and so on, liquid reactions <code>&lt;mod&gt;:&lt;liquid&gt;&gt;&lt;touching&gt;</code>, screen parts <code>&lt;mod&gt;:&lt;screen&gt;/&lt;area&gt;</code>. <code>.named(..)</code> on a recipe, spawn, decoration or reaction gives yours a name of your choice, and <code>Recipe::named("base:crafting/torch")</code>, <code>SpawnRule::named(..)</code> and the like reach theirs</li>
+<li><code>r.set</code> and <code>r.tag</code> above are <code>edit_pattern</code> for blocks and items at once</li>
+<li><code>r.replace</code> works for every kind with a builder, <code>r.remove</code> for every kind (a block takes its item along)</li>
+</ul>
+<p>After a replace their handle, item and recipes point at yours.</p>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/details/editing-others.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>

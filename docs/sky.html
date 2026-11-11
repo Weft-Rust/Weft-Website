@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sky guide - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../assets/icon.png">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../docs.css">
+</head>
+<body class="docs" data-root="../docs/">
+<header class="bar">
+  <a class="bar-name" href="../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="blocks.html">Blocks</a><a href="items.html">Items</a><a href="entities.html">Entities</a><a href="details/liquids.html">Liquids</a><a href="details/effects.html">Status effects and potions</a><a href="details/recipes-loot.html">Recipes and loot</a><a href="details/world-content.html">World content</a><a href="block_entities.html">Block entities guide</a><a href="registration.html">Registration guide</a><a href="details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="events.html">Events, chains and questions</a><a href="details/conditions.html">Conditions</a><a href="details/attributes.html">Attributes and modifiers</a><a href="details/poses-and-modes.html">Poses and game modes</a><a href="details/commands.html">Commands</a><a href="details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="world-api.html">World API</a><a href="details/world-blocks.html">Blocks in the world</a><a href="details/world-entities.html">Entities in the world</a><a href="details/hitboxes.html">Raycasts and hitboxes</a><a href="details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="client.html">Client side</a><a href="ui.html">UI guide</a><a href="details/camera.html">Camera modes</a><a href="models.html">Models and animations guide</a><a href="shaders.html">Shaders guide</a></details><details class="group" open><summary>Assets</summary><a href="textures.html">Textures guide</a><a href="ctm.html">CTM guide</a><a class="current" aria-current="page" href="sky.html">Sky guide</a><a href="resourcepacks.html">Resource packs guide</a><a href="localization.html">Localization guide</a><a href="redstone.html">redstone.md</a><a href="worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="reference/index.html">All reference pages</a><a href="reference/blocks.html">Blocks</a><a href="reference/client.html">Client</a><a href="reference/commands.html">Commands</a><a href="reference/effects.html">Particles and effects</a><a href="reference/entities.html">Entities</a><a href="reference/events.html">Events and steps</a><a href="reference/items.html">Items</a><a href="reference/recipes.html">Recipes and loot</a><a href="reference/registration.html">Registration</a><a href="reference/ui.html">UI</a><a href="reference/world.html">World</a><a href="reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Sky guide</h1><nav class="toc"><span>On this page</span><a href="#note">Note</a><a href="#quick-links">Quick links</a><a href="#bodies">Bodies</a><a href="#changing-what-is-there">Changing what is there</a><a href="#bodies-in-front-of-each-other">Bodies in front of each other</a><a href="#stars">Stars</a><a href="#clouds">Clouds</a><a href="#skyboxes">Skyboxes</a><a href="#shaders">Shaders</a><a href="#the-skys-colors">The sky's colors</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>Everything you see in the sky is an object registered for a specific dimension, and that includes the sun and the moon, which are just two ordinary objects of the base game that start half a turn apart and aren't connected in any other way. This means that you can add your own objects and change or remove objects from any other mod, and even a large number of them will barely affect performance.</p>
+<section class="dsec" id="note"><h2><button class="fold" aria-expanded="true">Note</button><a class="anchor" href="#note">#</a></h2><div class="sec-body">
+<p>Examples that you can copy from:</p>
+<ul>
+<li><code>mods/base/src/lib.rs</code> has the sun, the moon, the stars and the clouds</li>
+<li><code>mods/testmod/src/lib.rs</code> has Mars, with a sun that doesn't move and two moons that go in opposite directions</li>
+</ul>
+</div></section>
+<section class="dsec" id="quick-links"><h2><button class="fold" aria-expanded="true">Quick links</button><a class="anchor" href="#quick-links">#</a></h2><div class="sec-body">
+<p><a href="#bodies">bodies</a> | <a href="#changing-what-is-there">changing what is there</a> | <a href="#bodies-in-front-of-each-other">bodies in front of each other</a> | <a href="#stars">stars</a> | <a href="#clouds">clouds</a> | <a href="#skyboxes">skyboxes</a> | <a href="#shaders">shaders</a> | <a href="#the-skys-colors">the sky's colors</a></p>
+</div></section>
+<section class="dsec" id="bodies"><h2><button class="fold" aria-expanded="true">Bodies</button><a class="anchor" href="#bodies">#</a></h2><div class="sec-body">
+<p>To add a body, you only need one line with its texture, its size and the way it moves. <code>orbit</code> is measured in ticks per turn, so a value of 1200 means one turn per minute:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static PLANET: SkyObject = SkyObject::named("planet");
+r.sky_body(&amp;OVERWORLD, &amp;PLANET).texture("planet").size(6.0).orbit(96000.0).phase(0.1).tilt(20.0);</code></pre></div>
+<p>The texture goes to <code>assets/textures/sky/planet.png</code> and can be any size, and everything except the texture is optional:</p>
+<table><thead><tr><th>method</th><th>what it does</th></tr></thead><tbody><tr><td><code>orbit(ticks)</code></td><td>ticks per turn around the sky, and a negative value makes it go the other way. Without it, the body follows the day of the dimension like the sun does, which means it slows down a little around noon and midnight</td></tr><tr><td><code>orbit_still()</code></td><td>keeps the body where its phase, tilt and heading put it</td></tr><tr><td><code>orbit_day()</code></td><td>makes the body follow the day again, for example if it comes from another mod and you gave it an orbit</td></tr><tr><td><code>phase(turns)</code></td><td>sets where the body starts: 0 is rising in the east, 0.25 is overhead, 0.5 is setting, and 0.75 is under your feet</td></tr><tr><td><code>tilt(degrees)</code></td><td>leans the orbit to the south, away from overhead</td></tr><tr><td><code>heading(degrees)</code></td><td>rotates the orbit around the vertical axis, so with a value of 90 the body rises in the north</td></tr><tr><td><code>size(degrees)</code></td><td>sets how much of the sky the body takes across (33 for the sun and 23 for the moon)</td></tr><tr><td><code>spin(ticks)</code></td><td>ticks per turn around the body's own center</td></tr><tr><td><code>color(rgb)</code></td><td>sets a color that is multiplied with the texture</td></tr><tr><td><code>opacity(day, night)</code></td><td>sets how visible the body is during full day and deep night, from 0 to 1</td></tr><tr><td><code>frames(columns, rows)</code></td><td>treats the texture as a grid of frames that are shown one after another, like the phases of the moon</td></tr><tr><td><code>frame_ticks(ticks)</code></td><td>sets how long each frame lasts, which is one day of the dimension by default</td></tr><tr><td><code>glow(rgb)</code></td><td>lights the horizon while the body rises and sets. The sunset of the sun is <code>glow(0xFFE633)</code>, and two suns will give you two sunsets</td></tr><tr><td><code>blend_add()</code>, <code>blend_cover()</code></td><td><code>blend_add()</code> adds the body's light to what is behind it instead of covering it, and <code>blend_cover()</code> switches it back</td></tr><tr><td><code>order(n)</code></td><td>sets the drawing order from low to high, and bodies with equal values are drawn in the order they were registered</td></tr></tbody></table>
+<p>Daylight and the light on blocks come from the day of the dimension (<code>day_length</code>, <code>fixed_time</code>, <code>daylight</code> for its curve) and not from any body, which means that if you remove the sun, the day will still happen, and if you give the sun a different orbit, it will no longer match the light.</p>
+</div></section>
+<section class="dsec" id="changing-what-is-there"><h2><button class="fold" aria-expanded="true">Changing what is there</button><a class="anchor" href="#changing-what-is-there">#</a></h2><div class="sec-body">
+<p>An object of a dimension is <code>DIM.sky(&amp;OBJECT)</code>, and it is edited and removed like anything else registered. An edit changes only the fields you set and the object stays the same type, so this example makes the moon bigger, while its texture, phases and orbit stay the same:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">use base_api::{MOON, OVERWORLD, STARS, SUN};
+r.edit(OVERWORLD.sky(&amp;MOON)).size(40.0);
+r.edit(OVERWORLD.sky(&amp;SUN)).texture("mymod:blue_sun").glow(0x80C0FF);
+r.remove(OVERWORLD.sky(&amp;STARS));</code></pre></div>
+<p>If several mods change the same field, the one loaded last wins. <code>r.replace(OVERWORLD.sky(&amp;MOON))</code> starts it again from nothing, a body unless you say otherwise with <code>.set(&amp;comps::sky::KIND, abi::sky_kind::DOME)</code>. All of this works per dimension, and since base registers its four objects in both <code>OVERWORLD</code> and <code>FLATLANDS</code>, you have to change or remove them in each dimension separately. A resource pack can also replace the textures themselves, for example <code>textures/sky/sun.png</code>.</p>
+</div></section>
+<section class="dsec" id="bodies-in-front-of-each-other"><h2><button class="fold" aria-expanded="true">Bodies in front of each other</button><a class="anchor" href="#bodies-in-front-of-each-other">#</a></h2><div class="sec-body">
+<p>A body covers everything behind it wherever its texture is opaque, and the body that was registered later or has a higher <code>order</code> is drawn in front. Orbits of different lengths bring two bodies together from time to time, so one of them passes in front of the other, and for example orbits of 24000 and 22000 ticks meet about every 11 days. This doesn't dim the daylight, since the light on blocks comes from the day and not from what is drawn in the sky. Stars go behind bodies in the same way, so an opaque moon hides the stars behind it.</p>
+</div></section>
+<section class="dsec" id="stars"><h2><button class="fold" aria-expanded="true">Stars</button><a class="anchor" href="#stars">#</a></h2><div class="sec-body">
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.sky_stars(&amp;OVERWORLD, &amp;MY_STARS).count(4000).size(0.3).seed(7).color(0xFFE0C0).orbit(48000.0);</code></pre></div>
+<p>Stars turn together on the orbit you give them, or with the day if you don't give them one, and they are visible at night, which is <code>opacity(0.0, 0.22)</code> by default. <code>count</code> sets the number of stars and <code>seed</code> decides how they are scattered, and since the GPU generates them from their number alone, even a large count doesn't need any memory and is drawn in one call.</p>
+</div></section>
+<section class="dsec" id="clouds"><h2><button class="fold" aria-expanded="true">Clouds</button><a class="anchor" href="#clouds">#</a></h2><div class="sec-body">
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.sky_clouds(&amp;OVERWORLD, &amp;MY_CLOUDS).texture("clouds").height(300.0).drift(0.03).color(0xFFE0E0);</code></pre></div>
+<p>Every filled pixel of the texture becomes a box that is 12 blocks wide and 4 blocks high, and the texture repeats across the sky, further than the terrain and distant terrain reach. They are one draw whatever the size of the picture, as a shader walks it pixel by pixel. Without <code>.height</code> the underside is at 224.33, and players can raise any clouds in the video settings. Clouds exist in the world, which means that they hide what is behind them and you can fly through them. Rain makes them gray and hides bodies and stars, and which weathers come is the dimension's <code>.weathers(&amp;[..])</code>, while <code>w.raining()</code>, <code>w.weather()</code> and <code>w.set_weather(&amp;weathers::THUNDER, ticks)</code> let you read and change it. Weathers are values like any: <code>r.weather(&amp;ACID_RAIN).darkness(0.5).duration(2400, 6000).weight(1)</code> adds one, which comes now and then after clear weather where a dimension lists it, and <code>/weather mymod:acid_rain</code> sets it. What falls is the biome's: rain, snow with <code>.snows()</code>, or your own picture with <code>r.precipitation(&amp;ASH).texture("ash").speed(0.3).density(0.4)</code> and <code>.precipitation(&amp;ASH)</code> on the biome.</p>
+</div></section>
+<section class="dsec" id="skyboxes"><h2><button class="fold" aria-expanded="true">Skyboxes</button><a class="anchor" href="#skyboxes">#</a></h2><div class="sec-body">
+<p>A dome covers the entire sky at once and doesn't move unless you give it an orbit, and it is drawn over the sky's colors, but under the stars and bodies:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.sky_dome(&amp;OVERWORLD, &amp;NEBULA).texture("nebula").opacity(0.0, 1.0).orbit(24000.0);</code></pre></div>
+<p>The layout of a dome is determined by the shape of its texture. A texture that is twice as wide as it is high is treated as a panorama, which is the format that any skybox tool exports, and a texture with a ratio of three to two is treated as the six faces of a box, with down, up and south on the first row, and west, north and east on the second.</p>
+<p>A dome stays at full strength during both day and night unless you set its opacity, so if you want a sky that changes, you have to register one dome with <code>opacity(1.0, 0.0)</code> and another one with <code>opacity(0.0, 1.0)</code>. The horizon still fades into the fog color of the dimension, which is set with <code>.sky_color(..)</code>, and sunsets are drawn over domes, so a sun without <code>glow</code> won't have a sunset.</p>
+</div></section>
+<section class="dsec" id="shaders"><h2><button class="fold" aria-expanded="true">Shaders</button><a class="anchor" href="#shaders">#</a></h2><div class="sec-body">
+<p>Any object can be colored by a shader snippet instead of its plain texture, which allows you to create auroras and clouds of gas without any texture at all:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-wgsl">// assets/shaders/sky/aurora.wgsl
+fn shade(p: SkyPixel) -&gt; vec4&lt;f32&gt; {
+    let wave = sin(p.dir.x * 8.0 + p.time) * 0.5 + 0.5;
+    let band = smoothstep(0.1, 0.5, p.dir.y) * smoothstep(0.9, 0.5, p.dir.y);
+    return vec4(vec3(0.2, 1.0, 0.6) * wave, band * (1.0 - p.daylight));
+}</code></pre></div>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.sky_dome(&amp;OVERWORLD, &amp;AURORA).shader(&amp;AURORA_SHADER);</code></pre></div>
+<p><code>SkyPixel</code> contains <code>dir</code>, which is the direction of the pixel in the world, <code>local</code>, which is the same direction in the object's own frame that turns with its orbit, with x pointing at a body, and also <code>uv</code>, <code>albedo</code> (the texture, or white if there is none), <code>color</code>, <code>daylight</code> and <code>time</code>. The snippet returns the color and how much it covers, and <code>opacity</code> is applied on top of that. You can read more about snippets in the <a href="shaders.html#snippets">shaders guide</a>.</p>
+</div></section>
+<section class="dsec" id="the-skys-colors"><h2><button class="fold" aria-expanded="true">The sky's colors</button><a class="anchor" href="#the-skys-colors">#</a></h2><div class="sec-body">
+<p>Behind everything there is a gradient from the <code>sky_color(sky, fog)</code> of the dimension, with the sky color above and the fog color at the horizon, and both of them get darker during the night like in vanilla. A dome with an opaque texture simply covers this gradient.</p>
+<p>If you are inside a liquid, the sky is replaced by the fog of that liquid, and you can read about <code>fog</code> and <code>overlay</code> in <a href="details/liquids.html">liquids</a>.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/sky.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="./search-index.js"></script>
+<script src="../docs.js"></script>
+</body>
+</html>

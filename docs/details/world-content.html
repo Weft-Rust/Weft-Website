@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World content - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group" open><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="liquids.html">Liquids</a><a href="effects.html">Status effects and potions</a><a href="recipes-loot.html">Recipes and loot</a><a class="current" aria-current="page" href="world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a href="editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="conditions.html">Conditions</a><a href="attributes.html">Attributes and modifiers</a><a href="poses-and-modes.html">Poses and game modes</a><a href="commands.html">Commands</a><a href="text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="world-blocks.html">Blocks in the world</a><a href="world-entities.html">Entities in the world</a><a href="hitboxes.html">Raycasts and hitboxes</a><a href="particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="../reference/index.html">All reference pages</a><a href="../reference/blocks.html">Blocks</a><a href="../reference/client.html">Client</a><a href="../reference/commands.html">Commands</a><a href="../reference/effects.html">Particles and effects</a><a href="../reference/entities.html">Entities</a><a href="../reference/events.html">Events and steps</a><a href="../reference/items.html">Items</a><a href="../reference/recipes.html">Recipes and loot</a><a href="../reference/registration.html">Registration</a><a href="../reference/ui.html">UI</a><a href="../reference/world.html">World</a><a href="../reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>World content</h1>
+<p>Biomes, dimensions, weather, sky, ores, structures and spawns are all registered the same way as blocks. This page is the map; <a href="../worldgen.html">worldgen</a> and <a href="../sky.html">sky</a> have the detail.</p>
+<ul>
+<li><code>r.biome(..)</code> with its climate, surface and tints (<code>.temperature(0.35..).surface(..).tint(&amp;tints::GRASS, ..)</code>); terrain rules inherit them</li>
+<li><code>r.dimension(..)</code> (<code>spawn_point</code>, <code>player_spawn</code>, <code>height_cubes</code>, <code>gravity</code>, <code>day_length</code>, <code>daylight</code>, <code>fixed_time</code>, <code>sky_color</code>, <code>bare</code>, or <code>generator</code> + <code>column</code> to fill it in code)</li>
+<li>weather is a value too: <code>r.weather(&amp;ACID_RAIN).darkness(0.5).gray(0.8, 0.6, 0.9).sound("mymod:weather.acid").duration(2400, 6000).weight(1)</code> (<code>no_falling()</code>, <code>lightning()</code>, <code>no_shelter()</code> for a sandstorm that burns, the rest of its look in <code>comps::weather</code>), and a dimension lists what comes there after clear weather, <code>.weathers(&amp;[&amp;weathers::RAIN, &amp;weathers::THUNDER, &amp;ACID_RAIN])</code>, or <code>.push(&amp;comps::dimension::WEATHERS, ..)</code> in an edit of someone else's. <code>w.weather()</code> is the id now (<code>w.raining()</code>, <code>w.thundering()</code> read its tags), <code>w.set_weather(&amp;weathers::THUNDER, ticks)</code> changes it, and <code>r.on_event(&amp;WEATHER_TICK, ..)</code> hears every tick of it for acid on whoever stands outside. What falls is the biome's: <code>.precipitation(&amp;ASH)</code> after <code>r.precipitation(&amp;ASH)</code>, <code>.snows()</code> for snow</li>
+<li><code>r.sky_body(&amp;DIM, &amp;OBJECT)</code>, <code>r.sky_stars</code>, <code>r.sky_dome</code>, <code>r.sky_clouds</code> for what is in its sky, the sun and the moon included; <code>OVERWORLD.sky(&amp;MOON)</code> is one of them for <code>r.edit</code> and <code>r.remove</code></li>
+<li><code>r.terrain(&amp;DIM)</code> for your dimension's terrain, <code>r.edit(OVERWORLD.terrain())</code> for another mod's</li>
+<li><code>r.ore(block)</code>, in every dimension whose stone it replaces (<code>.dimension(..)</code> limits it). <code>.replaces_with("#granite", &amp;GRANITE_IRON_ORE)</code> makes the same vein go on as another block where it meets granite, so veins don't stop at stone borders; <code>.exposed(0.5)</code> leaves out half of what would touch a cave, as vanilla's gold and diamonds. <code>r.edit(IRON_ORE.ore())</code> changes another mod's ore: what you set, a <code>replaces</code> taking the place of its own and <code>replaces_with</code> added to its own (a block tagged <code>#stone_ore_replaceables</code> is in every ore's way at once)</li>
+<li><code>r.record(&amp;R)</code> for data of your own that other mods add to and change (an API's entries): tags and components on it say what it is, <code>entries_with(entry_kind::RECORD, "mymod:thing")</code> lists them once the game is loaded, <code>COMP.on_record(id)</code> reads one</li>
+<li>everything generation puts into the world is a feature: <code>r.ore</code>, <code>r.structure</code>, <code>r.scatter(&amp;TREES)</code> for trees and the like, <code>r.decoration(f)</code> for plants (named <code>&lt;mod&gt;:decoration</code>, <code>/2</code>..) are presets of <code>r.feature(&amp;F)</code>, which takes any spread (<code>per_cube</code>, <code>spacing</code>), shape (<code>vein</code>, <code>template</code>, <code>plan</code> for a layout of your own) and order (<code>stage</code>, <code>after</code>, <code>before</code>). Those on a grid give way to higher <code>priority</code> ones</li>
+<li><code>r.template(&amp;T)</code> (layers and keys, or <code>fill</code> boxes, <code>@slot</code> keys, <code>.loot</code>, <code>.entity</code>, <code>.joint</code>) or a file <code>structures/&lt;name&gt;.json</code> for a shape of blocks, then <code>r.structure(&amp;T)</code> (<code>T.structure()</code> to edit it, <code>.turns_and_mirrors()</code>, <code>.palette(&amp;P)</code> after <code>r.palette(&amp;P).slot("wall", "base:bricks")</code>), <code>.body(&amp;T)</code> on an entity, <code>p.grow(..)</code> in a plan to join pieces by their joints, or <code>w.place_template(&amp;T, pos, transform, palette)</code> / <code>w.place_feature(&amp;F, pos)</code> now (<code>w.unplace(id)</code> takes it back). <code>/structure save|load|undo|locate</code> in the game</li>
+<li><code>r.natural_spawn(&amp;ENTITY).biome("#animals").light(7, 15)</code>, named <code>&lt;mod&gt;:&lt;entity&gt;</code>, <code>/2</code>..</li>
+</ul>
+<p>The terrain has presets like hills, canyons, dunes, caves, lava lakes if you don't want to write noise by hand.<br>Mars in testmod is built from presets only.<br>Your own shapes are formulas (<code>Expr</code>) the GPU runs as fast as the presets, and <code>.field(..)</code> gives biome rules any value you make, not just temperature and humidity.<br>It works on other mods' dimensions too, so adding a biome to base's overworld is a <code>r.edit(OVERWORLD.terrain()).rule_before("base:desert", ..)</code> away.</p>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/details/world-content.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>

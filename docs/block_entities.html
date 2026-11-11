@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Block entities guide - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../assets/icon.png">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../docs.css">
+</head>
+<body class="docs" data-root="../docs/">
+<header class="bar">
+  <a class="bar-name" href="../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="index.html">Weft modding quick start</a></details><details class="group" open><summary>Content</summary><a href="blocks.html">Blocks</a><a href="items.html">Items</a><a href="entities.html">Entities</a><a href="details/liquids.html">Liquids</a><a href="details/effects.html">Status effects and potions</a><a href="details/recipes-loot.html">Recipes and loot</a><a href="details/world-content.html">World content</a><a class="current" aria-current="page" href="block_entities.html">Block entities guide</a><a href="registration.html">Registration guide</a><a href="details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="events.html">Events, chains and questions</a><a href="details/conditions.html">Conditions</a><a href="details/attributes.html">Attributes and modifiers</a><a href="details/poses-and-modes.html">Poses and game modes</a><a href="details/commands.html">Commands</a><a href="details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="world-api.html">World API</a><a href="details/world-blocks.html">Blocks in the world</a><a href="details/world-entities.html">Entities in the world</a><a href="details/hitboxes.html">Raycasts and hitboxes</a><a href="details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="client.html">Client side</a><a href="ui.html">UI guide</a><a href="details/camera.html">Camera modes</a><a href="models.html">Models and animations guide</a><a href="shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="textures.html">Textures guide</a><a href="ctm.html">CTM guide</a><a href="sky.html">Sky guide</a><a href="resourcepacks.html">Resource packs guide</a><a href="localization.html">Localization guide</a><a href="redstone.html">redstone.md</a><a href="worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="reference/index.html">All reference pages</a><a href="reference/blocks.html">Blocks</a><a href="reference/client.html">Client</a><a href="reference/commands.html">Commands</a><a href="reference/effects.html">Particles and effects</a><a href="reference/entities.html">Entities</a><a href="reference/events.html">Events and steps</a><a href="reference/items.html">Items</a><a href="reference/recipes.html">Recipes and loot</a><a href="reference/registration.html">Registration</a><a href="reference/ui.html">UI</a><a href="reference/world.html">World</a><a href="reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Block entities guide</h1><nav class="toc"><span>On this page</span><a href="#note">Note</a><a href="#quick-links">Quick links</a><a href="#how-it-fits-together">How it fits together</a><a href="#creating-one">Creating one</a><a href="#the-tick">The tick</a><a href="#the-screen">The screen</a><a href="#recipes">Recipes</a><a href="#energy">Energy</a><a href="#many-of-them">Many of them</a><a href="#holders">Holders</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>Blocks with data of their own, items, a window or all three: furnaces, chests, signs, water wheels, generators, batteries.<br>This guide builds a furnace step by step, then adds energy so generators, machines and cables from different mods work together.</p>
+<section class="dsec" id="note"><h2><button class="fold" aria-expanded="true">Note</button><a class="anchor" href="#note">#</a></h2><div class="sec-body">
+<p>Examples to copy from:</p>
+<ul>
+<li><code>mods/base/src/block_entities.rs</code>: the furnace (fuel, a recipe, a lit state) and the chest</li>
+<li><code>mods/testmod/src/lib.rs</code>: a generator, an electric furnace and a battery on the energy contract, plus a <code>cable</code> block</li>
+</ul>
+</div></section>
+<section class="dsec" id="quick-links"><h2><button class="fold" aria-expanded="true">Quick links</button><a class="anchor" href="#quick-links">#</a></h2><div class="sec-body">
+<p><a href="#how-it-fits-together">how it fits together</a> | <a href="#creating-one">creating one</a> | <a href="#the-tick">the tick</a> | <a href="#the-screen">the screen</a> | <a href="#recipes">recipes</a> | <a href="#energy">energy</a> | <a href="#many-of-them">many of them</a> | <a href="#holders">holders</a></p>
+</div></section>
+<section class="dsec" id="how-it-fits-together"><h2><button class="fold" aria-expanded="true">How it fits together</button><a class="anchor" href="#how-it-fits-together">#</a></h2><div class="sec-body">
+<p>Three things you put together, each on its own: the <strong>block</strong> players see and place; its <strong>block entity</strong> (<code>.entity(|e| ..)</code>), an invisible entity of the same name sitting on the block, with the block's data (what is burning, how far along it is), items (<code>e.inventory(n)</code>), a model of its own and a tick; and a <strong>menu</strong> that using the block opens (<code>.opens(&amp;MENU)</code>). A water wheel is a block entity with no menu, a sign one whose menu is only text, a lever a block with only <code>on_use</code>, a chest a block entity with items and a menu. The block entity comes and goes with the block, it is what gets ticked, once per tick for all of a kind, and data saved with <code>SAVE</code> stays in the world.</p>
+</div></section>
+<section class="dsec" id="creating-one"><h2><button class="fold" aria-expanded="true">Creating one</button><a class="anchor" href="#creating-one">#</a></h2><div class="sec-body">
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static FURNACE: Block = Block::named("furnace");
+static FURNACE_MENU: Menu = Menu::named("furnace");
+static SMELTING: Component&lt;Smelting&gt; = Component::named("base:smelting");
+
+r.entity_component(&amp;SMELTING, Smelting { burn: 0, burn_max: 0, cook: 0, cook_max: 0 }, component_flags::SAVE | component_flags::SYNC_MENU);
+r.block(&amp;FURNACE)
+    .hardness(3.5)
+    .mined_by("pickaxe", 0)
+    .entity(|e| e.attach(&amp;SMELTING).inventory(3))
+    .opens(&amp;FURNACE_MENU);
+r.menu(&amp;FURNACE_MENU)
+    .group("input", Slots::single().holder())
+    .group("fuel", Slots::single().accepts("#fuel").holder())
+    .group("output", Slots::single().output().holder())
+    .player_inventory()
+    .screen(|ui| { /* see below */ });
+r.system(&amp;SMELTING, tick_furnaces);</code></pre></div>
+<p><code>.entity(|e| ..)</code> is the block entity's kind, an <code>EntityBuilder</code> like any other: <code>inventory(n)</code> its slots, which the menu's <code>.holder()</code> groups show. One that should keep its state when broken (a charged battery, a half-done job) declares that state with <code>r.instance_component(&amp;C, default, flags | component_flags::CARRIED)</code>: the broken block's item takes the value along, and placing the item puts it back on the new block entity, the way a renamed chest keeps its name. <code>w.component(h, &amp;C)</code> and <code>w.set_component(h, &amp;C, v)</code> read and write such a value on any holder, the stack in a player's slot included. The block entity is named like the block, so <code>EntityKind::named("furnace")</code> finds it if your code needs to.</p>
+<p>Slots come in named groups. The block entity's inventory holds all of its <code>holder()</code> groups, the engine works out how big it is and which slot is which, and the tick and the screen ask for a group by its name. A group starts from a shape and adds rules:</p>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td><code>Slots::single()</code>, <code>row(n)</code>, <code>column(n)</code>, <code>grid(cols, rows)</code>, <code>chest(rows)</code></td><td>how many slots and how the screen lays them out</td></tr><tr><td><code>output()</code></td><td>items only come out (results)</td></tr><tr><td><code>input()</code></td><td>items only go in, nothing comes back out by hand (fuel it burns)</td></tr><tr><td><code>accepts("#fuel")</code></td><td>only the items a reference names, any mod's: <code>"#fuel #mymod:fire_starter"</code>, <code>"#fuel !base:lava_bucket"</code></td></tr><tr><td><code>liquid(capacity)</code></td><td>a liquid slot of that many millibuckets</td></tr><tr><td><code>limit(16)</code></td><td>at most this many items per slot</td></tr><tr><td><code>large()</code>, <code>size(px)</code></td><td>a bigger slot, 18 GUI pixels by default</td></tr><tr><td><code>background("flame_slot")</code></td><td>a texture from <code>gui/</code> shown while the slot is empty, like the armor silhouettes</td></tr><tr><td><code>tooltip("mymod.fuel_slot")</code></td><td>a translation shown over the empty slot</td></tr><tr><td><code>priority(n)</code></td><td>shift-clicks from the inventory fill groups with a higher priority first</td></tr></tbody></table>
+<p>Without <code>input()</code> or <code>output()</code> a slot takes and gives like a chest's. Shift-clicking an item in the player's inventory puts it into the first group that takes it, groups with an <code>accepts</code> rule before plain ones, so ore goes into the input and coal into the fuel slot without you saying anything.</p>
+<p>Its state is a component, a <code>value!</code> struct of plain numbers like any other. Slots hold items and liquids, so anything else it keeps (heat, progress) goes into a component like this one:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">value! {
+    pub struct Smelting { pub burn: u32, pub burn_max: u32, pub cook: u32, pub cook_max: u32 }
+}</code></pre></div>
+<p>The flags say who gets it. <code>SAVE</code> writes it with the world, <code>SYNC_MENU</code> sends it to players who have its menu open (progress bars need that), <code>SYNC_OWNER</code> sends it to the player who owns the entity (HUD values) and <code>SYNC_WATCHERS</code> to everyone who can see it. Since components are named, another mod that declares <code>base:smelting</code> with the same layout can read the furnace's state, see "Components and tags" in the <a href="index.html#components-and-tags-as-inter-mod-communication">cheat sheet</a>.</p>
+<p>One with nothing to show (a spring engine: state and energy, no items) has no <code>.opens</code>: using it opens nothing. A block that only needs state of its own gets just <code>.entity(|e| e.attach(..))</code>.</p>
+</div></section>
+<section class="dsec" id="the-tick"><h2><button class="fold" aria-expanded="true">The tick</button><a class="anchor" href="#the-tick">#</a></h2><div class="sec-body">
+<p>A block entity works through its state component: <code>r.system(&amp;BURNER, f)</code> hands <code>f</code> every loaded one with that component, their values side by side in one slice, changed in place (and saved and synced like any change). Measured on a thousand of them, that costs a few hundredths of what asking for each one's component costs, so it is the one way they tick:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">fn tick_generators(b: &amp;mut SystemBatch&lt;Burner&gt;) {
+    let w = b.world();
+    for (id, m, _ticks) in b.iter_mut() {
+        let slot = w.inventory(id).group("fuel");
+        if m.burn == 0 {
+            let fuel = slot.get(0);
+            // `fuel` is the common component, so any mod's fuel works
+            if let Some(ticks) = FUEL.on_item(fuel.item).filter(|_| !fuel.is_empty()) {
+                m.burn = ticks;
+                slot.set(0, consume_one(fuel));
+            }
+        }
+        if m.burn &gt; 0 {
+            m.burn -= 1;
+        }
+    }
+}</code></pre></div>
+<p><code>w.inventory(id).group("fuel")</code> is one group of its slots, numbered from 0 (<code>get</code>, <code>set</code>, <code>len</code>); the whole inventory also has <code>insert</code>, which returns what didn't fit. Give each kind a state component of its own (the generator's <code>Burner</code>, the furnace's <code>Smelting</code>), so its system reaches only its own. For stacks there are <code>consume_one</code> (a lava bucket leaves its bucket), <code>shrink</code>, <code>grow</code>, <code>stacks_with</code> and <code>max_stack</code>, and the rest of the world is in <code>w</code> too (<code>block</code>, <code>set_block</code>, <code>play_sound</code>, <code>emit</code>).</p>
+<p>To show that it is working, give the block a property and flip it from the tick. The furnace has <code>.facing(..)</code> and <code>.prop("lit", ["false", "true"])</code>, and its tick does</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">w.prop_set(pos, "lit", if lit { "true" } else { "false" });</code></pre></div>
+<p>which keeps the way it faces. <code>tick_furnaces</code> in <code>mods/base/src/block_entities.rs</code> is the whole thing in one place, with the recipe, the lit state and an event.</p>
+<h3 id="catching-up">Catching up <a class="anchor" href="#catching-up">#</a></h3>
+<p>The third value is how many ticks the call stands for. It's 1 almost always. When its area was unloaded, or the world's time jumped (someone slept, <code>/time</code>), the engine doesn't load anything extra and doesn't tick it thousands of times: it hands over the missed ticks instead, right away, in at most twenty calls however long the gap was. After each of those the energy network moves that many ticks' worth, so a generator and its furnace keep up with each other. So one that should keep working while nobody watches does <code>ticks</code> ticks of work in one go. For a furnace that's simple arithmetic: as many items as the fuel, the input and the output slot allow, see base's <code>catch_up</code> in <code>block_entities.rs</code> and testmod's generator. One that doesn't care can ignore the number, it just loses the missed time.</p>
+<h3 id="keeping-cubes-loaded">Keeping cubes loaded <a class="anchor" href="#keeping-cubes-loaded">#</a></h3>
+<p>Catching up is enough for one block entity. A network that has to run while nobody is there (a generator in one cube, its consumers in others, a quarry digging far below) keeps its cubes loaded: <code>w.keep_loaded(id, from, to, Loading::BlockEntities, 200)</code> keeps the cubes from block <code>from</code> to block <code>to</code> for 200 ticks under that key. Call it again before it runs out, with other blocks to move it; <code>w.release_loaded(id)</code> lets go. <code>Loading::BlockEntities</code> runs block entities, systems, scheduled ticks and redstone there while mobs stand still and nothing grows, as vanilla's lazy chunks; <code>Loading::All</code> runs everything as if a player stood there. Tickets survive a restart, all of them together keep at most <code>core:max_forced_cubes</code> cubes, and <code>question::FORCE_LOAD</code> lets a mod refuse one (someone else's claim).</p>
+</div></section>
+<section class="dsec" id="the-screen"><h2><button class="fold" aria-expanded="true">The screen</button><a class="anchor" href="#the-screen">#</a></h2><div class="sec-body">
+<p><code>screen(|ui| ..)</code> builds the window. <code>ui.group("input")</code> draws a group as its grid, <code>ui.group_slot("input", 1)</code> a single slot of it when a layout places them apart, <code>ui.equipment()</code> the equipment of what it is open on (a mob's, else the player's) and <code>ui.player_inventory(true)</code> the player's inventory and hotbar:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">.screen(|ui| {
+    ui.panel("panel", S::column().pad(7.0).gap(4.0).stretch(), |ui| {
+        ui.title();
+        ui.row(S::row().gap(8.0), |ui| {
+            ui.group("input");
+            ui.recipe_arrow_bind(|c| c.menu_component(&amp;SMELTING).map_or(0.0, |s| ratio(s.cook, s.cook_max)));
+            ui.group("output");
+        });
+        ui.player_inventory(true);
+    });
+})</code></pre></div>
+<p><code>ui.title()</code> is the block's name, so the window says "Furnace" without a translation of its own; a chest a player renamed (<code>/rename Loot</code> on the item, the anvil's job) shows that name instead, and keeps it when it's broken and picked up again. A menu opened from code has <code>menu.&lt;ns&gt;.&lt;name&gt;</code> as its title. The arrow reads the block entity's component through <code>menu_component</code>, which is why it needs <code>SYNC_MENU</code>. The screen belongs to the menu and not to a single block, so every block of one kind shows the same window. Parts, layout and themes are in the <a href="ui.html">UI guide</a>. <code>.default_screen()</code> instead of <code>.screen(..)</code> is the usual one: the title, the groups in order, the player's inventory. Using the block already opens the menu, and <code>world.open_menu(player, &amp;MENU, pos)</code> does the same from code.</p>
+</div></section>
+<section class="dsec" id="recipes"><h2><button class="fold" aria-expanded="true">Recipes</button><a class="anchor" href="#recipes">#</a></h2><div class="sec-body">
+<p>Anything where inputs turn into outputs over time is a recipe kind, and a block entity can use the base game's or one of its own:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static SMELTING_RECIPES: RecipeKind = RecipeKind::named("base:smelting");
+
+r.menu(&amp;FURNACE_MENU)
+    .recipes(&amp;SMELTING_RECIPES)          // its arrow opens them, the recipe viewer shows the blocks opening it
+    ..;
+// in the tick:
+if let Some((output, time)) = recipe_process(&amp;SMELTING_RECIPES, input.item) { .. }</code></pre></div>
+<p><code>recipe_process</code> gives the output and the time in ticks for one input. Recipes are added the usual way, <code>r.shapeless(&amp;SMELTING_RECIPES, "ruby", 1, &amp;["ruby_ore"], 200)</code>, so everything that uses the kind smelts it, whichever mod it comes from. <code>recipes(..)</code> makes the menu's <code>ui.recipe_arrow_bind(..)</code> (or <code>ui.recipe_arrow()</code> without progress) open the kind in the recipe viewer, with "Recipes" over it, and shows the blocks opening it there as where those recipes are made. An ordinary menu works the same way: <code>r.menu(&amp;CRAFTING).recipes(&amp;CRAFTING_RECIPES)</code>, and a block with <code>.opens(&amp;CRAFTING)</code> opens it and becomes a station of those recipes (that's the whole crafting table). A group made <code>Slots::grid(3, 3).crafting()</code> is its crafting grid: the engine shows what it makes in the menu's <code>output()</code> group and uses it up when that is taken, as each recipe says (<code>.keep</code>, <code>.wear</code>, <code>.leaves</code>), and a shift-click crafts all the runs whose results fit in the inventory at once. <code>on_take</code> is still called, <code>m.times()</code> saying how many runs it was. Machines get the same from <code>recipe.consume(&amp;mut stacks)</code>, except that what an ingredient leaves takes its slot only once it is used up.</p>
+<p>A recipe can say more than one output and a time:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.shapeless(&amp;ALLOYING, "tin_ingot", 2, &amp;["base:iron_ingot", "base:coal"], 100)
+    .input_amounts(&amp;[3, 1])                              // 3 iron and 1 coal
+    .output_chance("base:diamond", 1, 0.05)       // and a diamond now and then
+    .set(&amp;ENERGY_PER_TICK, 32);                   // data its tick reads</code></pre></div>
+<p>A liquid is an item too: every liquid has one named like it, counted in millibuckets, so <code>"base:water"</code> or <code>"#water"</code> (its tags are the liquid's) goes into a recipe with <code>input_amounts(&amp;[1000])</code> like any stack, and <code>hidden()</code> keeps a recipe out of the viewer. One with several inputs finds its recipe with <code>recipe_find(&amp;KIND, &amp;stacks)</code>, which gives the <code>time()</code>, the <code>outputs()</code> with their chances (stacks, liquids among them), the <code>value(&amp;COMPONENT)</code> and <code>consume(&amp;mut stacks)</code> to take the inputs out. Liquids live in liquid slots, GregTech's way: <code>.group("water", Slots::single().liquid(16_000))</code> holds sixteen buckets of one liquid, a player pours a bucket in or fills one by clicking with it, and the tick reads and sets it like any slot (<code>w.inventory(pos).group("water").get(0)</code> is the water item with its millibuckets as the count). Nothing else goes into a liquid slot, and a liquid goes nowhere else.</p>
+<p>A kind of your own is registered with <code>r.recipe_kind(&amp;KIND)</code>, and recipes that name a kind nobody registered fail at load. The same call says how the recipe viewer shows it:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.recipe_kind(&amp;ALLOYING)
+    .inputs(2, 1).outputs(2, 1)                   // always these grids, like a crafting table's 3 x 3
+    .info_line("recipe.mymod.alloying.info", &amp;["mymod:energy_per_tick", "time"]);</code></pre></div>
+<p><code>info_line</code> is a line under every recipe, a translation like <code>Uses {0} FE/t for {1} s</code> whose numbers come from the recipe's values and its time. For a layout of your own, <code>layout(|ui, recipe| ..)</code> builds each recipe with the usual UI parts plus <code>ui.recipe_inputs()</code>, <code>ui.recipe_outputs()</code> and <code>ui.recipe_input(i)</code> for its slots (<code>infusing</code> in testmod is one, with a fluid).</p>
+</div></section>
+<section class="dsec" id="energy"><h2><button class="fold" aria-expanded="true">Energy</button><a class="anchor" href="#energy">#</a></h2><div class="sec-body">
+<p>Generators, cables and machines from different mods work together through one contract in the engine. An entity with the <code>core:energy</code> component takes part, and a block tagged <code>conductor</code> is a cable. The block entities next to a cable, or a chain of them, form a network, and once per tick the engine shares what the generators offer among the machines that want it.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;ELECTRIC_FURNACE)
+    .entity(|e| e.attach(&amp;WORK).attach_with(&amp;ENERGY, Energy { stored: 0, capacity: 40_000, max_in: 400, max_out: 0 }).inventory(2))
+    .opens(&amp;FURNACE_MENU);
+r.system(&amp;WORK, tick_furnaces);
+r.block(&amp;CABLE).model_box([5.0, 5.0, 5.0], [11.0, 11.0, 11.0]).tag("conductor");</code></pre></div>
+<p><code>Energy</code> is <code>stored</code> and <code>capacity</code>, plus <code>max_in</code> and <code>max_out</code>, the most it takes from or gives to the network per tick. A generator has <code>max_in: 0</code>, a machine <code>max_out: 0</code>, and a battery has both, without feeding itself. In their systems, generators add to <code>stored</code> and machines spend it:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">let Some(mut e) = w.component(id, &amp;ENERGY) else { continue };
+e.stored = (e.stored + 40).min(e.capacity);      // a generator, per tick
+w.set_component(id, &amp;ENERGY, e);
+// a machine: if e.stored &gt;= COST { e.stored -= COST; work }</code></pre></div>
+<p><code>w.component(id, &amp;ENERGY)</code> reads it, and <code>w.energy_move</code> moves energy with the limits respected, positive in and negative out (<code>simulate = true</code> only reports how much would move). Networks are rebuilt when a cable or a block entity next to one is placed or broken, not every tick.</p>
+<p>The same calls take any holder, not only a block entity's id: a block (<code>w.component(pos, &amp;ENERGY)</code>) or a stack in someone's inventory, <code>Holder::held(player, slot)</code>. An item whose stacks carry <code>energy</code> (<code>.set(&amp;ENERGY, Energy { .. })</code> on the item) is a battery, and a machine charging the tool in its slot is one <code>w.energy_move(Holder::held(id, slot), amount, false)</code>.</p>
+<p>There are no units, conversion or losses along the way. Testmod uses 40 per tick and capacities in the tens of thousands, so if your mod should play along with others, stay in that range.</p>
+</div></section>
+<section class="dsec" id="many-of-them"><h2><button class="fold" aria-expanded="true">Many of them</button><a class="anchor" href="#many-of-them">#</a></h2><div class="sec-body">
+<p>Systems already run once per tick and region with every one of a kind at once, so thousands cost little. Work that only changes the state and touches no inventory is the cheapest of all:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.system(&amp;HEAT, |batch| for (_, heat, ticks) in batch.iter_mut() { *heat = heat.saturating_sub(ticks); });   // HEAT: Component&lt;u32&gt;</code></pre></div>
+<p>Block entities have no built-in way to pass items to each other, so a pipe or a hopper is something you write: do it in a tick with <code>inventory(id).insert(..)</code>.</p>
+</div></section>
+<section class="dsec" id="holders"><h2><button class="fold" aria-expanded="true">Holders</button><a class="anchor" href="#holders">#</a></h2><div class="sec-body">
+<p>What carries items is a holder: a block entity, any entity, a stack. <code>inventory(n)</code> is the same component on all of them. <code>r.block(&amp;CRATE).entity(|e| e.inventory(27))</code> gives each placed crate 27 slots, <code>w.inventory(pos)</code> reaches them and <code>w.open_menu(player, &amp;CRATE_MENU, pos)</code> shows them; a mob kind takes <code>.inventory(n)</code> the same way, and an item with <code>.inventory(n)</code> is a backpack: each stack keeps its own items, saved with it, and <code>w.open_menu(player, &amp;BAG_MENU, Holder::held(player, slot))</code> opens it. While that menu is open its stack can't be moved, and the menu closes if the stack goes away.</p>
+<p>More inventories than its own go on a holder as storages: <code>static ENDER: Storage = Storage::named("ender");</code>, <code>r.storage(&amp;ENDER, 27)</code> and <code>r.edit(&amp;PLAYER).attach_storage(&amp;ENDER)</code> give every player 27 more slots, saved with them and kept on death. <code>w.inventory(ENDER.of(player))</code> reaches them, and an ender chest is a block whose use does <code>w.open_menu(player, &amp;ENDER_MENU, ENDER.of(player))</code>, the menu's <code>.holder()</code> groups being the storage. Kinds of your own carry one with <code>.attach_storage(&amp;S)</code>; any stack can carry one, <code>S.of(Holder::held(player, slot))</code>.</p>
+<p>Equipment works the same for every entity that wears (<code>.equipment()</code> on its kind, the player always): a menu's <code>.equipment()</code> groups are the equipment of the entity it is open on, else the player's, and <code>ui.equipment()</code> draws them where the screen wants.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/block_entities.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="./search-index.js"></script>
+<script src="../docs.js"></script>
+</body>
+</html>

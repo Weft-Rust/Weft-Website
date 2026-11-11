@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Raycasts and hitboxes - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="liquids.html">Liquids</a><a href="effects.html">Status effects and potions</a><a href="recipes-loot.html">Recipes and loot</a><a href="world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a href="editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="conditions.html">Conditions</a><a href="attributes.html">Attributes and modifiers</a><a href="poses-and-modes.html">Poses and game modes</a><a href="commands.html">Commands</a><a href="text.html">Text on the screen</a></details><details class="group" open><summary>World from code</summary><a href="../world-api.html">World API</a><a href="world-blocks.html">Blocks in the world</a><a href="world-entities.html">Entities in the world</a><a class="current" aria-current="page" href="hitboxes.html">Raycasts and hitboxes</a><a href="particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="../reference/index.html">All reference pages</a><a href="../reference/blocks.html">Blocks</a><a href="../reference/client.html">Client</a><a href="../reference/commands.html">Commands</a><a href="../reference/effects.html">Particles and effects</a><a href="../reference/entities.html">Entities</a><a href="../reference/events.html">Events and steps</a><a href="../reference/items.html">Items</a><a href="../reference/recipes.html">Recipes and loot</a><a href="../reference/registration.html">Registration</a><a href="../reference/ui.html">UI</a><a href="../reference/world.html">World</a><a href="../reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Raycasts and hitboxes</h1>
+<section class="dsec" id="raycasts"><h2><button class="fold" aria-expanded="true">Raycasts</button><a class="anchor" href="#raycasts">#</a></h2><div class="sec-body">
+<p><code>w.in_liquid(pos)</code> knows a liquid's surface, which the block alone doesn't tell. <code>w.raycast(from, dir, max, Ray::blocks().entities().skip(me))</code> (<code>.solid()</code> for blocks by what stops a body, <code>.liquids()</code>) finds what any line hits first, a block or an entity (a turret, whether a mob sees a player), with the face it went in by and where on it: <code>hit.local</code> is from the block's or the entity's box's low corner, a block's 0..1, times 16 the pixel (a panel of buttons on one face); <code>w.looked_at(id, max, ray)</code> is that from an entity's eyes.</p>
+</div></section>
+<section class="dsec" id="hitboxes"><h2><button class="fold" aria-expanded="true">Hitboxes</button><a class="anchor" href="#hitboxes">#</a></h2><div class="sec-body">
+<p>What hits an entity hits the parts of its hitbox: <code>r.entity(&amp;X).hitboxes(Hitboxes::humanoid())</code> (or <code>quadruped()</code>, <code>.reaching()</code> for arms held out, <code>.slim(2.0)</code>, and your own <code>Hitboxes::new().head(..).part(..).limb(..)</code>), boxes in its model's pixels that turn with its body (<code>EntityState::body_yaw</code>, lagging behind the head as vanilla's), a head with the look and legs and arms swinging as it walks: run and an arrow may pass between them. Where it can be hit never comes from its model. <code>hit.part</code> says which (<code>hitbox_part::HEAD</code>, <code>hitbox_part_id("tail")</code>), <code>hit.face</code> and <code>hit.local</code> are that part's (face 4 its front). The part goes on into the hurt: <code>Damage::part</code>, and the <code>part</code> a step of <code>chain::DAMAGE</code>, <code>MELEE</code> or <code>PROJECTILE_DAMAGE</code> reads in its query, a blow taking the part its striker looks at. Base's arrows hurt half as much again in the head. A kind without parts is hit by its plain box. <code>/gizmo hitboxes</code> (F3+B) shows them: white the box it bumps and is pushed by, pink the parts.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/details/hitboxes.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>

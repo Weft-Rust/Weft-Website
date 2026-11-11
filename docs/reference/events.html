@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Events and steps reference - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="../details/liquids.html">Liquids</a><a href="../details/effects.html">Status effects and potions</a><a href="../details/recipes-loot.html">Recipes and loot</a><a href="../details/world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a href="../details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="../details/conditions.html">Conditions</a><a href="../details/attributes.html">Attributes and modifiers</a><a href="../details/poses-and-modes.html">Poses and game modes</a><a href="../details/commands.html">Commands</a><a href="../details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="../details/world-blocks.html">Blocks in the world</a><a href="../details/world-entities.html">Entities in the world</a><a href="../details/hitboxes.html">Raycasts and hitboxes</a><a href="../details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="../details/camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group" open><summary>Reference</summary><a href="index.html">All reference pages</a><a href="blocks.html">Blocks</a><a href="client.html">Client</a><a href="commands.html">Commands</a><a href="effects.html">Particles and effects</a><a href="entities.html">Entities</a><a class="current" aria-current="page" href="events.html">Events and steps</a><a href="items.html">Items</a><a href="recipes.html">Recipes and loot</a><a href="registration.html">Registration</a><a href="ui.html">UI</a><a href="world.html">World</a><a href="worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Events and steps reference</h1><nav class="toc"><span>On this page</span><a href="#action">Action</a><a href="#ask">Ask</a><a href="#attributebuilder">AttributeBuilder</a><a href="#blockevent">BlockEvent</a><a href="#damage">Damage</a><a href="#effecttick">EffectTick</a><a href="#entityevent">EntityEvent</a><a href="#entitytick">EntityTick</a><a href="#event">Event</a><a href="#eventbatch">EventBatch</a><a href="#gate">Gate</a><a href="#gateinputs">GateInputs</a><a href="#itemuse">ItemUse</a><a href="#modifier">Modifier</a><a href="#modify">Modify</a><a href="#neighbors">Neighbors</a><a href="#phasebuilder">PhaseBuilder</a><a href="#place">Place</a><a href="#signalevent">SignalEvent</a><a href="#stepbuilder">StepBuilder</a><a href="#systembatch">SystemBatch</a><a href="#use">Use</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>Events, actions, steps, phases, modifiers and what a callback gets as its argument.</p>
+<section class="dsec" id="action"><h2><button class="fold" aria-expanded="true">Action</button><a class="anchor" href="#action">#</a></h2><div class="sec-body">
+<p>Something that happens, as one name: the question asked before it (<code>r.before_event(&amp;A, ..)</code>) and the event after (<code>r.on_event(&amp;A, ..)</code>). The engine's are in <code>actions</code>; a mod's own goes through <code>w.act(&amp;WRENCH, &amp;mut query, value)</code>.</p>
+<ul>
+<li><a id="Action-named"></a><code>.named(name: &amp;'static str)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L335">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="ask"><h2><button class="fold" aria-expanded="true">Ask</button><a class="anchor" href="#ask">#</a></h2><div class="sec-body">
+<p>A question being asked (<code>Registry::before_event</code>); <code>answer</code> is what the steps before said.</p>
+<ul>
+<li><a id="Ask-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L446">source</a></li>
+<li><a id="Ask-question"></a><code>.question() -&gt; &amp;str</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L449">source</a></li>
+<li><a id="Ask-query"></a><code>.query() -&gt; &amp;abi::Query</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L452">source</a></li>
+<li><a id="Ask-entity"></a><code>.entity() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L455">source</a></li>
+<li><a id="Ask-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L458">source</a></li>
+<li><a id="Ask-state"></a><code>.state() -&gt; u32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L461">source</a></li>
+<li><a id="Ask-text"></a><code>.text() -&gt; &amp;str</code><span class="d">What a player is about to say (<code>actions::CHAT</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L465">source</a></li>
+<li><a id="Ask-item"></a><code>.item() -&gt; u32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L468">source</a></li>
+<li><a id="Ask-is_camera"></a><code>.is_camera(mode: &amp;crate::CameraMode) -&gt; bool</code><span class="d">Whether <code>question::CAMERA</code> asks about <code>mode</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L472">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="attributebuilder"><h2><button class="fold" aria-expanded="true">AttributeBuilder</button><a class="anchor" href="#attributebuilder">#</a></h2><div class="sec-body">
+<p>An attribute being registered (<code>Registry::attribute</code>).</p>
+<ul>
+<li><a id="AttributeBuilder-rule"></a><code>.rule()</code><span class="d">The base of it for kinds that don't set their own (the player) is a world rule named like it (<code>/rule</code>), with its default and range; <code>/attribute</code> sets one entity's apart. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L990">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="blockevent"><h2><button class="fold" aria-expanded="true">BlockEvent</button><a class="anchor" href="#blockevent">#</a></h2><div class="sec-body">
+<ul>
+<li><a id="BlockEvent-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3458">source</a></li>
+<li><a id="BlockEvent-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3461">source</a></li>
+<li><a id="BlockEvent-state"></a><code>.state() -&gt; u32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3464">source</a></li>
+<li><a id="BlockEvent-neighbor"></a><code>.neighbor() -&gt; BlockPos</code><span class="d">The neighbor that changed, for <code>on_neighbor</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3468">source</a></li>
+<li><a id="BlockEvent-body_pos"></a><code>.body_pos() -&gt; BlockPos</code><span class="d">Where the block is on the body, for <code>on_carried</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3472">source</a></li>
+<li><a id="BlockEvent-entity"></a><code>.entity() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3475">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="damage"><h2><button class="fold" aria-expanded="true">Damage</button><a class="anchor" href="#damage">#</a></h2><div class="sec-body">
+<p>A hurt described (<code>World::damage</code>): <code>Damage::new(4.0, &amp;damage_causes::ATTACK).by(shooter) .through(arrow)</code>. Steps see all of it (<code>Query::other</code>, <code>direct</code>, <code>item</code>, <code>crit</code>).</p>
+<ul>
+<li><a id="Damage-new"></a><code>.new(amount: f32, cause: impl Into&lt;Id&lt;crate::DamageCause&gt;&gt;) -&gt; Damage</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L87">source</a></li>
+<li><a id="Damage-by"></a><code>.by(source: u64)</code><span class="d">Who did it. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L91">source</a></li>
+<li><a id="Damage-through"></a><code>.through(direct: u64)</code><span class="d">What hit, when not <code>by</code> itself (the arrow): knockback goes away from it. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L96">source</a></li>
+<li><a id="Damage-with"></a><code>.with(item: ItemStack)</code><span class="d">What it was done with. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L101">source</a></li>
+<li><a id="Damage-knock"></a><code>.knock(way: impl Into&lt;Vec3&gt;)</code><span class="d">The way it pushes, instead of away from what hit. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L106">source</a></li>
+<li><a id="Damage-crit"></a><code>.crit(mut self)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L110">source</a></li>
+<li><a id="Damage-part"></a><code>.part(part: u32)</code><span class="d">The part of the hitbox it lands on (<code>hitbox_part::HEAD</code>, <code>hitbox_part_id("tail")</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L115">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="effecttick"><h2><button class="fold" aria-expanded="true">EffectTick</button><a class="anchor" href="#effecttick">#</a></h2><div class="sec-body">
+<p>An effect's tick (<code>EntityEffectBuilder::on_tick</code>): every entity that has it, with its level.</p>
+<ul>
+<li><a id="EffectTick-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L767">source</a></li>
+<li><a id="EffectTick-effect"></a><code>.effect() -&gt; u32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L770">source</a></li>
+<li><a id="EffectTick-iter"></a><code>.iter() -&gt; impl Iterator&lt;Item = (u64, u32)&gt; + '_</code><span class="d">(entity, level). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L774">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="entityevent"><h2><button class="fold" aria-expanded="true">EntityEvent</button><a class="anchor" href="#entityevent">#</a></h2><div class="sec-body">
+<ul>
+<li><a id="EntityEvent-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L750">source</a></li>
+<li><a id="EntityEvent-entity"></a><code>.entity() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L753">source</a></li>
+<li><a id="EntityEvent-other"></a><code>.other() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L756">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="entitytick"><h2><button class="fold" aria-expanded="true">EntityTick</button><a class="anchor" href="#entitytick">#</a></h2><div class="sec-body">
+<ul>
+<li><a id="EntityTick-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L737">source</a></li>
+<li><a id="EntityTick-ids"></a><code>.ids() -&gt; &amp;[u64]</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L740">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="event"><h2><button class="fold" aria-expanded="true">Event</button><a class="anchor" href="#event">#</a></h2><div class="sec-body">
+<p>A typed event, named like any other thing a mod owns: <code>Event::named("eaten")</code> is this mod's, <code>Event::named("base:eaten")</code> another's.</p>
+<ul>
+<li><a id="Event-named"></a><code>.named(name: &amp;'static str)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L252">source</a></li>
+<li><a id="Event-name"></a><code>.name() -&gt; &amp;str</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L255">source</a></li>
+<li><a id="Event-id"></a><code>.id() -&gt; u32</code><span class="d"><code>u32::MAX</code> when nobody listens. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L259">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="eventbatch"><h2><button class="fold" aria-expanded="true">EventBatch</button><a class="anchor" href="#eventbatch">#</a></h2><div class="sec-body">
+<p>Every value of one event queued during a tick, in the order they happened.</p>
+<ul>
+<li><a id="EventBatch-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L414">source</a></li>
+<li><a id="EventBatch-iter"></a><code>.iter() -&gt; impl Iterator&lt;Item = &amp;T&gt;</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L417">source</a></li>
+<li><a id="EventBatch-len"></a><code>.len() -&gt; usize</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L420">source</a></li>
+<li><a id="EventBatch-is_empty"></a><code>.is_empty() -&gt; bool</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L423">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="gate"><h2><button class="fold" aria-expanded="true">Gate</button><a class="anchor" href="#gate">#</a></h2><div class="sec-body">
+<p>Which faces of a <code>BlockBuilder::signal_gate</code> read power and give it (strongly, into the block there and on), and its delay.</p>
+<ul>
+<li><a id="Gate-new"></a><code>.new() -&gt; Gate</code><span class="d">Reads behind it and both sides, gives out of the front, one redstone tick late. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3398">source</a></li>
+<li><a id="Gate-inputs"></a><code>.inputs(sides: &amp;[Side]) -&gt; Gate</code><span class="d">The faces it reads; an output is never an input. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3402">source</a></li>
+<li><a id="Gate-outputs"></a><code>.outputs(sides: &amp;[Side]) -&gt; Gate</code><span class="d">The faces it gives at. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3407">source</a></li>
+<li><a id="Gate-delay"></a><code>.delay(ticks: u32) -&gt; Gate</code><span class="d">In redstone ticks, two game ticks each. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3413">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="gateinputs"><h2><button class="fold" aria-expanded="true">GateInputs</button><a class="anchor" href="#gateinputs">#</a></h2><div class="sec-body">
+<p>What comes in at a <code>BlockBuilder::signal_gate</code>'s faces.</p>
+<ul>
+<li><a id="GateInputs-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3434">source</a></li>
+<li><a id="GateInputs-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3437">source</a></li>
+<li><a id="GateInputs-side"></a><code>.side(side: Side) -&gt; u8</code><span class="d">Power coming in at <code>side</code>, 0 for a face it doesn't read. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3441">source</a></li>
+<li><a id="GateInputs-output"></a><code>.output() -&gt; u8</code><span class="d">What it gives now. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3445">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="itemuse"><h2><button class="fold" aria-expanded="true">ItemUse</button><a class="anchor" href="#itemuse">#</a></h2><div class="sec-body">
+<ul>
+<li><a id="ItemUse-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3552">source</a></li>
+<li><a id="ItemUse-entity"></a><code>.entity() -&gt; u64</code><span class="d">Who uses it: a player, or a mob (<code>World::use_item</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3556">source</a></li>
+<li><a id="ItemUse-target_block"></a><code>.target_block() -&gt; Option&lt;(BlockPos, u32)&gt;</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3559">source</a></li>
+<li><a id="ItemUse-held_ticks"></a><code>.held_ticks() -&gt; u32</code><span class="d">Ticks the use button was held, for <code>on_release</code> (a bow's draw); 0 for a use at once. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3563">source</a></li>
+<li><a id="ItemUse-stack"></a><code>.stack() -&gt; crate::ItemStack</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3566">source</a></li>
+<li><a id="ItemUse-slot"></a><code>.slot() -&gt; u32</code><span class="d">The slot of its inventory the stack is in. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3570">source</a></li>
+<li><a id="ItemUse-holder"></a><code>.holder() -&gt; crate::Holder</code><span class="d">The used stack as a holder: what a backpack opens its menu on. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3574">source</a></li>
+<li><a id="ItemUse-set_stack"></a><code>.set_stack(s: crate::ItemStack)</code><span class="d">Replaces the held stack (use count 0 to consume it entirely). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3578">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="modifier"><h2><button class="fold" aria-expanded="true">Modifier</button><a class="anchor" href="#modifier">#</a></h2><div class="sec-body">
+<p>A step with a number on an attribute, that comes with something (<code>.modifier(..)</code> on an item, a pose, an entity kind, an effect) or is put on an entity (<code>World::attribute_add_modifier</code>): <code>Modifier::add(&amp;attribute::MOVEMENT_SPEED, 0.2)</code>, while worn (<code>.worn()</code>) or while conditions hold for its holder (<code>.when(..)</code>). Any code of your own is a step too: <code>Modifier::step(&amp;A, &amp;MY_STEP, 2.0)</code> runs <code>MY_STEP</code> (<code>Registry::step</code>) with 2.0 as <code>Modify::arg</code>.</p>
+<ul>
+<li><a id="Modifier-step"></a><code>.step(attribute: &amp;crate::Attribute, step: &amp;Step, amount: f64) -&gt; Modifier</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L206">source</a></li>
+<li><a id="Modifier-add"></a><code>.add(attribute: &amp;crate::Attribute, amount: f64) -&gt; Modifier</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L209">source</a></li>
+<li><a id="Modifier-mul"></a><code>.mul(attribute: &amp;crate::Attribute, factor: f64) -&gt; Modifier</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L212">source</a></li>
+<li><a id="Modifier-set"></a><code>.set(attribute: &amp;crate::Attribute, value: f64) -&gt; Modifier</code><span class="d">The value becomes <code>value</code>, at the end (<code>phase::OVERRIDE</code>) unless <code>.phase(..)</code> says. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L216">source</a></li>
+<li><a id="Modifier-percent"></a><code>.percent(attribute: &amp;crate::Attribute, share: f64) -&gt; Modifier</code><span class="d">Adds <code>share</code> of the value its phase started from: vanilla's percent modifiers, which add up (speed and slowness together are +5%, not 1.2 x 0.85). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L221">source</a></li>
+<li><a id="Modifier-phase"></a><code>.phase(phase: &amp;Phase) -&gt; Modifier</code><span class="d">Runs in <code>phase</code> rather than its step's own. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L225">source</a></li>
+<li><a id="Modifier-worn"></a><code>.worn(mut self) -&gt; Modifier</code><span class="d">An item's, while it is in an equipment slot rather than in the main hand. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L230">source</a></li>
+<li><a id="Modifier-when"></a><code>.when(c: impl Into&lt;Cond&gt;) -&gt; Modifier</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L234">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="modify"><h2><button class="fold" aria-expanded="true">Modify</button><a class="anchor" href="#modify">#</a></h2><div class="sec-body">
+<p>One step's run (<code>Registry::modify</code>, <code>Registry::step</code>): read the context, change <code>value</code>. <code>base</code> is where the chain began, <code>start</code> where this phase began, <code>arg</code> the number a modifier gave the step (0 on a chain). A question's value is 1 for yes, 0 for no.</p>
+<ul>
+<li><a id="Modify-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L491">source</a></li>
+<li><a id="Modify-query"></a><code>.query() -&gt; &amp;abi::Query</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L494">source</a></li>
+<li><a id="Modify-chain"></a><code>.chain() -&gt; &amp;str</code><span class="d">The chain it runs in: one step may be on several (a modifier on any attribute). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L498">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="neighbors"><h2><button class="fold" aria-expanded="true">Neighbors</button><a class="anchor" href="#neighbors">#</a></h2><div class="sec-body">
+<p>The blocks around one (<code>BlockBuilder::derived</code>).</p>
+<ul>
+<li><a id="Neighbors-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L1912">source</a></li>
+<li><a id="Neighbors-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L1915">source</a></li>
+<li><a id="Neighbors-at"></a><code>.at(side: crate::Dir) -&gt; u32</code><span class="d">The block on that side, air where nothing is loaded. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L1919">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="phasebuilder"><h2><button class="fold" aria-expanded="true">PhaseBuilder</button><a class="anchor" href="#phasebuilder">#</a></h2><div class="sec-body">
+<p>A phase being registered (<code>Registry::phase</code>).</p>
+<ul>
+<li><a id="PhaseBuilder-after"></a><code>.after(phase: &amp;Phase)</code><span class="d">Comes right after <code>phase</code> (after phases that said so before it). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L565">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="place"><h2><button class="fold" aria-expanded="true">Place</button><a class="anchor" href="#place">#</a></h2><div class="sec-body">
+<ul>
+<li><a id="Place-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3519">source</a></li>
+<li><a id="Place-face"></a><code>.face() -&gt; crate::Dir</code><span class="d">Face of the block that was clicked. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3523">source</a></li>
+<li><a id="Place-look_dir"></a><code>.look_dir() -&gt; crate::Vec3</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3526">source</a></li>
+<li><a id="Place-hit"></a><code>.hit() -&gt; crate::Vec3</code><span class="d">Just outside where it was clicked, 0..1 from this cell's corner: for a slab, <code>hit().y &gt; 0.5</code> is the upper half, on a floor, under a ceiling, against a wall or on another slab alike. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3531">source</a></li>
+<li><a id="Place-placed"></a><code>.placed(prop: &amp;str) -&gt; Option&lt;&amp;'static str&gt;</code><span class="d">In <code>merge</code>: a property of how its item would go. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3535">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="signalevent"><h2><button class="fold" aria-expanded="true">SignalEvent</button><a class="anchor" href="#signalevent">#</a></h2><div class="sec-body">
+<p>What <code>BlockBuilder::on_signal</code> is told.</p>
+<ul>
+<li><a id="SignalEvent-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3342">source</a></li>
+<li><a id="SignalEvent-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3345">source</a></li>
+<li><a id="SignalEvent-state"></a><code>.state() -&gt; u32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3348">source</a></li>
+<li><a id="SignalEvent-level"></a><code>.level() -&gt; u8</code><span class="d">Power around it now, 0..15. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3352">source</a></li>
+<li><a id="SignalEvent-level_before"></a><code>.level_before() -&gt; u8</code><span class="d">What it was. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3356">source</a></li>
+<li><a id="SignalEvent-rising"></a><code>.rising() -&gt; bool</code><span class="d">It just got power. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3360">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="stepbuilder"><h2><button class="fold" aria-expanded="true">StepBuilder</button><a class="anchor" href="#stepbuilder">#</a></h2><div class="sec-body">
+<p>A step being registered (<code>Registry::step</code>, <code>modify</code>, <code>before_event</code>).</p>
+<ul>
+<li><a id="StepBuilder-on"></a><code>.on(chain: &amp;impl Valued)</code><span class="d">Runs every time <code>chain</code> is computed; without, only where a modifier names it. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L527">source</a></li>
+<li><a id="StepBuilder-phase"></a><code>.phase(phase: &amp;Phase)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L530">source</a></li>
+<li><a id="StepBuilder-after"></a><code>.after(name: &amp;str)</code><span class="d">Runs after step <code>name</code> when both are in one phase of a chain. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L534">source</a></li>
+<li><a id="StepBuilder-before"></a><code>.before(name: &amp;str)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L537">source</a></li>
+<li><a id="StepBuilder-run"></a><code>.run(f: impl Fn(&amp;mut Modify) + Send + Sync + 'static)</code><span class="d">What it does to the value. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L541">source</a></li>
+<li><a id="StepBuilder-answer"></a><code>.answer(f: impl Fn(&amp;Ask) -&gt; Verdict + Send + Sync + 'static)</code><span class="d">What it says to a question. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L545">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="systembatch"><h2><button class="fold" aria-expanded="true">SystemBatch</button><a class="anchor" href="#systembatch">#</a></h2><div class="sec-body">
+<p>Every entity of a region that has a component, with the values side by side, and the ticks each call stands for: 1 normally, more while an entity catches up on time it missed (its region was unloaded, the world's time jumped). A system worth catching up does the work of <code>ticks</code> ticks at once (a furnace: so many items smelted), anything else may ignore it.</p>
+<ul>
+<li><a id="SystemBatch-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L953">source</a></li>
+<li><a id="SystemBatch-ids"></a><code>.ids() -&gt; &amp;[u64]</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L956">source</a></li>
+<li><a id="SystemBatch-values"></a><code>.values() -&gt; &amp;mut [T]</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L959">source</a></li>
+<li><a id="SystemBatch-ticks"></a><code>.ticks() -&gt; &amp;[u32]</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L962">source</a></li>
+<li><a id="SystemBatch-iter_mut"></a><code>.iter_mut() -&gt; impl Iterator&lt;Item = (u64, &amp;mut T, u32)&gt;</code><span class="d">(entity, its value, ticks to do). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L966">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="use"><h2><button class="fold" aria-expanded="true">Use</button><a class="anchor" href="#use">#</a></h2><div class="sec-body">
+<ul>
+<li><a id="Use-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3488">source</a></li>
+<li><a id="Use-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3491">source</a></li>
+<li><a id="Use-state"></a><code>.state() -&gt; u32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3494">source</a></li>
+<li><a id="Use-face"></a><code>.face() -&gt; crate::Dir</code><span class="d">Face of the block that was clicked. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3498">source</a></li>
+<li><a id="Use-player"></a><code>.player() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3501">source</a></li>
+<li><a id="Use-sneaking"></a><code>.sneaking() -&gt; bool</code><span class="d">The player sneaks: only with <code>.sneak_use(..)</code> saying so, or with empty hands. Returning false passes the click on to what it holds. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3506">source</a></li>
+</ul>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/reference/events.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>

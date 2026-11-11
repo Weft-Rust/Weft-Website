@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>redstone.md - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../assets/icon.png">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../docs.css">
+</head>
+<body class="docs" data-root="../docs/">
+<header class="bar">
+  <a class="bar-name" href="../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="blocks.html">Blocks</a><a href="items.html">Items</a><a href="entities.html">Entities</a><a href="details/liquids.html">Liquids</a><a href="details/effects.html">Status effects and potions</a><a href="details/recipes-loot.html">Recipes and loot</a><a href="details/world-content.html">World content</a><a href="block_entities.html">Block entities guide</a><a href="registration.html">Registration guide</a><a href="details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="events.html">Events, chains and questions</a><a href="details/conditions.html">Conditions</a><a href="details/attributes.html">Attributes and modifiers</a><a href="details/poses-and-modes.html">Poses and game modes</a><a href="details/commands.html">Commands</a><a href="details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="world-api.html">World API</a><a href="details/world-blocks.html">Blocks in the world</a><a href="details/world-entities.html">Entities in the world</a><a href="details/hitboxes.html">Raycasts and hitboxes</a><a href="details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="client.html">Client side</a><a href="ui.html">UI guide</a><a href="details/camera.html">Camera modes</a><a href="models.html">Models and animations guide</a><a href="shaders.html">Shaders guide</a></details><details class="group" open><summary>Assets</summary><a href="textures.html">Textures guide</a><a href="ctm.html">CTM guide</a><a href="sky.html">Sky guide</a><a href="resourcepacks.html">Resource packs guide</a><a href="localization.html">Localization guide</a><a class="current" aria-current="page" href="redstone.html">redstone.md</a><a href="worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="reference/index.html">All reference pages</a><a href="reference/blocks.html">Blocks</a><a href="reference/client.html">Client</a><a href="reference/commands.html">Commands</a><a href="reference/effects.html">Particles and effects</a><a href="reference/entities.html">Entities</a><a href="reference/events.html">Events and steps</a><a href="reference/items.html">Items</a><a href="reference/recipes.html">Recipes and loot</a><a href="reference/registration.html">Registration</a><a href="reference/ui.html">UI</a><a href="reference/world.html">World</a><a href="reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <p>﻿# Redstone guide</p>
+<p>Redstone here isn't vanilla's. The numbers are familiar (power 0 to 15, a redstone tick is 2 game ticks), but the rules are simpler and they don't care which way you build:</p>
+<ul>
+<li>A build works the same in any direction, turned or mirrored. There's no update order to fight and no quasi-connectivity, so 0-tick tricks and the like don't exist.</li>
+<li>Wire goes on floors, walls and ceilings. Gates and switches go on the face you click, like torches.</li>
+<li>A circuit that isn't changing costs nothing, however big it is.</li>
+</ul>
+<p>Vanilla circuits that rely on those quirks behave differently. That's on purpose.</p>
+<section class="dsec" id="quick-links"><h2><button class="fold" aria-expanded="true">Quick links</button><a class="anchor" href="#quick-links">#</a></h2><div class="sec-body">
+<p><a href="#the-rules">The rules</a> | <a href="#whats-in-the-game">What's in the game</a> | <a href="#making-your-own">Making your own</a> | <a href="#reading-it-from-code">Reading it from code</a> | <a href="#limits">Limits</a></p>
+</div></section>
+<section class="dsec" id="the-rules"><h2><button class="fold" aria-expanded="true">The rules</button><a class="anchor" href="#the-rules">#</a></h2><div class="sec-body">
+<p><strong>Wire</strong> lies on any face of a solid block, several faces in one cell if you like (it is an <code>on_sides</code> block, <code>west</code>..<code>south</code> properties saying where it lies). A piece connects to the next over each of its edges: into the corner of a wall in the same cell, on along the same plane, or around the edge of the block it lies on. Going up a step means going floor, wall, top. Power drops by one with each piece, so it reaches fifteen pieces.</p>
+<p>Only wire of the same block connects, so another wire block is an insulated wire.</p>
+<p><strong>Power reaches a block two ways:</strong></p>
+<ul>
+<li><em>Strongly</em>, from a gate facing it, a lever on it, or a torch next to it (not the block the torch is on). Wire touching that block takes the power, and so do devices.</li>
+<li><em>Weakly</em>, from wire lying on it. Only devices next to it take that. Otherwise all the wires on one wall would be one wire.</li>
+</ul>
+<p>Solid blocks carry power by default, lamps and other blocks that only take power included. <code>.signal_blocker()</code> turns that off, the way glass, ice, leaves and the golden lamp have it. Wire can still lie on them. Slabs and other partial solid blocks carry power too.</p>
+<p><strong>Wire reaches</strong> the block it lies on and any device touching one of its edges or its back. It doesn't reach across the cell, so wire on a floor doesn't touch what is on the ceiling above it. Wire running past a lamp lights it. To get past without lighting it, take another face.</p>
+<p><strong>Timing:</strong> gates act after their delay and wire is instant. A piston takes 2 ticks: what it moves is there for circuits then, and is drawn as a block 2 ticks later, when the moving picture has arrived. All of a tick is read as the last tick left it, then applied, which is why order doesn't show. Every loop goes through a gate, so nothing can hang a tick.</p>
+<p><strong>Pistons</strong> move chests and anything else with an entity, which stays the same one, with what is in it. Those that want the same block in the same tick both give way, since letting one win would favor a direction, and the one still wanting it goes as soon as the other stops. Two sticky ones bringing back one block both come back without it. A sticky piston that loses power within 2 ticks of starting comes back without its block. A piston being pushed by another doesn't count as wanting anything: it waits, and goes from where it lands if it has power there.</p>
+<p><strong>On what moves:</strong> circuits go on on a piston's blocks and on a body, pulses on their way included, and a piston moving a block takes what stands on it: dust, gates, torches, levers. Only dust lying directly in the way breaks. Being on a piston's blocks, a piston waits till it lands. Bodies and the world power each other where they are next to each other: a redstone block going past lamps lights them, and a lamp going past one is lit. Wire of a body and wire of the world don't join or feed each other, though each lights what it touches on the other side. An observer sees a body come and go, and one on a body sees the world change as it goes.</p>
+<p><strong>Unloaded blocks:</strong> what can't see all of its inputs stays as it is until they load, instead of flipping. A saved world starts the same way. A pulse in flight inside a repeater isn't saved, and doesn't survive parts of the world joining into one region or splitting. Blocks on the way from a piston get there at once when that happens or when the world saves.</p>
+</div></section>
+<section class="dsec" id="whats-in-the-game"><h2><button class="fold" aria-expanded="true">What's in the game</button><a class="anchor" href="#whats-in-the-game">#</a></h2><div class="sec-body">
+<table><thead><tr><th>Block</th><th>What it does</th></tr></thead><tbody><tr><td><code>redstone</code></td><td>The dust, one piece per click</td></tr><tr><td><code>lever</code></td><td>Toggles, strongly powers what it's on</td></tr><tr><td><code>stone_button</code></td><td>On for a second</td></tr><tr><td><code>redstone_block</code></td><td>Always on, no strong power</td></tr><tr><td><code>redstone_torch</code></td><td>Off while what it's on has power. Strongly powers every other block around it, so one on a wall powers both the block in front and the one above. 8 flips in 3 seconds burn it out for 8</td></tr><tr><td><code>repeater</code></td><td>Full power out the front, 1 to 4 redstone ticks after the back gets any (click to change). A gate pointing into its side locks it</td></tr><tr><td><code>comparator</code></td><td>Back against the sides; the other mode subtracts (click to change). Reads how full a container behind it is</td></tr><tr><td><code>redstone_lamp</code></td><td>Lit with any power around it. Carries power like any solid block</td></tr><tr><td><code>piston</code>, <code>sticky_piston</code></td><td>Pushes up to 12 blocks, powered from any side but its front. Breaks what isn't solid, stops at block entities and <code>.immovable()</code> blocks. The blocks move as a body, so whoever stands on them rides along smoothly</td></tr><tr><td><code>slime_block</code></td><td>What a piston moves takes what touches it along, for flying machines. <code>.sticky()</code> on any block does the same</td></tr><tr><td><code>floater</code></td><td>What is fixed to its blocks comes along; what runs into a solid block on the way comes off and drops while it all goes on, so a torch or lever feeding it from the leading face stops it on arrival. Goes the way you look when placing it, any of the six, its green front first. With power from any other side it carries itself, the block in front of it and what is stuck to that through slime, half a block a second per level of power, circuits going on. Nothing else it touches goes along: the floor and what feeds it stay. Without power, with its floaters broken off, or at something solid in the way, it all lands on a whole block. It shows red when it can't go; a comparator reads 1 going, 15 stuck</td></tr><tr><td><code>golden_lamp</code></td><td>Each new pulse flips it. A comparator reads 15 while it is lit. Doesn't carry power</td></tr><tr><td><code>anchor</code></td><td>With power it can't be moved: in a row being pushed it stops the push, touching slime it stays behind. On a platform on its way, getting power with more of the platform pushing it stops the platform at the next whole block; with nothing pushing it, it rides on. Without power it moves like any block</td></tr><tr><td><code>observer</code></td><td>A 1 redstone tick pulse out of its back, 1 redstone tick after the block it looks at changes (wire's power too), and when a piston moves it</td></tr><tr><td><code>dispenser</code></td><td>One item out of the front for each new pulse</td></tr></tbody></table>
+</div></section>
+<section class="dsec" id="making-your-own"><h2><button class="fold" aria-expanded="true">Making your own</button><a class="anchor" href="#making-your-own">#</a></h2><div class="sec-body">
+<p>Say what a block is and the engine runs it. No ticking and no neighbor callbacks to write.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">// Always on.
+r.block(&amp;CRYSTAL).signal_constant();
+
+// Follows the power around it: a `power` property (`off`, `on`) changes by itself.
+r.block(&amp;LIGHT)
+    .signal_sink()
+    .prop("power", ["off", "on"])
+    .states(|p, s| if p.is("power", "on") { s.light(15) } else { s });
+
+// The same with code: called when the power around it changes.
+r.block(&amp;ALARM).signal_sink().on_signal(|e| {
+    if e.rising() {
+        e.world().spawn_item(/* ... */);
+    }
+});
+
+// A gate with your own logic, on the clicked face. Runs only when something around it changes,
+// and what it returns comes out of the front after the delay (in redstone ticks, like a repeater's).
+// `Gate::new()` reads behind it and both sides; `.inputs(&amp;[Side::Left, Side::Right, Side::Top])`
+// names other faces, `.outputs(&amp;[Side::Front, Side::Top])` gives at more than the front, `.delay(4)`
+// waits longer. Sides are the gate's own, so they turn with it.
+r.block(&amp;AND_GATE)
+    .signal_gate(Gate::new(), |s| if s.side(Side::Rear) &gt; 0 &amp;&amp; (s.side(Side::Left) &gt; 0 || s.side(Side::Right) &gt; 0) { 15 } else { 0 })
+    .model_box([0.0, 0.0, 0.0], [16.0, 2.0, 16.0])
+    .not_solid();
+
+// Wire that doesn't join base's. Textures: the dot on top, the line on the sides, in gray; power
+// colors it.
+r.block(&amp;BLUE_WIRE).wire().texture("blue_line").ends("blue_dot");
+
+// Glass-like, and something a piston can't move.
+r.block(&amp;CASING).signal_blocker();
+r.block(&amp;BEDROCK_ISH).immovable();</code></pre></div>
+<p>The rest of the set, each with the properties it needs added for you:</p>
+<ul>
+<li><code>.signal_switch()</code>: a lever or button. Goes on the clicked face; flip its <code>power</code> property from <code>on_use</code>.</li>
+<li><code>.signal_torch()</code>, <code>.signal_repeater()</code>, <code>.signal_comparator()</code>: as in the game.</li>
+<li><code>.signal_read(|w, p| level)</code>: what a comparator behind the block reads, instead of how full it is. It looks again when the block changes; <code>w.signal_read_changed(p)</code> for anything else it depends on.</li>
+<li><code>.signal_floater(breaks)</code> after <code>.facing(..)</code>: a floater; <code>breaks</code> makes it break what is in its way. <code>power</code> is 0 idle, 1 going, 2 stuck.</li>
+<li><code>w.body_from_blocks(center, &amp;cells)</code> takes blocks out of the world into a moving body, with chests and what is in them, circuits going on. Move it with <code>w.entity_modify(id).velocity(..)</code> or <code>w.body_move_to(id, pos, ticks)</code>, and <code>w.body_to_blocks(id)</code> makes it blocks again, on the nearest whole block. Its blocks are reached the way the world's are, through <code>w.on_body(id)</code>: <code>w.on_body(ship)?.prop_set(pos, "lit", "true")</code> in the body's own coordinates, with parts, scheduled ticks and signals as in the world. <code>w.push_blocks(pos, dir)</code> moves blocks the way a piston does, without one: what would be pushed goes one block that way, slime and all, so a machine can open a drawbridge. <code>w.body_fall(id)</code> lets it drop instead, like sand: each block lands where it comes down, or drops if it can't stand there, so a felled tree or a collapsing roof is a lift and a fall.</li>
+<li><code>.signal_observer()</code> and <code>.signal_piston(head, sticky)</code>, <code>.signal_piston_head()</code>: after <code>.facing(..)</code>.</li>
+</ul>
+<p><strong>A model on any face:</strong> those blocks have <code>attach</code> and <code>front</code> properties. Write the model once for a floor with the front to the north, and the block turns it onto its face, pictures included:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;GATE).signal_repeater().states(|p, s| {
+    let top = if p.is("power", "on") { "gate_on" } else { "gate" };
+    let mut faces = [("smooth_stone", UV_FROM_BOX); 6];
+    faces[3].0 = top;
+    s.model_box_faces([0.0, 0.0, 0.0], [16.0, 2.0, 16.0], faces)
+});</code></pre></div>
+<p>A block with <code>facing</code> turns the same way, its front to it; <code>s.orientation(Orientation::up(p.facing()))</code> turns its top that way instead, like a piston.</p>
+<p><code>base</code> is written with exactly this: see <code>mods/base/src/redstone.rs</code>.</p>
+</div></section>
+<section class="dsec" id="reading-it-from-code"><h2><button class="fold" aria-expanded="true">Reading it from code</button><a class="anchor" href="#reading-it-from-code">#</a></h2><div class="sec-body">
+<p><code>w.signal(pos)</code> is the strongest power coming into a cell, 0 to 15.</p>
+</div></section>
+<section class="dsec" id="limits"><h2><button class="fold" aria-expanded="true">Limits</button><a class="anchor" href="#limits">#</a></h2><div class="sec-body">
+<ul>
+<li>Wire on moving bodies runs but isn't drawn.</li>
+<li>A gate changing is still a block change, so on the client it remeshes its cube. Only wire avoids that.</li>
+</ul>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/redstone.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="./search-index.js"></script>
+<script src="../docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Attributes and modifiers - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="liquids.html">Liquids</a><a href="effects.html">Status effects and potions</a><a href="recipes-loot.html">Recipes and loot</a><a href="world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a href="editing-others.html">Changing something of another mod</a></details><details class="group" open><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="conditions.html">Conditions</a><a class="current" aria-current="page" href="attributes.html">Attributes and modifiers</a><a href="poses-and-modes.html">Poses and game modes</a><a href="commands.html">Commands</a><a href="text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="world-blocks.html">Blocks in the world</a><a href="world-entities.html">Entities in the world</a><a href="hitboxes.html">Raycasts and hitboxes</a><a href="particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="../reference/index.html">All reference pages</a><a href="../reference/blocks.html">Blocks</a><a href="../reference/client.html">Client</a><a href="../reference/commands.html">Commands</a><a href="../reference/effects.html">Particles and effects</a><a href="../reference/entities.html">Entities</a><a href="../reference/events.html">Events and steps</a><a href="../reference/items.html">Items</a><a href="../reference/recipes.html">Recipes and loot</a><a href="../reference/registration.html">Registration</a><a href="../reference/ui.html">UI</a><a href="../reference/world.html">World</a><a href="../reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Attributes and modifiers</h1>
+<p>A number a body used to have as a constant is an attribute, so a modifier is all a long tool, a haste effect or a ring of flight takes. Client and server move a player by the same ones.</p>
+<p>Reach and mining speed are attributes too (<code>attribute::BLOCK_REACH</code>, <code>ENTITY_REACH</code>, <code>MINING_SPEED</code>), and the client reads them: a modifier is all a long tool or a haste effect takes.</p>
+<table><thead><tr><th>Attribute</th><th>What it is</th></tr></thead><tbody><tr><td><code>MOVEMENT_SPEED</code>, <code>JUMP_STRENGTH</code></td><td>speed and jump, mobs and players alike; <code>attribute_add_modifier</code> with one is a speed effect</td></tr><tr><td><code>FOV</code></td><td>widens or narrows a player's view (a zoom, a speed rush)</td></tr><tr><td><code>BLOCK_REACH</code>, <code>ENTITY_REACH</code>, <code>MINING_SPEED</code></td><td>how far a hand reaches and how fast it digs; the client reads them too</td></tr><tr><td><code>SAFE_FALL</code></td><td>blocks that can be fallen for free (3)</td></tr><tr><td><code>FALL_DAMAGE_MULTIPLIER</code></td><td>damage per block past that</td></tr><tr><td><code>STEP_HEIGHT</code></td><td>0.6</td></tr><tr><td><code>GRAVITY</code></td><td>a multiplier of the dimension's, below 0 floats up</td></tr><tr><td><code>KNOCKBACK_RESISTANCE</code></td><td></td></tr><tr><td><code>ATTACK_DAMAGE</code></td><td>its own melee damage, what it holds adding to it</td></tr><tr><td><code>CRIT_DAMAGE</code></td><td>1.5</td></tr><tr><td><code>ATTACK_KNOCKBACK</code>, <code>SWEEPING_DAMAGE_RATIO</code></td><td></td></tr><tr><td><code>HURT_COOLDOWN</code></td><td>ticks of grace after a hit (10)</td></tr><tr><td><code>DAMAGE_RESISTANCE</code>, <code>FIRE_RESISTANCE</code></td><td>shares taken off</td></tr><tr><td><code>BURNING_TIME</code></td><td></td></tr><tr><td><code>SUBMERGED_MINING_SPEED</code>, <code>AIRBORNE_MINING_SPEED</code></td><td>0.2 each</td></tr><tr><td><code>SWIM_SPEED</code>, <code>FLYING_SPEED</code></td><td>multipliers, 1; flying goes on top of a player's own wheel speed</td></tr><tr><td><code>AIR_CONTROL</code></td><td>how well it steers in the air</td></tr><tr><td><code>SLIPPERINESS</code></td><td>skates on any ground</td></tr><tr><td><code>CLIMB_SPEED</code></td><td>ladders</td></tr><tr><td><code>CAN_FLY</code></td><td>1 or more flies, 1 in creative: a ring of flight is a modifier</td></tr><tr><td><code>CAN_SPRINT</code></td><td></td></tr></tbody></table>
+<section class="dsec" id="making-your-own"><h2><button class="fold" aria-expanded="true">Making your own</button><a class="anchor" href="#making-your-own">#</a></h2><div class="sec-body">
+<p>Attributes are chains with a base: <code>r.attribute(&amp;MANA, 100.0, 0.0, 1000.0)</code>. What things give them is a step with a number, a modifier: <code>Modifier::add</code>, <code>mul</code>, <code>set</code> (in <code>OVERRIDE</code> unless <code>.phase(..)</code> says; <code>FINAL</code> still comes after), <code>percent</code> (vanilla's percents, which add up: speed and slowness are +5%, not 1.2 x 0.85), and <code>Modifier::step(&amp;A, &amp;MY_STEP, 2.0)</code> runs a step of yours (<code>r.step(&amp;MY_STEP).run(..)</code> without <code>.on(..)</code>) with 2.0 as <code>m.arg</code>. <code>w.attribute_add_modifier(id, "spell", &amp;Modifier::mul(&amp;attribute::MOVEMENT_SPEED, 0.5), 200)</code> puts one on an entity for ten seconds, saved with it.</p>
+</div></section>
+<section class="dsec" id="modifiers-that-come-with-things"><h2><button class="fold" aria-expanded="true">Modifiers that come with things</button><a class="anchor" href="#modifiers-that-come-with-things">#</a></h2><div class="sec-body">
+<p>Modifiers also come with things, kept up by the engine: <code>r.item(&amp;BOOTS).modifier(Modifier::add(&amp;attribute::MOVEMENT_SPEED, 0.2).worn())</code> while worn (without <code>.worn()</code>: while in the main hand), <code>r.pose(&amp;SIT).modifier(..)</code> while in that pose, and <code>r.edit(&amp;PLAYER).modifier(Modifier::add(&amp;attribute::CAN_SPRINT, -1.0).when(&amp;HUNGRY))</code> while a condition holds.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/details/attributes.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>

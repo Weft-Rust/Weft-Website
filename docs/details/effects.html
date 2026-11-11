@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Status effects and potions - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group" open><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="liquids.html">Liquids</a><a class="current" aria-current="page" href="effects.html">Status effects and potions</a><a href="recipes-loot.html">Recipes and loot</a><a href="world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a href="editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="conditions.html">Conditions</a><a href="attributes.html">Attributes and modifiers</a><a href="poses-and-modes.html">Poses and game modes</a><a href="commands.html">Commands</a><a href="text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="world-blocks.html">Blocks in the world</a><a href="world-entities.html">Entities in the world</a><a href="hitboxes.html">Raycasts and hitboxes</a><a href="particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="../reference/index.html">All reference pages</a><a href="../reference/blocks.html">Blocks</a><a href="../reference/client.html">Client</a><a href="../reference/commands.html">Commands</a><a href="../reference/effects.html">Particles and effects</a><a href="../reference/entities.html">Entities</a><a href="../reference/events.html">Events and steps</a><a href="../reference/items.html">Items</a><a href="../reference/recipes.html">Recipes and loot</a><a href="../reference/registration.html">Registration</a><a href="../reference/ui.html">UI</a><a href="../reference/world.html">World</a><a href="../reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Status effects and potions</h1>
+<section class="dsec" id="status-effects"><h2><button class="fold" aria-expanded="true">Status effects</button><a class="anchor" href="#status-effects">#</a></h2><div class="sec-body">
+<p>A status effect is a few attribute modifiers and hazards with an icon, nothing more: <code>r.entity_effect(&amp;SPEED).icon("mob_effect/speed").color(0x33EBFF).beneficial().modifier(Modifier::percent(&amp;attribute::MOVEMENT_SPEED, 0.2))</code>. The icon (18 pixels square, <code>textures/mob_effect/speed.png</code> here) puts it on the HUD and in the list beside the inventory, named <code>effect.&lt;namespace&gt;.&lt;name&gt;</code> in lang; the color gives the swirls everyone sees around who has it. Each modifier runs once a level and each hazard's damage goes times the level, so speed II is +40%; <code>modifier_at(level, ..)</code> and <code>hazard_at(level, ..)</code> give one level its own instead (mining fatigue's steep steps, poison hurting twice as often a level), for that attribute only, and the levels past the highest given go as that one. A <code>Modifier::set</code> sets the same at every level. <code>.on_tick(|t| for (id, level) in t.iter() { .. })</code> is code every tick with everyone who has it (your own levitation, a mana drain). <code>actions::EFFECT</code> asks before one takes hold and tells after, <code>EFFECT_ENDED</code> when it ran out or was taken off, and a kind tagged <code>immune_effect/base:poison</code> never takes it (base's undead). A hazard with negative damage heals (regeneration), <code>.instant()</code> makes an effect act once when given (healing), <code>.screen(&amp;SHADER)</code> lays a <code>shaders/post</code> shader over what its player sees (blindness, nausea), <code>.hides()</code> keeps its entity from being drawn for others (invisibility). <code>w.entity_effect(id, &amp;SPEED, level, ticks)</code> gives one (<code>abi::INFINITE_TICKS</code> for good, shown as infinity), <code>w.effects(id)</code> lists them, <code>/effect give @s base:speed 30 2</code> (or <code>infinite</code> for the seconds) and <code>/effect clear @s</code> do the same from the chat. They are saved with the entity, by name and with the ticks left, go with it to other dimensions and end when it dies. Base has vanilla's, <code>base::effects</code>.</p>
+</div></section>
+<section class="dsec" id="potions"><h2><button class="fold" aria-expanded="true">Potions</button><a class="anchor" href="#potions">#</a></h2><div class="sec-body">
+<p>A potion is an item and nothing else: <code>r.item(&amp;SWIFTNESS).use_ticks(32).gives_effect(&amp;SPEED, 1, 180.0).remainder(&amp;GLASS_BOTTLE)</code> is drunk in 32 ticks, gives speed for three minutes and leaves the bottle (<code>f32::INFINITY</code> seconds: for good). With an <code>on_use</code> of its own (food eaten) it gives them when that use goes through: a golden apple.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/details/effects.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World API - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../assets/icon.png">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../docs.css">
+</head>
+<body class="docs" data-root="../docs/">
+<header class="bar">
+  <a class="bar-name" href="../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="blocks.html">Blocks</a><a href="items.html">Items</a><a href="entities.html">Entities</a><a href="details/liquids.html">Liquids</a><a href="details/effects.html">Status effects and potions</a><a href="details/recipes-loot.html">Recipes and loot</a><a href="details/world-content.html">World content</a><a href="block_entities.html">Block entities guide</a><a href="registration.html">Registration guide</a><a href="details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="events.html">Events, chains and questions</a><a href="details/conditions.html">Conditions</a><a href="details/attributes.html">Attributes and modifiers</a><a href="details/poses-and-modes.html">Poses and game modes</a><a href="details/commands.html">Commands</a><a href="details/text.html">Text on the screen</a></details><details class="group" open><summary>World from code</summary><a class="current" aria-current="page" href="world-api.html">World API</a><a href="details/world-blocks.html">Blocks in the world</a><a href="details/world-entities.html">Entities in the world</a><a href="details/hitboxes.html">Raycasts and hitboxes</a><a href="details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="client.html">Client side</a><a href="ui.html">UI guide</a><a href="details/camera.html">Camera modes</a><a href="models.html">Models and animations guide</a><a href="shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="textures.html">Textures guide</a><a href="ctm.html">CTM guide</a><a href="sky.html">Sky guide</a><a href="resourcepacks.html">Resource packs guide</a><a href="localization.html">Localization guide</a><a href="redstone.html">redstone.md</a><a href="worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="reference/index.html">All reference pages</a><a href="reference/blocks.html">Blocks</a><a href="reference/client.html">Client</a><a href="reference/commands.html">Commands</a><a href="reference/effects.html">Particles and effects</a><a href="reference/entities.html">Entities</a><a href="reference/events.html">Events and steps</a><a href="reference/items.html">Items</a><a href="reference/recipes.html">Recipes and loot</a><a href="reference/registration.html">Registration</a><a href="reference/ui.html">UI</a><a href="reference/world.html">World</a><a href="reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>World API</h1><nav class="toc"><span>On this page</span><a href="#seeds">Seeds</a><a href="#actions">Actions</a><a href="#stacks-and-inventories">Stacks and inventories</a><a href="#game-rules">Game rules</a><a href="#gizmos">Gizmos</a><a href="#plain-helpers">Plain helpers</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>Positions come back as <code>BlockPos</code> (a block, <code>x</code>, <code>y</code>, <code>z</code> whole numbers) and <code>Vec3</code> (a point or a speed, in blocks); <code>p.offset(0, 1, 0)</code>, <code>p.above()</code>, <code>p.center()</code> and <code>v.block()</code> move between them. Anything that takes a position takes a plain array too: <code>w.set_block([x, y + 1, z], s)</code>.</p>
+<p>Inside any callback you get a <code>World</code> (<code>w</code>). What it can do is grouped by what it works on:</p>
+<table><thead><tr><th>Page</th><th>What is in it</th></tr></thead><tbody><tr><td><a href="details/world-blocks.html">Blocks</a></td><td>reading and changing blocks, <code>fill</code> with shapes</td></tr><tr><td><a href="details/world-entities.html">Entities</a></td><td>spawning, finding, walking, <code>entity_modify</code></td></tr><tr><td><a href="details/attributes.html">Attributes</a></td><td>speed, reach, fall damage and the rest, modifiers that come with things</td></tr><tr><td><a href="details/hitboxes.html">Raycasts and hitboxes</a></td><td>what a line hits first, parts of a body</td></tr><tr><td><a href="details/conditions.html">Conditions</a></td><td>the predicate language shared by music, loot, spawning, poses</td></tr><tr><td><a href="details/poses-and-modes.html">Poses and game modes</a></td><td></td></tr><tr><td><a href="details/particles-sounds.html">Particles and sounds</a></td><td></td></tr><tr><td><a href="events.html">Events, chains and questions</a></td><td>hooking into what the game does</td></tr><tr><td><a href="details/text.html">Text</a>, <a href="details/commands.html">commands</a></td><td></td></tr></tbody></table>
+<section class="dsec" id="seeds"><h2><button class="fold" aria-expanded="true">Seeds</button><a class="anchor" href="#seeds">#</a></h2><div class="sec-body">
+<p>The world's seed (<code>seed</code>, and <code>seed_at(pos)</code>, <code>seed_of_cube(pos)</code> for a number that belongs to a place: what a chest holds when first opened, a villager's trades)</p>
+</div></section>
+<section class="dsec" id="actions"><h2><button class="fold" aria-expanded="true">Actions</button><a class="anchor" href="#actions">#</a></h2><div class="sec-body">
+<p>What happens in the world comes as actions, a question before and an event after under one handle: <code>r.before_event(&amp;actions::DIE, ..)</code> is a totem (denied, it lives on with one health), <code>r.on_event(&amp;actions::INTERACT_ENTITY, ..)</code> hears every right click on an entity. A mod's own is <code>static WRENCH: Action&lt;Wrenched&gt; = Action::named("wrench")</code>, and <code>w.act(&amp;WRENCH, &amp;query, value)</code> asks, then tells everyone if the answer is yes</p>
+</div></section>
+<section class="dsec" id="stacks-and-inventories"><h2><button class="fold" aria-expanded="true">Stacks and inventories</button><a class="anchor" href="#stacks-and-inventories">#</a></h2><div class="sec-body">
+<p>For stacks, <code>s.add_wear(1)</code> wears one down, and in a block entity's tick <code>output.room_for(result)</code> and <code>output.merged(result, n)</code> are what an output slot takes</p>
+<p>Inventories (<code>inventory(h).get/set/insert</code>, <code>inventory(h).group("fuel")</code>), where <code>h</code> is an entity id, a block position or <code>Holder::held(player, slot)</code> for a backpack, or <code>STORAGE.of(h)</code> for a storage it carries (<code>r.storage(&amp;S, slots)</code>, an ender chest's slots in every player); a player's by the groups its inventory was declared with (<code>r.player_slots().group("hotbar", Slots::row(9).hotbar())..</code>, the mod loaded last wins), <code>core:equipment</code> for all equipment slots</p>
+</div></section>
+<section class="dsec" id="game-rules"><h2><button class="fold" aria-expanded="true">Game rules</button><a class="anchor" href="#game-rules">#</a></h2><div class="sec-body">
+<p>Game rules: settings of the world, <code>r.config(&amp;HARD_MODE).bool(false).world()</code>, read with <code>HARD_MODE.get()</code>, changed with <code>/rule hard_mode 1</code> or in World Rules (when the world is made, and in game for whoever may <code>/rule</code>). What is the same for every player is a rule, what one player has apart is an attribute: <code>r.attribute(&amp;THIRST_RATE, 1.0, 0.0, 10.0).rule()</code> makes the rule <code>mymod:thirst_rate</code> the base of it for players and every kind that doesn't set its own, and <code>/attribute mymod:thirst_rate 2</code> (a <code>Modifier::set</code>, at the end of the chain) sets one entity's. The engine's are <code>core:max_health</code>, <code>core:keep_inventory</code>, <code>core:mob_spawning</code>, <code>core:max_entity_cramming</code> (more than this many pushing on one hurt it, 24; 0 never), <code>core:lives</code> (deaths before going on as a spectator, 1 for hardcore), <code>core:rules_locked</code>, and a <code>core:damage.&lt;cause&gt;</code> for every damage cause, yours too (<code>core:damage.mymod.radiation</code>), to turn it off</p>
+</div></section>
+<section class="dsec" id="gizmos"><h2><button class="fold" aria-expanded="true">Gizmos</button><a class="anchor" href="#gizmos">#</a></h2><div class="sec-body">
+<p>Gizmos for debugging (<code>w.draw_line/box/fill/shape/text(Some(&amp;GROUP), ..)</code>, seen while a player shows the group, or <code>None</code> for always; <code>.ticks(n)</code> keeps the server's longer, a client's last a frame)</p>
+</div></section>
+<section class="dsec" id="plain-helpers"><h2><button class="fold" aria-expanded="true">Plain helpers</button><a class="anchor" href="#plain-helpers">#</a></h2><div class="sec-body">
+<p>And a few plain helpers: <code>block_center(p)</code>, <code>block_floor(p)</code>, <code>block_pos_of(pos)</code>, <code>st.eye()</code>, <code>yaw_toward(from, to)</code>, <code>yaw_dir(yaw)</code>, <code>look_dir(yaw, pitch)</code>, <code>ratio(a, b)</code>. <code>EntityState</code>'s yaw and pitch are radians; what you pass to the API (<code>ModelPart::rotation</code>, <code>set_pose</code> facing, <code>Client::set_look</code>) is in degrees</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/world-api.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="./search-index.js"></script>
+<script src="../docs.js"></script>
+</body>
+</html>

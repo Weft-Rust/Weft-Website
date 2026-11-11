@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Particles and effects reference - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="../details/liquids.html">Liquids</a><a href="../details/effects.html">Status effects and potions</a><a href="../details/recipes-loot.html">Recipes and loot</a><a href="../details/world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a href="../details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="../details/conditions.html">Conditions</a><a href="../details/attributes.html">Attributes and modifiers</a><a href="../details/poses-and-modes.html">Poses and game modes</a><a href="../details/commands.html">Commands</a><a href="../details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="../details/world-blocks.html">Blocks in the world</a><a href="../details/world-entities.html">Entities in the world</a><a href="../details/hitboxes.html">Raycasts and hitboxes</a><a href="../details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="../details/camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group" open><summary>Reference</summary><a href="index.html">All reference pages</a><a href="blocks.html">Blocks</a><a href="client.html">Client</a><a href="commands.html">Commands</a><a class="current" aria-current="page" href="effects.html">Particles and effects</a><a href="entities.html">Entities</a><a href="events.html">Events and steps</a><a href="items.html">Items</a><a href="recipes.html">Recipes and loot</a><a href="registration.html">Registration</a><a href="ui.html">UI</a><a href="world.html">World</a><a href="worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Particles and effects reference</h1><nav class="toc"><span>On this page</span><a href="#burst">Burst</a><a href="#client">Client</a><a href="#conditionctx">ConditionCtx</a><a href="#musicbuilder">MusicBuilder</a><a href="#particlebuilder">ParticleBuilder</a><a href="#playsound">PlaySound</a><a href="#soundbuilder">SoundBuilder</a><a href="#then">Then</a><a href="#when">When</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>Particles, bursts and what the GPU does with them.</p>
+<section class="dsec" id="burst"><h2><button class="fold" aria-expanded="true">Burst</button><a class="anchor" href="#burst">#</a></h2><div class="sec-body">
+<p>Particles sent when this is dropped: <code>w.spawn_particles(&amp;SPARK, pos).count(10).speed(1.5)</code>.</p>
+<ul>
+<li><a id="Burst-to"></a><code>.to(who: impl Into&lt;crate::Who&gt;)</code><span class="d">For whom, of the players on the server (those near it unless said). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L373">source</a></li>
+<li><a id="Burst-area"></a><code>.area(shape: &amp;crate::Shape)</code><span class="d">The particles start anywhere inside <code>shape</code> (a ring, a shell, a magic circle) instead of a box around the position; <code>outward</code> sends them away from the position. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L379">source</a></li>
+<li><a id="Burst-count"></a><code>.count(n: u32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L383">source</a></li>
+<li><a id="Burst-spread"></a><code>.spread(s: f32)</code><span class="d">Each particle starts up to this far from the position on every axis. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L388">source</a></li>
+<li><a id="Burst-spread_box"></a><code>.spread_box(s: impl Into&lt;Vec3&gt;)</code><span class="d"><code>spread</code> of its own on each axis: a flat sheet, a column. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L393">source</a></li>
+<li><a id="Burst-velocity"></a><code>.velocity(v: impl Into&lt;Vec3&gt;)</code><span class="d">Starting velocity, blocks per second. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L398">source</a></li>
+<li><a id="Burst-speed"></a><code>.speed(s: f32)</code><span class="d">Random extra velocity up to this, in any direction. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L403">source</a></li>
+<li><a id="Burst-color"></a><code>.color(rgb: u32)</code><span class="d">0xRRGGBB the kind's color is multiplied by: one white kind in any color. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L408">source</a></li>
+<li><a id="Burst-outward"></a><code>.outward(mut self)</code><span class="d">Each flies away from the middle of the burst, more or less, like the pieces of a broken block. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L413">source</a></li>
+<li><a id="Burst-block"></a><code>.block(state: u32)</code><span class="d">Block state the textureless kinds (block dust) take their texture from. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L418">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="client"><h2><button class="fold" aria-expanded="true">Client</button><a class="anchor" href="#client">#</a></h2><div class="sec-body">
+<ul>
+<li><a id="Client-post_effect"></a><code>.post_effect(effect: &amp;crate::Shader, strength: f32) -&gt; bool</code><span class="d">Turns a screen effect (<code>shaders/post/&lt;name&gt;.wgsl</code>) on at <code>strength</code> (0 turns it off). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L470">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="conditionctx"><h2><button class="fold" aria-expanded="true">ConditionCtx</button><a class="anchor" href="#conditionctx">#</a></h2><div class="sec-body">
+<p>What a condition is asked about.</p>
+<ul>
+<li><a id="ConditionCtx-world"></a><code>.world() -&gt; Option&lt;World&gt;</code><span class="d">The server's world, when the server asks (loot, spawning). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L340">source</a></li>
+<li><a id="ConditionCtx-client"></a><code>.client() -&gt; Option&lt;ClientView&gt;</code><span class="d">The client, when it asks (music, text): its own player. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L344">source</a></li>
+<li><a id="ConditionCtx-pos"></a><code>.pos() -&gt; Vec3</code><span class="d">The spot, the block, the player. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L348">source</a></li>
+<li><a id="ConditionCtx-entity"></a><code>.entity() -&gt; u64</code><span class="d">Who it is about (the killer or breaker for loot), 0 for nobody. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L352">source</a></li>
+<li><a id="ConditionCtx-arg"></a><code>.arg() -&gt; &amp;str</code><span class="d">What is between its parentheses where it is used, empty for none. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L356">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="musicbuilder"><h2><button class="fold" aria-expanded="true">MusicBuilder</button><a class="anchor" href="#musicbuilder">#</a></h2><div class="sec-body">
+<p>Background music being registered (<code>Registry::music</code>): after a quiet while, a track of the first music whose conditions hold.</p>
+<ul>
+<li><a id="MusicBuilder-tracks"></a><code>.tracks(names: &amp;[&amp;str])</code><span class="d">Files streamed (<code>sounds/&lt;name&gt;.ogg|.wav</code>), relative to this mod. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L542">source</a></li>
+<li><a id="MusicBuilder-dimension"></a><code>.dimension(dimension: &amp;crate::Dimension)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L546">source</a></li>
+<li><a id="MusicBuilder-when"></a><code>.when(c: impl Into&lt;crate::Cond&gt;)</code><span class="d">Plays only while this holds (<code>&amp;conditions::NIGHT</code>, a mod's own, any <code>Cond</code>); call again for more, all of which have to hold. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L551">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="particlebuilder"><h2><button class="fold" aria-expanded="true">ParticleBuilder</button><a class="anchor" href="#particlebuilder">#</a></h2><div class="sec-body">
+<p>A particle kind being registered (<code>Registry::particle</code>): half a second to a second, a tenth to a fifth of a block, white, without gravity, unless told otherwise.</p>
+<ul>
+<li><a id="ParticleBuilder-on_land"></a><code>.on_land(when: When, then: Then)</code><span class="d">What landing on a block does where <code>when</code> holds; rules are tried in order, and without one that holds it lies there. Any landing or hitting rule makes it stop on blocks. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L98">source</a></li>
+<li><a id="ParticleBuilder-on_wall"></a><code>.on_wall(when: When, then: Then)</code><span class="d">Running into a block's side; without a rule it slides along. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L102">source</a></li>
+<li><a id="ParticleBuilder-on_ceiling"></a><code>.on_ceiling(when: When, then: Then)</code><span class="d">Running into a block's underside; without a rule it stops. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L106">source</a></li>
+<li><a id="ParticleBuilder-on_enter_liquid"></a><code>.on_enter_liquid(when: When, then: Then)</code><span class="d">Going into a liquid (<code>when</code> asks about that liquid). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L110">source</a></li>
+<li><a id="ParticleBuilder-on_leave_liquid"></a><code>.on_leave_liquid(when: When, then: Then)</code><span class="d">Coming out of one: a bubble pops. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L114">source</a></li>
+<li><a id="ParticleBuilder-on_expire"></a><code>.on_expire(when: When, then: Then)</code><span class="d">The end of its life: by default the end of it, <code>Then::turn_into</code> goes on as another kind (a spark dying into smoke). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L119">source</a></li>
+<li><a id="ParticleBuilder-textures"></a><code>.textures(names: &amp;[&amp;str])</code><span class="d">Frames over its life; relative names are under <code>particle/</code>. None: block dust (pieces of the burst's block). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L124">source</a></li>
+<li><a id="ParticleBuilder-life"></a><code>.life(min: f32, max: f32)</code><span class="d">Seconds, picked between the two. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L129">source</a></li>
+<li><a id="ParticleBuilder-size"></a><code>.size(min: f32, max: f32)</code><span class="d">Edge length in blocks, picked between the two. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L133">source</a></li>
+<li><a id="ParticleBuilder-gravity"></a><code>.gravity(g: f32)</code><span class="d">Blocks per second squared, pulling down (negative rises). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L137">source</a></li>
+<li><a id="ParticleBuilder-drag"></a><code>.drag(d: f32)</code><span class="d">Fraction of speed kept per tick (vanilla 0.98). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L141">source</a></li>
+<li><a id="ParticleBuilder-color"></a><code>.color(start: u32, end: u32)</code><span class="d">0xRRGGBBAA at birth and at the end of its life. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L145">source</a></li>
+<li><a id="ParticleBuilder-colliding"></a><code>.colliding()</code><span class="d">Stops on blocks: lies where it lands, slides along walls. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L149">source</a></li>
+<li><a id="ParticleBuilder-fullbright"></a><code>.fullbright()</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L152">source</a></li>
+<li><a id="ParticleBuilder-translucent"></a><code>.translucent()</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L155">source</a></li>
+<li><a id="ParticleBuilder-shrinking"></a><code>.shrinking()</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L158">source</a></li>
+<li><a id="ParticleBuilder-shader"></a><code>.shader(shader: &amp;crate::Shader)</code><span class="d">Colors it with <code>shaders/particle/&lt;name&gt;.wgsl</code> (<code>fn shade(p: ParticleFrag) -&gt; vec4&lt;f32&gt;</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L162">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="playsound"><h2><button class="fold" aria-expanded="true">PlaySound</button><a class="anchor" href="#playsound">#</a></h2><div class="sec-body">
+<p>A sound about to play (<code>Output::play_sound</code>).</p>
+<ul>
+<li><a id="PlaySound-to"></a><code>.to(who: impl Into&lt;crate::Who&gt;)</code><span class="d">Who hears it, of the players on the server (those in its range unless said). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L599">source</a></li>
+<li><a id="PlaySound-pitch"></a><code>.pitch(pitch: f32)</code><span class="d">Playback speed (1 = as recorded, 2 an octave up) instead of one picked from the sound's range: a note block's <code>2f32.powf((key - 12) as f32 / 12.0)</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L605">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="soundbuilder"><h2><button class="fold" aria-expanded="true">SoundBuilder</button><a class="anchor" href="#soundbuilder">#</a></h2><div class="sec-body">
+<p>A sound event being registered (<code>Registry::sound</code>): at volume 1 and as recorded, heard 16 blocks away, a block sound, unless told otherwise.</p>
+<ul>
+<li><a id="SoundBuilder-files"></a><code>.files(names: &amp;[&amp;str])</code><span class="d">Variants picked at random: <code>sounds/&lt;name&gt;.ogg</code> or <code>.wav</code>, relative to this mod. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L490">source</a></li>
+<li><a id="SoundBuilder-category"></a><code>.category(category: &amp;SoundCategory)</code><span class="d">Category for its volume setting: the engine's (<code>core:creatures</code> ...) or one registered with <code>Registry::sound_category</code> (any mod's). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L496">source</a></li>
+<li><a id="SoundBuilder-volume"></a><code>.volume(v: f32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L499">source</a></li>
+<li><a id="SoundBuilder-pitch"></a><code>.pitch(min: f32, max: f32)</code><span class="d">Playback speed picked between the two. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L503">source</a></li>
+<li><a id="SoundBuilder-range"></a><code>.range(blocks: f32)</code><span class="d">Blocks away it is still heard. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L507">source</a></li>
+<li><a id="SoundBuilder-falloff"></a><code>.falloff(full_within: f32, curve: Falloff)</code><span class="d">Full volume within <code>full_within</code> blocks, then fading to nothing at <code>range</code> along <code>curve</code> (by default within 1 block, evenly). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L512">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="then"><h2><button class="fold" aria-expanded="true">Then</button><a class="anchor" href="#then">#</a></h2><div class="sec-body">
+<p>What a particle's rule does.</p>
+<ul>
+<li><a id="Then-die"></a><code>.die() -&gt; Then</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L65">source</a></li>
+<li><a id="Then-stop"></a><code>.stop() -&gt; Then</code><span class="d">Stays where it is for the rest of its life. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L69">source</a></li>
+<li><a id="Then-slide"></a><code>.slide() -&gt; Then</code><span class="d">Keeps going along what it hit. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L73">source</a></li>
+<li><a id="Then-bounce"></a><code>.bounce(share: f32) -&gt; Then</code><span class="d">Comes back off what it hit with <code>share</code> of its speed. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L77">source</a></li>
+<li><a id="Then-turn_into"></a><code>.turn_into(kind: &amp;Particle) -&gt; Then</code><span class="d">Becomes a particle of <code>kind</code> where it is, its speed kept and its life starting anew; <code>kind</code> must be drawn the same way (<code>translucent</code> or not). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L82">source</a></li>
+<li><a id="Then-turn_into_still"></a><code>.turn_into_still(kind: &amp;Particle) -&gt; Then</code><span class="d"><code>turn_into</code>, standing still: a ripple where a drop fell. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L86">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="when"><h2><button class="fold" aria-expanded="true">When</button><a class="anchor" href="#when">#</a></h2><div class="sec-body">
+<p>Where a particle's rule holds: the block it hit, or the one it is in.</p>
+<ul>
+<li><a id="When-any"></a><code>.any() -&gt; When</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L41">source</a></li>
+<li><a id="When-liquid"></a><code>.liquid() -&gt; When</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L44">source</a></li>
+<li><a id="When-tag"></a><code>.tag(tag: &amp;str) -&gt; When</code><span class="d">A block with <code>tag</code> (<code>water</code>, <code>lava</code>, a mod's own). At most 5 different tags over all particle kinds of the game: the GPU keeps them with each block. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/effects.rs#L49">source</a></li>
+</ul>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/reference/effects.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>

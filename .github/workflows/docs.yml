@@ -1,0 +1,45 @@
+name: docs
+
+# The docs section is built from the game repository's master: docs/*.md and the doc comments of
+# crates/sdk. It runs when the game repository says so (see its site-docs workflow), every half hour
+# as a fallback, and by hand.
+on:
+  repository_dispatch:
+    types: [docs-changed]
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: docs
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: Weft-Rust/Weft
+          ref: master
+          path: weft
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build docs
+        run: python tools/docs/build.py weft .
+      - name: Commit what changed
+        run: |
+          git add docs docs.css docs.js
+          if git diff --cached --quiet; then
+            echo "docs are up to date"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "docs from Weft $(git -C weft rev-parse --short HEAD)"
+          git push

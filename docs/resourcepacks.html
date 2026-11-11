@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resource packs guide - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../assets/icon.png">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../docs.css">
+</head>
+<body class="docs" data-root="../docs/">
+<header class="bar">
+  <a class="bar-name" href="../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="blocks.html">Blocks</a><a href="items.html">Items</a><a href="entities.html">Entities</a><a href="details/liquids.html">Liquids</a><a href="details/effects.html">Status effects and potions</a><a href="details/recipes-loot.html">Recipes and loot</a><a href="details/world-content.html">World content</a><a href="block_entities.html">Block entities guide</a><a href="registration.html">Registration guide</a><a href="details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="events.html">Events, chains and questions</a><a href="details/conditions.html">Conditions</a><a href="details/attributes.html">Attributes and modifiers</a><a href="details/poses-and-modes.html">Poses and game modes</a><a href="details/commands.html">Commands</a><a href="details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="world-api.html">World API</a><a href="details/world-blocks.html">Blocks in the world</a><a href="details/world-entities.html">Entities in the world</a><a href="details/hitboxes.html">Raycasts and hitboxes</a><a href="details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="client.html">Client side</a><a href="ui.html">UI guide</a><a href="details/camera.html">Camera modes</a><a href="models.html">Models and animations guide</a><a href="shaders.html">Shaders guide</a></details><details class="group" open><summary>Assets</summary><a href="textures.html">Textures guide</a><a href="ctm.html">CTM guide</a><a href="sky.html">Sky guide</a><a class="current" aria-current="page" href="resourcepacks.html">Resource packs guide</a><a href="localization.html">Localization guide</a><a href="redstone.html">redstone.md</a><a href="worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="reference/index.html">All reference pages</a><a href="reference/blocks.html">Blocks</a><a href="reference/client.html">Client</a><a href="reference/commands.html">Commands</a><a href="reference/effects.html">Particles and effects</a><a href="reference/entities.html">Entities</a><a href="reference/events.html">Events and steps</a><a href="reference/items.html">Items</a><a href="reference/recipes.html">Recipes and loot</a><a href="reference/registration.html">Registration</a><a href="reference/ui.html">UI</a><a href="reference/world.html">World</a><a href="reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Resource packs guide</h1><nav class="toc"><span>On this page</span><a href="#note">Note</a><a href="#making-a-pack">Making a pack</a><a href="#what-can-be-replaced">What can be replaced</a><a href="#order-of-packs">Order of packs</a><a href="#shader-packs">Shader packs</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>A resource pack changes how the game looks without touching any code, and it can do that for the base game or for any single mod.<br>It is just a folder of files, laid out like a mod's assets.</p>
+<section class="dsec" id="note"><h2><button class="fold" aria-expanded="true">Note</button><a class="anchor" href="#note">#</a></h2><div class="sec-body">
+<p>A pack replaces files by their path, so what goes where is the same as in a mod's <code>assets</code> folder, with one extra level in front for the mod's id. Players turn packs on in <strong>Settings &gt; Resource Packs</strong>, which also has an <strong>Open Folder</strong> button.<br>This guide is about making a pack. How a mod lays out its own files is in the <a href="index.html#names-and-paths">cheat sheet</a>.</p>
+</div></section>
+<section class="dsec" id="making-a-pack"><h2><button class="fold" aria-expanded="true">Making a pack</button><a class="anchor" href="#making-a-pack">#</a></h2><div class="sec-body">
+<p>A pack is a folder in <code>resourcepacks/</code> next to the game, and the folder's name is its id.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">resourcepacks/
+    my_pack/
+        pack.cfg
+        base/
+            textures/block/stone.png
+            lang/en_us.lang
+        examplemod/
+            textures/item/example_item.png</code></pre></div>
+<p>Every mod gets its own folder inside the pack, named by the mod's id and laid out exactly like that mod's <code>assets</code>. A file at the same path as the mod's own replaces it and everything else stays as the mod made it. A folder for a mod that isn't loaded is simply ignored, so one pack can cover as many mods as you like.</p>
+<p><code>pack.cfg</code> is optional and only names the pack in the list, with two <code>key = value</code> lines (<code>name</code> and <code>description</code>). Without it the folder's name is shown.<br>While you work, <strong>F3+T</strong> reloads the files, so there's no need to restart.</p>
+</div></section>
+<section class="dsec" id="what-can-be-replaced"><h2><button class="fold" aria-expanded="true">What can be replaced</button><a class="anchor" href="#what-can-be-replaced">#</a></h2><div class="sec-body">
+<p>Anything a mod keeps in <code>assets</code>, at the same path:</p>
+<table><thead><tr><th>files</th><th>what they change</th></tr></thead><tbody><tr><td><code>textures/block/</code>, <code>item/</code>, <code>entity/</code></td><td>blocks, items and mob skins. <code>_e</code> glow masks and <code>.anim</code> files go along, see the <a href="textures.html">textures guide</a></td></tr><tr><td><code>textures/gui/</code></td><td>windows, buttons and bars, with <code>.gui</code> files for how they stretch (<a href="ui.html#gui-textures">UI guide</a>)</td></tr><tr><td><code>textures/entity/armor/</code>, <code>textures/particle/</code></td><td>worn armor and particles</td></tr><tr><td><code>lang/en_us.lang</code></td><td>all text, <a href="localization.html">tooltips</a> included, and the named colors (<code>color.button = {#ffffff}</code>, <a href="ui.html#looks">UI guide</a>)</td></tr><tr><td><code>models/</code>, <code>animations/</code></td><td>block and item shapes (<code>models/block/</code>, <code>models/item/</code>, Java models) and mob models and keyframes (<a href="models.html">models guide</a>); a block's new shape is only drawn, its collision stays</td></tr><tr><td><code>shaders/</code> (<code>fx</code>, <code>gui</code>, <code>entity</code>, <code>block</code>, <code>sky</code>, <code>particle</code>, <code>post</code>)</td><td>the shader snippets (<a href="shaders.html">shaders guide</a>)</td></tr><tr><td><code>sounds/</code></td><td>sounds and music, <code>.ogg</code> or <code>.wav</code></td></tr><tr><td><code>&lt;texture&gt;/&lt;texture&gt;.ctm</code></td><td>connected textures, tiles beside it (<a href="ctm.html">CTM guide</a>)</td></tr></tbody></table>
+<p>Two things catch people out. First, files are replaced whole. Translations are the exception: a pack's <code>base/lang/en_us.lang</code> goes on top of base's, so it needs only the lines it changes (colors included). Second, the extra files that belong to a texture (<code>.anim</code>, <code>_e</code>) are taken from the same pack or mod as the picture itself. A texture with connected tiles is a folder (<code>glass/glass.ctm</code>, <code>glass/0.png</code>..): a pack replacing a tile keeps the mod's rules, a pack's plain <code>glass.png</code> turns them off.</p>
+<p>A pack can't add blocks, items or mobs, since those are code and so need a mod. What it can add is looks for things that already exist: connected tiles for a texture that had none (in the folder of the mod that owns it, like <code>my_pack/base/textures/block/glass/glass.ctm</code>, which a mod can't do for someone else's texture), or <code>_e</code> and <code>.anim</code> files for existing textures. Which pictures a block's face lays over each other is the mod's code; a pack replaces the pictures. Models too: any block can be redrawn, or <a href="ctm.html#models-as-tiles">varied by a <code>.ctm</code></a>.</p>
+</div></section>
+<section class="dsec" id="order-of-packs"><h2><button class="fold" aria-expanded="true">Order of packs</button><a class="anchor" href="#order-of-packs">#</a></h2><div class="sec-body">
+<p>Several packs can be on at once, and they stack. Drag a pack by its handle: over to the other list to turn it on or off, or up and down to change its place. The list reads <strong>Selected (top wins)</strong>: where two packs have the same file, the one higher up is used. A pack only needs the files it changes, so a small pack of textures can sit on top of a big one without copying anything.</p>
+<p>Packs are folders only, zip files aren't read.</p>
+</div></section>
+<section class="dsec" id="shader-packs"><h2><button class="fold" aria-expanded="true">Shader packs</button><a class="anchor" href="#shader-packs">#</a></h2><div class="sec-body">
+<p>A shader pack is a different thing: it replaces the engine's own shaders (blocks, mobs, particles, the interface) rather than assets. It lives in <code>shaderpacks/</code>, is picked in <strong>Settings &gt; Shader Packs</strong> and only one can be on at a time. Everything about it is in the <a href="shaders.html#shader-packs">shaders guide</a>.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/resourcepacks.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="./search-index.js"></script>
+<script src="../docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shaders guide - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../assets/icon.png">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../docs.css">
+</head>
+<body class="docs" data-root="../docs/">
+<header class="bar">
+  <a class="bar-name" href="../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="blocks.html">Blocks</a><a href="items.html">Items</a><a href="entities.html">Entities</a><a href="details/liquids.html">Liquids</a><a href="details/effects.html">Status effects and potions</a><a href="details/recipes-loot.html">Recipes and loot</a><a href="details/world-content.html">World content</a><a href="block_entities.html">Block entities guide</a><a href="registration.html">Registration guide</a><a href="details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="events.html">Events, chains and questions</a><a href="details/conditions.html">Conditions</a><a href="details/attributes.html">Attributes and modifiers</a><a href="details/poses-and-modes.html">Poses and game modes</a><a href="details/commands.html">Commands</a><a href="details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="world-api.html">World API</a><a href="details/world-blocks.html">Blocks in the world</a><a href="details/world-entities.html">Entities in the world</a><a href="details/hitboxes.html">Raycasts and hitboxes</a><a href="details/particles-sounds.html">Particles and sounds</a></details><details class="group" open><summary>Client</summary><a href="client.html">Client side</a><a href="ui.html">UI guide</a><a href="details/camera.html">Camera modes</a><a href="models.html">Models and animations guide</a><a class="current" aria-current="page" href="shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="textures.html">Textures guide</a><a href="ctm.html">CTM guide</a><a href="sky.html">Sky guide</a><a href="resourcepacks.html">Resource packs guide</a><a href="localization.html">Localization guide</a><a href="redstone.html">redstone.md</a><a href="worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="reference/index.html">All reference pages</a><a href="reference/blocks.html">Blocks</a><a href="reference/client.html">Client</a><a href="reference/commands.html">Commands</a><a href="reference/effects.html">Particles and effects</a><a href="reference/entities.html">Entities</a><a href="reference/events.html">Events and steps</a><a href="reference/items.html">Items</a><a href="reference/recipes.html">Recipes and loot</a><a href="reference/registration.html">Registration</a><a href="reference/ui.html">UI</a><a href="reference/world.html">World</a><a href="reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Shaders guide</h1><nav class="toc"><span>On this page</span><a href="#note">Note</a><a href="#quick-links">Quick links</a><a href="#snippets">Snippets</a><a href="#text-effects">Text effects</a><a href="#panels">Panels</a><a href="#entities">Entities</a><a href="#blocks">Blocks</a><a href="#particles">Particles</a><a href="#screen-effects">Screen effects</a><a href="#shader-packs">Shader packs</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>Small shader files can change how text, panels, mobs, particles and the whole screen look, and shader packs can replace the engine's own shaders altogether.<br>Everything is written in WGSL and shipped as assets, so a mod needs no engine changes and next to no code.</p>
+<section class="dsec" id="note"><h2><button class="fold" aria-expanded="true">Note</button><a class="anchor" href="#note">#</a></h2><div class="sec-body">
+<p>Examples to copy from, all in <code>mods/testmod/assets/shaders/</code>:</p>
+<ul>
+<li><code>fx/glitch.wgsl</code>: letters that jump sideways</li>
+<li><code>gui/circuit.wgsl</code>: a panel with pulses running along traces</li>
+<li><code>entity/ghost.wgsl</code>: a mob that breathes and has holes sweeping across it</li>
+<li><code>block/stripes.wgsl</code>: magenta bands sliding up a block</li>
+<li><code>particle/twinkle.wgsl</code>: sparks that flicker and shift color as they age</li>
+<li><code>post/dream.wgsl</code>: a screen effect that sways and warms the picture</li>
+</ul>
+<p>The engine's own text effects are in <code>crates/engine/assets/shaders/fx/</code>.</p>
+</div></section>
+<section class="dsec" id="quick-links"><h2><button class="fold" aria-expanded="true">Quick links</button><a class="anchor" href="#quick-links">#</a></h2><div class="sec-body">
+<p><a href="#snippets">snippets</a> | <a href="#text-effects">text effects</a> | <a href="#panels">panels</a> | <a href="#entities">entities</a> | <a href="#blocks">blocks</a> | <a href="#particles">particles</a> | <a href="#screen-effects">screen effects</a> | <a href="#shader-packs">shader packs</a></p>
+</div></section>
+<section class="dsec" id="snippets"><h2><button class="fold" aria-expanded="true">Snippets</button><a class="anchor" href="#snippets">#</a></h2><div class="sec-body">
+<p>A snippet is a file <code>shaders/&lt;kind&gt;/&lt;name&gt;.wgsl</code> in your mod, holding one function whose name depends on the kind. The engine puts all snippets of a kind into a single shader and picks one by number for each text, panel, mob or particle, so a hundred snippets don't cost a hundred shaders. Code names a snippet by a handle like anything else, <code>static GHOST: Shader = Shader::named("ghost");</code>, and the kind's folder is found from what uses it.</p>
+<table><thead><tr><th>kind</th><th>folder</th><th>function</th><th>used by</th></tr></thead><tbody><tr><td>text effects</td><td><code>shaders/fx/</code></td><td><code>fn effect(g: Glyph) -&gt; Glyph</code></td><td><code>{fx:mymod:name}</code> in a translation</td></tr><tr><td>panels</td><td><code>shaders/gui/</code></td><td><code>fn fill(p: GuiPixel) -&gt; vec4&lt;f32&gt;</code></td><td>a class's <code>.gui</code>: <code>shader = mymod:name</code></td></tr><tr><td>entities</td><td><code>shaders/entity/</code></td><td><code>fn shade(p: EntityPixel) -&gt; vec4&lt;f32&gt;</code></td><td><code>r.entity(..).shader(&amp;SHADER)</code></td></tr><tr><td>entity effects</td><td><code>shaders/entity_effect/</code></td><td><code>fn effect(p: EntityPixel, c: vec4&lt;f32&gt;, strength: f32) -&gt; vec4&lt;f32&gt;</code></td><td><code>r.entity_effect(&amp;E)</code>, then <code>w.entity_effect(id, &amp;E, level, ticks)</code></td></tr><tr><td>blocks</td><td><code>shaders/block/</code></td><td><code>fn shade(p: BlockPixel) -&gt; vec4&lt;f32&gt;</code></td><td><code>r.block(..).shader(&amp;SHADER)</code></td></tr><tr><td>particles</td><td><code>shaders/particle/</code></td><td><code>fn shade(p: ParticleFrag) -&gt; vec4&lt;f32&gt;</code></td><td><code>r.particle(..).shader(&amp;SHADER)</code></td></tr><tr><td>sky</td><td><code>shaders/sky/</code></td><td><code>fn shade(p: SkyPixel) -&gt; vec4&lt;f32&gt;</code></td><td><code>r.sky_body(..).shader(&amp;SHADER)</code>, see the <a href="sky.html#shaders">sky guide</a></td></tr><tr><td>screen effects</td><td><code>shaders/post/</code></td><td><code>fn apply(p: PostPixel) -&gt; vec4&lt;f32&gt;</code></td><td><code>client.post_effect(&amp;SHADER, strength)</code></td></tr></tbody></table>
+<p>The file name is the snippet's name, so <code>shaders/fx/glitch.wgsl</code> in <code>testmod</code> is <code>testmod:glitch</code>. Whatever a function can see is in the struct it takes, and all of them carry <code>time</code>, the seconds since the game started. A resource pack can replace a snippet the way it replaces a texture, and a mistake in one shows up in the log with the file and the error.</p>
+</div></section>
+<section class="dsec" id="text-effects"><h2><button class="fold" aria-expanded="true">Text effects</button><a class="anchor" href="#text-effects">#</a></h2><div class="sec-body">
+<p>An effect moves and tints each letter of the text between <code>{fx:mymod:name}</code> and <code>{/fx}</code>:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-wgsl">fn effect(g: Glyph) -&gt; Glyph {
+    var o = g;
+    let t = floor(g.time * 8.0);
+    let h = fract(sin(g.index * 91.7 + t * 13.1) * 43758.5453);
+    if h &gt; 0.8 {
+        o.offset.x = (h - 0.9) * 20.0 * g.scale;
+    }
+    return o;
+}</code></pre></div>
+<p><code>Glyph</code> has <code>offset</code> (pixels added to the letter's corner), <code>color</code> (linear, with alpha), <code>time</code>, <code>index</code> (the letter's number in its text, handy for waves), <code>corner</code> (which corner of the letter, 0 to 1 on each axis), <code>scale</code> (physical pixels per GUI pixel) and <code>shadow</code>, which is true for the dark copy drawn under the text. Leave the shadow's color alone, or it turns bright.</p>
+<p>The function runs for every corner of every letter, so it pays to keep it small. How to use the effects inside translations is in the <a href="localization.html#effects">tooltips guide</a>.</p>
+</div></section>
+<section class="dsec" id="panels"><h2><button class="fold" aria-expanded="true">Panels</button><a class="anchor" href="#panels">#</a></h2><div class="sec-body">
+<p>A class's <code>.gui</code> (next to its texture) can name a shader, and the panel is filled by it instead of the picture:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">shader = testmod:circuit</code></pre></div>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-wgsl">fn fill(p: GuiPixel) -&gt; vec4&lt;f32&gt; {
+    let edge = min(min(p.uv.x, 1.0 - p.uv.x) * p.size.x, min(p.uv.y, 1.0 - p.uv.y) * p.size.y);
+    let border = step(edge, 3.0);
+    return vec4(vec3(0.02) + vec3(0.25) * border, 0.97);
+}</code></pre></div>
+<p><code>GuiPixel</code> has <code>uv</code> (0 to 1 across the panel), <code>size</code> (in pixels), <code>color</code> (linear) and <code>time</code>. More on how classes look is in the <a href="ui.html#looks">UI guide</a>.</p>
+</div></section>
+<section class="dsec" id="entities"><h2><button class="fold" aria-expanded="true">Entities</button><a class="anchor" href="#entities">#</a></h2><div class="sec-body">
+<p>An entity shader colors the pixels of a mob. It takes over from the normal lit skin, so it also decides how light affects the mob:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-wgsl">fn shade(p: EntityPixel) -&gt; vec4&lt;f32&gt; {
+    let pulse = 0.75 + 0.25 * sin(p.time * 3.0);
+    let lit = max(p.light, vec3(0.35)) * pulse;
+    return vec4(p.albedo.rgb * lit, p.albedo.a);
+}</code></pre></div>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.entity(&amp;WISP).texture("wisp").model(model.uv_size(32, 16)).shader(&amp;GHOST);</code></pre></div>
+<p><code>EntityPixel</code> has <code>uv</code>, <code>albedo</code> (the skin's texel, linear, <code>a</code> is its alpha), <code>light</code> (a vec3 with shading and the glow mask already included) and <code>time</code>. A returned alpha under 0.5 cuts the pixel out, which is how the wisp gets its holes. The <code>_e</code> glow masks of the <a href="textures.html#emission">textures guide</a> are a separate and simpler way to make parts of a skin shine.</p>
+<p>An entity effect goes on top of whatever shaded a mob, for a while: it gets the color <code>c</code> and a <code>strength</code> (1 while it is on), and returns the new color. The engine's are effects too, <code>core:hurt</code> is the red a hit leaves, <code>core:flash</code> a white flash and <code>core:glow</code> lights a mob up whatever the light around (<code>entity_effects::GLOW</code>). <code>w.entity_effect(id, &amp;MY_EFFECT, 1, 40)</code> puts one on for everyone who sees it, players arriving later included, and one of a kind at a time: a new one replaces it, <code>0</code> ticks takes it off. <code>w.flash(id)</code> is the white one for two ticks.</p>
+</div></section>
+<section class="dsec" id="blocks"><h2><button class="fold" aria-expanded="true">Blocks</button><a class="anchor" href="#blocks">#</a></h2><div class="sec-body">
+<p>A block shader colors the pixels of a block's faces and takes over from the normal lighting the same way:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-wgsl">fn shade(p: BlockPixel) -&gt; vec4&lt;f32&gt; {
+    let band = step(0.5, fract(p.pos.y * 2.0 - p.time));
+    return vec4(mix(p.albedo.rgb * p.light, vec3(0.8, 0.05, 0.8), band * 0.7), p.albedo.a);
+}</code></pre></div>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;REINFORCED_STONE).shader(&amp;STRIPES);</code></pre></div>
+<p><code>BlockPixel</code> has <code>uv</code> (across the face), <code>albedo</code> (the texel with its overlay, linear), <code>light</code> (shading, AO, the biome tint and glow already in), <code>pos</code> (block coordinates of the pixel, handy for patterns that run across blocks) and <code>time</code>. Fog goes on top of what it returns. The shader goes with the block's textures, so two blocks sharing a texture share it.</p>
+</div></section>
+<section class="dsec" id="particles"><h2><button class="fold" aria-expanded="true">Particles</button><a class="anchor" href="#particles">#</a></h2><div class="sec-body">
+<p>A particle shader colors a particle before lighting and fog are applied:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-wgsl">fn shade(p: ParticleFrag) -&gt; vec4&lt;f32&gt; {
+    let flicker = 0.7 + 0.3 * sin(p.time * 30.0 + p.life * 20.0);
+    return vec4(p.albedo.rgb * flicker, p.albedo.a * p.color.a);
+}</code></pre></div>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static SPARK: Particle = Particle::named("spark");
+r.particle(&amp;SPARK).textures(&amp;["glint_0", "glint_1"]).life(0.3, 0.6).fullbright().shader(&amp;TWINKLE);</code></pre></div>
+<p><code>ParticleFrag</code> has <code>uv</code> (0 to 1 across the quad), <code>albedo</code> (the texture sample), <code>color</code> (the kind's color at this age, between the two you gave to <code>color(start, end)</code>), <code>life</code> (0 at birth, 1 at the end) and <code>time</code>.</p>
+<p>The rest of the builder is <code>life(min, max)</code> in seconds, <code>size(min, max)</code> in blocks, <code>gravity(g)</code> (negative rises), <code>drag(d)</code>, <code>colliding()</code>, <code>fullbright()</code>, <code>translucent()</code> and <code>shrinking()</code>. From the server, <code>world.spawn_particles(&amp;SPARK, pos).count(12).spread(0.4).speed(2.0)</code> makes them appear for everyone nearby. <code>r.edit(&amp;POOF)</code> with <code>static POOF: Particle = Particle::named("core:poof")</code> (or <code>replace</code>) changes how the engine's own smoke looks, <code>core:block</code> its block dust.</p>
+</div></section>
+<section class="dsec" id="screen-effects"><h2><button class="fold" aria-expanded="true">Screen effects</button><a class="anchor" href="#screen-effects">#</a></h2><div class="sec-body">
+<p>A screen effect works on the finished picture of the world, and fades in and out with a strength from 0 to 1:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-wgsl">fn apply(p: PostPixel) -&gt; vec4&lt;f32&gt; {
+    let wave = vec2(sin(p.uv.y * 18.0 + p.time * 2.0), 0.0) * 0.006 * p.strength;
+    let c = scene_at(p, p.uv + wave).rgb;
+    return vec4(c * mix(vec3(1.0), vec3(1.15, 1.0, 0.8), p.strength), 1.0);
+}</code></pre></div>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static DREAM: Key = Key::named("dream");
+static DREAM_EFFECT: Shader = Shader::named("dream");
+r.key(&amp;DREAM, "N").on_client(|c| c.post_effect(&amp;DREAM_EFFECT, 1.0));</code></pre></div>
+<p><code>PostPixel</code> has <code>uv</code> (0 to 1, top left first), <code>color</code> (the picture so far at that point, linear), <code>strength</code>, <code>time</code> and <code>size</code> in pixels, and <code>scene_at(p, uv)</code> reads the picture anywhere else, for blur and waves. <code>post_effect(&amp;EFFECT, 0.0)</code> turns an effect off, and several can be on at once, applied one after another in the order they were turned on.</p>
+</div></section>
+<section class="dsec" id="shader-packs"><h2><button class="fold" aria-expanded="true">Shader packs</button><a class="anchor" href="#shader-packs">#</a></h2><div class="sec-body">
+<p>Snippets add to the engine's shaders, a shader pack replaces them. It is a folder <code>shaderpacks/&lt;id&gt;/</code> next to the game, chosen by players in the settings, with any of these files:</p>
+<table><thead><tr><th>file</th><th>what it draws</th></tr></thead><tbody><tr><td><code>world.wgsl</code></td><td>blocks and liquids</td></tr><tr><td><code>model.wgsl</code></td><td>mobs and the player's model</td></tr><tr><td><code>entity.wgsl</code></td><td>held items</td></tr><tr><td><code>particle.wgsl</code></td><td>particles</td></tr><tr><td><code>weather.wgsl</code></td><td>rain and snow</td></tr><tr><td><code>sky.wgsl</code></td><td>the sky, what is in it, and the overlay from inside a liquid</td></tr><tr><td><code>post.wgsl</code></td><td>screen effects</td></tr><tr><td><code>ui.wgsl</code></td><td>all screens and text</td></tr></tbody></table>
+<p>A file replaces its shader completely and the ones a pack doesn't have stay as they were, so the easiest start is a copy of the original from <code>crates/engine/assets/shaders/</code>. A replacement writes only functions (and its own private structs like <code>VOut</code>): the buffer structs, the bindings, the constants and the shared helpers of <code>common.wgsl</code> come from the engine's prelude (<code>crates/engine/src/gpu_layout.rs</code>), so a pack can't get them wrong and keeps working when they change. It has to keep the entry points. If it doesn't compile, the log says why and the built-in shader is used instead, so a broken pack can't leave anyone with a black screen. Mods' snippets keep working inside a pack's shaders, and an optional <code>pack.cfg</code> (<code>name = ...</code>, <code>description = ...</code>) names the pack in the list.</p>
+<h3 id="sun-shadows">Sun shadows <a class="anchor" href="#sun-shadows">#</a></h3>
+<p>A pack that wants shadows gets the two things it needs from the world shader's prelude: <code>scene.sun</code> (xyz points toward the sun, w is how high it stands, 0 at night and in dimensions without sky) and <code>solid_at(p: vec3&lt;i32&gt;) -&gt; bool</code>, which says whether the block at <code>p</code> casts a shadow (anything that dims sky light, liquids aside). It knows the blocks about 112 blocks around the camera and answers false beyond them, so march from the pixel toward <code>scene.sun.xyz</code> through block cells and stop at the first solid one. The engine only keeps these blocks on the GPU while the chosen pack's <code>world.wgsl</code> calls <code>solid_at</code>, so packs without shadows pay nothing.</p>
+<p>Textures and models stay with resource packs, see the <a href="resourcepacks.html">resource packs guide</a>.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/shaders.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="./search-index.js"></script>
+<script src="../docs.js"></script>
+</body>
+</html>

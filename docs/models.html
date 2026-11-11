@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Models and animations guide - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../assets/icon.png">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../docs.css">
+</head>
+<body class="docs" data-root="../docs/">
+<header class="bar">
+  <a class="bar-name" href="../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="blocks.html">Blocks</a><a href="items.html">Items</a><a href="entities.html">Entities</a><a href="details/liquids.html">Liquids</a><a href="details/effects.html">Status effects and potions</a><a href="details/recipes-loot.html">Recipes and loot</a><a href="details/world-content.html">World content</a><a href="block_entities.html">Block entities guide</a><a href="registration.html">Registration guide</a><a href="details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="events.html">Events, chains and questions</a><a href="details/conditions.html">Conditions</a><a href="details/attributes.html">Attributes and modifiers</a><a href="details/poses-and-modes.html">Poses and game modes</a><a href="details/commands.html">Commands</a><a href="details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="world-api.html">World API</a><a href="details/world-blocks.html">Blocks in the world</a><a href="details/world-entities.html">Entities in the world</a><a href="details/hitboxes.html">Raycasts and hitboxes</a><a href="details/particles-sounds.html">Particles and sounds</a></details><details class="group" open><summary>Client</summary><a href="client.html">Client side</a><a href="ui.html">UI guide</a><a href="details/camera.html">Camera modes</a><a class="current" aria-current="page" href="models.html">Models and animations guide</a><a href="shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="textures.html">Textures guide</a><a href="ctm.html">CTM guide</a><a href="sky.html">Sky guide</a><a href="resourcepacks.html">Resource packs guide</a><a href="localization.html">Localization guide</a><a href="redstone.html">redstone.md</a><a href="worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="reference/index.html">All reference pages</a><a href="reference/blocks.html">Blocks</a><a href="reference/client.html">Client</a><a href="reference/commands.html">Commands</a><a href="reference/effects.html">Particles and effects</a><a href="reference/entities.html">Entities</a><a href="reference/events.html">Events and steps</a><a href="reference/items.html">Items</a><a href="reference/recipes.html">Recipes and loot</a><a href="reference/registration.html">Registration</a><a href="reference/ui.html">UI</a><a href="reference/world.html">World</a><a href="reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Models and animations guide</h1><nav class="toc"><span>On this page</span><a href="#note">Note</a><a href="#blocks-and-items">Blocks and items</a><a href="#quick-links">Quick links</a><a href="#the-basics">The basics</a><a href="#model-in-code">Model in code</a><a href="#model-from-blockbench">Model from Blockbench</a><a href="#roles">Roles</a><a href="#animations">Animations</a><a href="#items-in-the-hand">Items in the hand</a><a href="#an-item-as-a-model">An item as a model</a><a href="#models-on-models">Models on models</a><a href="#bones-that-move-by-themselves">Bones that move by themselves</a><a href="#a-players-own-model">A player's own model</a><a href="#armor-and-other-worn-items">Armor and other worn items</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>How things are shaped: blocks and items from boxes, entities from bones, written in code or made in Blockbench, plus keyframe animations and actions, items in the hands, and armor drawn on the wearer.</p>
+<section class="dsec" id="note"><h2><button class="fold" aria-expanded="true">Note</button><a class="anchor" href="#note">#</a></h2><div class="sec-body">
+<p>Examples to copy from:</p>
+<ul>
+<li><code>mods/testmod/assets/models/idol.geo.json</code> and <code>animations/idol.animation.json</code>: a model with mesh wings, an idle and a bow</li>
+<li><code>mods/testmod/assets/animations/player.animation.json</code>: a wave for the player</li>
+<li><code>mods/testmod/assets/animations/greatsword.animation.json</code>, <code>blaster.animation.json</code>: items held in two hands, one swinging with the whole body, one with a bone of its own</li>
+<li><code>mods/testmod/src/looks.rs</code>: entities with models from code (<code>wisp</code>, <code>orb</code>) and from a file (<code>idol</code>)</li>
+<li><code>mods/base/src/mobs.rs</code>: the <code>biped</code>, <code>quadruped</code> and <code>spider</code> mobs</li>
+<li><code>mods/testmod/assets/models/block/pedestal.json</code> and <code>models/item/totem.json</code>: a block and an item shaped by files</li>
+</ul>
+</div></section>
+<section class="dsec" id="blocks-and-items"><h2><button class="fold" aria-expanded="true">Blocks and items</button><a class="anchor" href="#blocks-and-items">#</a></h2><div class="sec-body">
+<p>A block or item made of boxes takes Blockbench's <strong>Java Block/Item</strong> model: export it as <code>models/block/&lt;name&gt;.json</code> or <code>models/item/&lt;name&gt;.json</code> in your mod and it is picked up by the name, no code needed. Entities take the <strong>Bedrock Entity</strong> format instead (below). Two formats because the two want different things: a block is boxes whose faces each show some texture and never moves, a mob is bones that turn, swing and play keyframes over one skin. Each format is the one Blockbench made for that job.</p>
+<p>From a Java model the engine reads <code>elements</code> (<code>from</code>, <code>to</code>, <code>rotation</code>, and <code>faces</code> with their <code>texture</code>, <code>uv</code> and <code>rotation</code>), <code>textures</code> with <code>#name</code> references and <code>parent</code>, another model file or one of vanilla's cube parents (<code>block/cube_all</code>, <code>block/cube</code>, <code>block/cube_column</code>, <code>block/cube_bottom_top</code>) which give a plain cube its face textures. A face whose <code>#name</code> no texture sets shows the block's own texture of that face, so a file can bring only the shape and leave the textures to <code>.texture(..)</code> / <code>.top(..)</code> and the like in code. An element with <code>"shade": false</code> is drawn without the shading by side (<code>.unshaded()</code> in code). Faces the file leaves out aren't drawn. <code>uv</code> is 0 to 16 across a picture of any size, fractions included, so a face can be a part of an unwrap.</p>
+<p>In code the same is <code>.model_box(min, max)</code> (pixels, 0..16), whose faces show the state's textures. A block's model decides its shape for everyone, collision and selection included (box by box, so a stair is one slab and a quarter, unless <code>.hitbox(min, max)</code>, in the same pixels, says otherwise).</p>
+<p>For items, <code>models/item/&lt;name&gt;.json</code> with <code>"parent": "item/generated"</code> and a <code>layer0</code> texture is a flat item showing that texture; with <code>elements</code> the item is drawn as those boxes in the hand, on the ground and in slots. A face without a texture shows the item's own icon.</p>
+<p>A resource pack replaces these files like any other: its <code>models/block/stone.json</code> in <code>base/</code> redraws stone, and the block's item with it unless the pack has a <code>models/item/stone.json</code>. Only the drawing changes; what a block collides with, how it is selected and which neighbors it hides stay what the mod gave every player, since a server knows nothing of packs. A <code>.ctm</code> can pick among models by position or neighbors, and let a block stop hiding its neighbors: <a href="ctm.html#models-as-tiles">models as tiles</a>.</p>
+</div></section>
+<section class="dsec" id="quick-links"><h2><button class="fold" aria-expanded="true">Quick links</button><a class="anchor" href="#quick-links">#</a></h2><div class="sec-body">
+<p><a href="#the-basics">the basics</a> | <a href="#model-in-code">model in code</a> | <a href="#model-from-blockbench">model from Blockbench</a> | <a href="#roles">roles</a> | <a href="#animations">animations</a> | <a href="#items-in-the-hand">items in the hand</a> | <a href="#armor-and-other-worn-items">armor</a></p>
+</div></section>
+<section class="dsec" id="the-basics"><h2><button class="fold" aria-expanded="true">The basics</button><a class="anchor" href="#the-basics">#</a></h2><div class="sec-body">
+<p>An entity has a size, which is its hitbox, and a model, which is what gets drawn. The two are independent: <code>.size(0.6, 1.8)</code> is in blocks, and the model can be bigger or smaller than the box it lives in.</p>
+<p>A model is a list of bones. Each one has a pivot (the point it turns around), boxes or loose triangles drawn around that point, and optionally a parent bone it moves with. Everything is measured in model pixels, 16 to a block, with y up from the feet and the model looking along -Z (north).</p>
+<p>The skin lives in <code>textures/entity/&lt;name&gt;.png</code>, named like the entity, and so do its sounds in <code>sounds/entity/&lt;name&gt;/</code>:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static GHOST: EntityKind = EntityKind::named("ghost");
+r.entity(&amp;GHOST).size(0.6, 1.8).max_health(10.0).model(humanoid(false)).sound("hurt").sound("death");</code></pre></div>
+<p><code>.texture("other")</code> picks another file under <code>entity/</code> (<code>"base:zombie"</code> for someone else's). The model says how big a skin its UVs are laid out on, so a resource pack can swap in a skin of twice the resolution and everything still lines up.<br><code>.sound("hurt")</code> plays one of <code>hurt*.ogg</code> (or <code>.wav</code>) from the entity's sound folder at random, <code>.sound_variants("hurt", &amp;["groan", "growl"])</code> names the files. The events the engine plays are <code>hurt</code>, <code>death</code>, <code>ambient</code> and <code>step</code>.</p>
+</div></section>
+<section class="dsec" id="model-in-code"><h2><button class="fold" aria-expanded="true">Model in code</button><a class="anchor" href="#model-in-code">#</a></h2><div class="sec-body">
+<p><code>.model(..)</code> takes a <code>Model</code>, or a <code>Vec&lt;ModelPart&gt;</code> laid out on a 64x32 skin (<code>Model::from(parts).uv_size(64, 64)</code> for another size). Three are ready made: <code>humanoid(arms_forward)</code> is the classic humanoid on a 64x32 skin, the player's own model too (<code>true</code> holds the arms out like a zombie), <code>quadruped(body, leg, head)</code> is an animal on a 64x64 skin with sizes in model pixels, and <code>spider()</code> is head, two body parts and eight legs.</p>
+<p>For your own, a <code>ModelPart</code> starts from a name (it decides the <a href="#roles">role</a> and is what animations address) and a pivot, and collects boxes with <code>cuboid</code>:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">ModelPart::new("wisp", [0.0, 3.0, 0.0])
+    .cuboid([-3.0, -3.0, -3.0], [6.0, 6.0, 6.0], [0.0, 0.0])</code></pre></div>
+<p>Everything you can do with a part:</p>
+<ul>
+<li><code>cuboid(origin, size, uv)</code>: a box. <code>origin</code> is relative to the pivot, <code>uv</code> the top-left corner of its unwrap on the skin</li>
+<li><code>mirrored()</code>: mirrors the last box's unwrap, handy for an arm that shares its texture with the other one</li>
+<li><code>child_of(index)</code>: hangs it from the part at that index in the same list</li>
+<li><code>rotation(x, y, z)</code>: a resting rotation in degrees</li>
+<li><code>mesh(triangles)</code>: loose triangles in model pixels, three corners each. <code>sphere_mesh(center, radius, rings, segments, uv)</code> builds a ball</li>
+</ul>
+<p>This is the orb from testmod, a ball with a ring of stones hanging off it:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">let ring = ModelPart::new("ring", [0.0, 8.0, 0.0]).child_of(0);
+r.entity(&amp;ORB).texture("orb").model(Model::from(vec![
+    ModelPart::new("core", [0.0, 8.0, 0.0]).mesh(sphere_mesh([0.0, 8.0, 0.0], 4.0, 8, 12, [0.0, 0.0, 16.0, 16.0])),
+    ring.cuboid([6.0, -1.0, -1.0], [2.0, 2.0, 2.0], [16.0, 0.0]),
+]).uv_size(32, 16));</code></pre></div>
+</div></section>
+<section class="dsec" id="model-from-blockbench"><h2><button class="fold" aria-expanded="true">Model from Blockbench</button><a class="anchor" href="#model-from-blockbench">#</a></h2><div class="sec-body">
+<p>Make the model as a Bedrock Entity, export it as <code>&lt;name&gt;.geo.json</code> and drop it into <code>assets/models/</code>. A file named like the entity is picked up on its own (<code>idol.geo.json</code> for <code>idol</code>), and <code>r.set_model(&amp;IDOL, "other_name")</code> points at another one. Either way the file replaces any model written in code. Animations work the same way, from <code>animations/&lt;name&gt;.animation.json</code>.</p>
+<p>The engine reads bones with their <code>pivot</code>, <code>parent</code> and resting <code>rotation</code>, boxes with <code>origin</code> (absolute, the way Blockbench writes it), <code>size</code>, <code>uv</code> (a pair or per face), <code>mirror</code> and <code>inflate</code>, and <code>poly_mesh</code> bones, triangles and quads alike, with normalized uvs if you use them. The geometry's <code>texture_width</code> and <code>texture_height</code> override the numbers you gave to <code>Model::uv_size</code>, so the skin can be any size.</p>
+<p>Two things trip people up. A rotated box is drawn unrotated (the log warns about it), so put it in its own bone and rotate the bone. And list parent bones before their children, as Blockbench does. Molang expressions aren't evaluated, only plain numbers.</p>
+</div></section>
+<section class="dsec" id="roles"><h2><button class="fold" aria-expanded="true">Roles</button><a class="anchor" href="#roles">#</a></h2><div class="sec-body">
+<p>A role tells the engine what a bone is: which stock clips move it, what armor covers it, where a hand is. It comes from the bone's name, in code and in Blockbench files alike (case and <code>_</code> don't matter), so the ready made models can be animated and worn on by the same names:</p>
+<table><thead><tr><th>bone name</th><th>role</th></tr></thead><tbody><tr><td><code>head</code></td><td>follows where the entity looks</td></tr><tr><td><code>leftArm</code>, <code>rightArm</code> (also <code>mainArm</code>, <code>offArm</code>)</td><td>swing while walking; resting held out (rotated about 90 degrees on x, a zombie's) they only sway. <code>mainArm</code> is the same bone as <code>leftArm</code>, at <code>+x</code>: Bedrock files name it from the viewer's side</td></tr><tr><td><code>body</code></td><td>leans forward when sneaking</td></tr><tr><td><code>leftLeg</code>, <code>rightLeg</code> (also <code>leg0</code>, <code>leg1</code>)</td><td>swing while walking</td></tr><tr><td><code>leg2</code>, <code>leg3</code></td><td>the front legs of a four-legged animal, opposite to the back ones</td></tr><tr><td><code>leg0</code> .. <code>leg7</code> in a model with more than four legs</td><td>a spider's legs, sweeping sideways (left and right twins <code>leg0</code>/<code>leg1</code>, <code>leg2</code>/<code>leg3</code> ...)</td></tr><tr><td><code>mainItem</code>, <code>offItem</code> (also <code>leftItem</code>, <code>rightItem</code>)</td><td>an empty bone: a held item goes here instead of at the end of the arm</td></tr><tr><td><code>eyes</code></td><td>an empty bone: where the camera is, for a model whose head isn't at the usual height</td></tr><tr><td><code>hanging</code>, <code>hanging_&lt;anything&gt;</code></td><td>hangs and swings by itself, see "Bones that move by themselves"</td></tr><tr><td>a bone under <code>head</code></td><td>stays with the head, and is gone with it from your own eyes</td></tr><tr><td>anything else</td><td>stays still</td></tr></tbody></table>
+<p>The player's model is <code>humanoid(false)</code> set by base (<code>r.set_model(&amp;PLAYER, ..)</code> sets any kind's model, the engine's included); its sneaking pose comes from <code>body</code>, <code>head</code> and the arms and legs.</p>
+</div></section>
+<section class="dsec" id="animations"><h2><button class="fold" aria-expanded="true">Animations</button><a class="anchor" href="#animations">#</a></h2><div class="sec-body">
+<p>One file holds any number of animations, and an animation's name is whatever follows the last dot, so <code>animation.idol.bow</code> is just <code>bow</code>:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-json">{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.idol.bow": {
+      "loop": "hold_on_last_frame",
+      "animation_length": 0.8,
+      "bones": {
+        "head": { "rotation": { "0": [0, 0, 0], "0.4": [40, 0, 0] } }
+      }
+    }
+  }
+}</code></pre></div>
+<p>Each bone can carry <code>rotation</code> (degrees), <code>position</code> (model pixels) and <code>scale</code>, as keyframes at times in seconds. A keyframe is a plain <code>[x, y, z]</code> or an object with <code>pre</code>, <code>post</code> and <code>"lerp_mode": "catmullrom"</code> when you want a jump or a smooth curve. Between keys the value is linear. <code>loop</code> is <code>true</code> to repeat, <code>false</code> to play once and go back to normal, or <code>"hold_on_last_frame"</code> to stay in the last pose.</p>
+<p>Clips go by the server's ticks, not by when a client happened to see something start: every player sees a mob in the same pose at the same moment, which is how an arrow stays on the arm it went into for all of them.</p>
+<p>Keyframes are added on top of what is below them, and of a bone's resting angle, so even a walking leg can be animated. Set <code>"override_previous_animation": true</code> (Blockbench's Override box) and they go over what is below on the bones they name instead, scale included (an arrow a <code>hold</code> clip hides at scale 0 shows again in <code>use</code>): <code>blend_weight</code> then says how much of that it hides, and its own angles stay what the file has. So 1 replaces it, and 0.9 on a greatsword's <code>hold</code> leaves a tenth of the walk on the arms, so they stir without dangling. A clip only ever touches the bones it names: arms only and the walk goes on, the whole body for a heavy swing and it doesn't. The angles follow Blockbench's convention: a Bedrock arm turned -90 degrees on x points forward.</p>
+<p>Without override <code>blend_weight</code> scales the clip: a number, or <code>query.modified_move_speed</code> for how fast it walks. <code>anim_time_update</code> says what moves the clip's time: <code>query.modified_distance_moved</code> for steps, or anything with <code>progress</code> in it to stretch the clip over however long the action takes. Other Molang isn't evaluated.</p>
+<h3 id="actions">Actions <a class="anchor" href="#actions">#</a></h3>
+<p>What plays goes by the name of an action, and that name is all there is to it. The engine looks for these by itself:</p>
+<table><thead><tr><th>action</th><th>when</th><th>time</th></tr></thead><tbody><tr><td><code>idle</code></td><td>always</td><td>clock</td></tr><tr><td><code>walk</code></td><td>walking, more the faster</td><td>distance walked</td></tr><tr><td><code>sneak</code>, <code>swim</code>, <code>crawl</code></td><td>in that pose (<code>crawl</code> falls back on <code>swim</code>)</td><td>clock, distance</td></tr><tr><td><code>hold</code></td><td>something in hand (<code>hold_tool</code> for tools that don't have their own)</td><td>clock</td></tr><tr><td><code>hold_empty</code></td><td>nothing in hand, for <code>.first_person</code> only by default</td><td>clock</td></tr><tr><td><code>equip</code></td><td>the hand going down and up as it changes items or recharges</td><td>progress</td></tr><tr><td><code>swing</code>, <code>use</code></td><td>swinging (<code>swing_held</code> with an item that has no <code>swing</code> of its own), and using what it holds</td><td>progress; seconds held for an item used until let go (a bow), staying at its end</td></tr><tr><td><code>death</code></td><td>dying</td><td>clock</td></tr></tbody></table>
+<p>The engine has clips for all of these (<code>assets/animations/stock_*.animation.json</code>), picked by the shape of the model: walking on two legs, four, eight. So any model with the right <a href="#roles">bone names</a> walks without a single keyframe. Your own clip of the same name takes over on the bones it names, and the stock one keeps moving the others.</p>
+<p><code>mainArm</code> and <code>offArm</code> in a clip mean the arm with the item and the other one, whatever the model calls them. A clip for the item in the other hand plays mirrored, so you write each one once, for the main hand. There is also a bone no model needs: <code>root</code> moves the whole model, and <code>camera</code> moves the view of a player seeing it through their own eyes.</p>
+<p>Anything else is yours to name. Started from code, everyone who sees the entity sees it:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">world.action_play(entity_id, "bow", false);    // false plays once, true repeats
+world.action_play(entity_id, "", false);       // back to normal
+world.action_override(mob, "walk", "flee_cat"); // plays flee_cat wherever it would walk
+world.action_override_clear(mob, "walk");</code></pre></div>
+<p><code>action_override</code> is the one for a mob's goal, and <code>ai::with_action_override("walk", "flee_cat", goal)</code> does it for as long as the goal runs. Without a <code>flee_cat</code> clip it just goes on walking.</p>
+<p>The file is found by the entity's name, or by <code>.animations("name")</code> when it is called something else.</p>
+<h3 id="animations-for-something-that-already-exists">Animations for something that already exists <a class="anchor" href="#animations-for-something-that-already-exists">#</a></h3>
+<p>A file can also be attached to an entity that belongs to someone else, the player for example:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.set_animations(&amp;PLAYER, "mymod:player");</code></pre></div>
+<p>After that the player has the animations of your <code>animations/player.animation.json</code>, and <code>action_play(player, "wave", false)</code> plays one.</p>
+<h3 id="coming-and-going">Coming and going <a class="anchor" href="#coming-and-going">#</a></h3>
+<p>What plays over the standing clips (what is held, a swing, your own actions) eases in and out by itself, 0.12 seconds unless the clip says otherwise. What goes by an action's progress, a swing say, starts at once, as its first frames are the swing's. In a clip: <code>"blend_in": 0.3</code>, <code>"blend_out": 0.5</code>, in seconds, and Blockbench's <code>start_delay</code> and <code>loop_delay</code> are read too. Blockbench doesn't know <code>blend_in</code> and <code>blend_out</code> and drops them when it saves the file over, so add them to the exported file.</p>
+</div></section>
+<section class="dsec" id="items-in-the-hand"><h2><button class="fold" aria-expanded="true">Items in the hand</button><a class="anchor" href="#items-in-the-hand">#</a></h2><div class="sec-body">
+<p>An item brings its own clips: <code>animations/&lt;item&gt;.animation.json</code>, or <code>.animations("name")</code> on the item. They are the same clips with the same action names, for whoever holds it. <code>hold</code> with <code>mainArm</code> and <code>offArm</code> both in it is a two-handed grip, and that's all a second arm takes: it comes up because the clip names it.</p>
+<p>A <code>position</code> on an arm pulls it off its shoulder. A <code>hold</code> clip has its real angles, so what you see in Blockbench is what plays. The stock one has override and <code>blend_weight</code> 0.5: an arm holding something walks at half its swing, as in vanilla. Arms named by what is held follow the view: from the eyes they stay where they are on screen, and from outside they go half way with the look. The same clip and the same item size play seen from anywhere. With the First Person Model setting on, you see your real arms from your own eyes, exactly as others see them. With it off there is no body for them to hang from: an arm a held clip names leaves out the walking under it, stays put on screen and is seen from a little above and behind the eyes. If that view does need something else, <code>swing.first_person</code> plays there instead of <code>swing</code>, and so on for any action.</p>
+<p>What an item may do in the hands is a property of the item:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.item(&amp;GREATSWORD).two_handed();                     // does nothing while the other hand holds something
+r.item(&amp;MAP).one_handed_action("hold_one");               // two hands, or one with this action
+r.item(&amp;BOW).use_priority(10);                        // goes before the other hand on a right click</code></pre></div>
+<p>A right click goes to the block first (not while sneaking), then to the hands by <code>use_priority</code>, the main hand if they are equal. The next hand gets its turn when the item does nothing, which <code>on_use</code> says by returning <code>false</code>: a bow with no arrows lets the torches in the other hand go down. Hits are for the main hand. The second hand itself is an equipment slot, <code>r.equipment_slot(&amp;OFF_HAND, &amp;[], "slot_offhand")</code>, and base registers it. A menu with <code>.equipment()</code> has it; its screen places it with <code>ui.group(OFF_HAND.name())</code>, as <code>ui.equipment()</code> draws only what is worn.</p>
+<p>Where the item sits in the hand comes from <code>display.thirdperson_righthand</code> of <code>models/item/&lt;name&gt;.json</code>, which is Blockbench's Display tab, the same from the eyes and from outside; the other hand mirrors it. And <code>models/item/&lt;name&gt;.geo.json</code> makes the item out of bones (its texture is <code>textures/item/&lt;name&gt;.png</code>). Its origin is the palm with -Z along the arm, and its bones go in the same clips as the arms, so a gun's slide is one more bone in <code>swing</code>. On the ground and in the inventory it still shows its sprite.</p>
+<p><code>examples/examplemod/assets/models/player_template.geo.json</code> is the player's skeleton to open in Blockbench and animate on. Arms from the eyes are seen from 1.62 blocks up at the front of the head, plus 5 pixels up, 10 back and 3 to the left.</p>
+</div></section>
+<section class="dsec" id="an-item-as-a-model"><h2><button class="fold" aria-expanded="true">An item as a model</button><a class="anchor" href="#an-item-as-a-model">#</a></h2><div class="sec-body">
+<p>Any item, yours or not, can be a model, and is that model wherever it shows: in the hand, on the ground and in slots.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.set_model("base:apple", "foodmod:apple");        // models/apple.geo.json with textures/apple.png
+r.set_model("#food", "foodmod:food/{name}");       // all food at once; what has no file stays as it was</code></pre></div>
+<p>An item with a file <code>models/item/&lt;item&gt;.geo.json</code> needs no line at all. The model's origin is the palm: <code>+Y</code> goes up from the hand when the arm is held out, so a sword's blade is along <code>+Y</code>. Its clips are in <code>animations/&lt;model&gt;.animation.json</code>, and they go along with what its holder plays by name: a gun's slide in its <code>swing</code> moves when the arm swings.</p>
+<p>Two more clips say how it lies when it isn't in a hand, both moving a bone called <code>root</code>, which the model doesn't have to have:</p>
+<ul>
+<li><code>ground</code>: on the ground. It turns and bobs by itself at half size, and for a sword to lie flat this is <code>root</code> turned 90 degrees on x.</li>
+<li><code>gui</code>: in a slot, turned like a block is, then made to fit. The picture is drawn once, so nothing moves in it and it may not be scaled.</li>
+</ul>
+<p>A look that depends on the stack, a sword that broke say, is the item's <code>condition</code>:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.item(&amp;SWORD).condition(|s, v| if s.wear() &gt; 100 { v.model("sword_broken"); });</code></pre></div>
+<p><code>v.texture(..)</code> swaps the flat picture the same way, in slots, hands and on the ground. It is asked once per kind of stack. The stacks in other players' hands aren't sent, so there they show the usual model.</p>
+</div></section>
+<section class="dsec" id="models-on-models"><h2><button class="fold" aria-expanded="true">Models on models</button><a class="anchor" href="#models-on-models">#</a></h2><div class="sec-body">
+<p>A second model can sit on a bone of the first, with its own texture and clips, like a tail:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.bone_model(&amp;PLAYER, "tailmod:tail", "body");                                  // on every player
+r.item(&amp;TAIL).wearable_model(&amp;base_api::CHEST, "tailmod:tail", "body");           // on who wears it</code></pre></div>
+<p>Draw it in the pixels of the model it goes on, with the same origin (<code>player_template.geo.json</code> in the example mod is good to draw on top of). What plays on the wearer plays on it: its own <code>walk</code> plays with theirs, and when someone's <code>walk</code> names a bone <code>tail</code> that is in your model, it moves. Nobody knowing of the other two mods is needed for that.</p>
+</div></section>
+<section class="dsec" id="bones-that-move-by-themselves"><h2><button class="fold" aria-expanded="true">Bones that move by themselves</button><a class="anchor" href="#bones-that-move-by-themselves">#</a></h2><div class="sec-body">
+<p>On top of clips. A bone whose name starts with <code>hanging</code> hangs down whichever way what holds it turns, and swings when that moves: a lantern on a chain is a hook and two <code>hanging_</code> links, with no code. For something other than hanging:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.bone_motion("tailmod:tail", "tail2", BoneMotion::SPRINGY);                                   // keeps its shape, lags behind
+r.bone_motion("mymod:banner", "cloth", BoneMotion { gravity: 20.0, spring: 5.0, drag: 1.5 });</code></pre></div>
+<p>A file can say the same, for those without code: <code>models/&lt;model&gt;.bones</code> with lines like <code>tail2 = 5 30 5</code> (gravity, spring, drag).</p>
+<p>Each frame on the client, from <code>r.client_entity_frame(&amp;KIND, |c, e| ..)</code> (any number of mods on one kind, the local player too) or <code>r.client_frame</code>:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">c.bone_turn(e.id(), "tail1", [0.0, (e.age() * 6.0).sin() * 20.0, 0.0]);   // on top of its clips, degrees, this frame only
+c.bone_move(e.id(), "orb", [0.0, 2.0, 0.0]);                              // pixels
+c.bone_scale(e.id(), "hat", [0.0; 3]);                                    // 0 hides it
+c.bone_position(e.id(), "tip");                                           // where it was in the world, for sparks off a sword
+c.action_current(e.id());                                                 // what `action_play` has it doing, until its clip is over
+c.clip_length(e.id(), "bow");                                             // seconds
+c.held_item(e.id(), Hand::Main);                                    // the item id in a hand</code></pre></div>
+<p>The bones are looked for in the entity's model and in what it holds and has on. An entity out of the view isn't posed, so <code>bone_position</code> has nothing for it, and far away a pose lasts a few frames. This runs on each client by itself, so nobody else's swing is exactly yours. A kind with <code>.own_effects()</code> gets no steps and such from the engine, its <code>client_entity_frame</code> does them.</p>
+<p><code>World::action_stop(id)</code> ends what <code>action_play</code> started. <code>action::WALK</code>, <code>action::HOLD</code> and so on are the engine's action names, if you'd rather a typo didn't compile.</p>
+</div></section>
+<section class="dsec" id="a-players-own-model"><h2><button class="fold" aria-expanded="true">A player's own model</button><a class="anchor" href="#a-players-own-model">#</a></h2><div class="sec-body">
+<p>Players can bring a model with no mod at all: <code>skins/avatar/</code> holds <code>avatar.geo.json</code> and <code>avatar.png</code>, and if they like <code>avatar.animation.json</code>, <code>avatar.bones</code> and <code>avatar_e.png</code> (a glow mask). Everyone sees it from the next time they join; <code>examples/avatar</code> is one to start from.</p>
+<p>It is the same as any model: the bone names above make walking, holding and swinging work with no clips, its own clips go over them by name, items go on <code>mainItem</code> and <code>offItem</code>. No code comes with it, so it can't do any harm: all of it together stays under 512 KB, with limits on bones, boxes, clips and how far it reaches, and what goes past them shows as the usual player. Armor goes on it as on any model (see below). A player can turn others' models off with Players' Own Models in the settings, and a world with <code>core:allow_avatars</code> off doesn't pass them on.</p>
+</div></section>
+<section class="dsec" id="armor-and-other-worn-items"><h2><button class="fold" aria-expanded="true">Armor and other worn items</button><a class="anchor" href="#armor-and-other-worn-items">#</a></h2><div class="sec-body">
+<p>An item shows up on the wearer when it sits in an equipment slot. The slots are declared once, with the bones what is worn there covers and the silhouette of the empty slot, and an item only names its slot:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static HEAD: EquipmentSlot = EquipmentSlot::named("base:head");    // the base game's, or your own
+r.equipment_slot(&amp;BACK, &amp;["body", "leftWing", "rightWing"], "slot_back"); // a slot of your mod
+r.item(&amp;RUBY_HELMET).wearable(&amp;HEAD, 1.0, "armor/ruby_1")</code></pre></div>
+<p>A slot covers bones by name. A name with a <a href="#roles">role</a> (<code>head</code>, <code>leftArm</code>, <code>leg0</code> ...) covers every bone of that role, so armor fits any model; any other name covers that bone only. The base game's slots use <code>worn::HEAD</code>, <code>worn::CHEST</code>, <code>worn::LEGS</code> and <code>worn::FEET</code>. <code>wearable</code> takes how far the piece sticks out from the body in pixels (vanilla armor uses 1.0, and 0.5 for the leggings layer) and its texture. The slot then takes the item in the inventory, shift-clicks put it there, and a new slot of any mod shows up in the inventory screen by itself (<code>.equipment()</code> on the menu, <code>ui.equipment()</code> on its screen).</p>
+<p>The texture is laid out like vanilla armor's, the 64x32 files in <code>mods/base/assets/textures/entity/armor/</code> (the name is under <code>entity/</code>), and every model wears it the same way, players' own models too. Per covered bone:</p>
+<ul>
+<li><strong>The model's own armor</strong>: a bone called <code>armor_&lt;bone&gt;</code> (<code>armor_head</code>, <code>armor_leftArm</code>), a child of the bone it is for, with its boxes painted on the armor texture. It and everything under it is drawn only for what is worn there, never with the skin. A model whose head is a pumpkin or whose arms are wings says this way exactly where a helmet or a sleeve sits.</li>
+<li><strong>Otherwise vanilla's piece, fitted</strong>: the head, <code>body</code>, the arms and the legs get vanilla's piece stretched over their biggest box, so a 10 pixel head wears a 10 pixel helmet and ears or a muzzle on the same bone stay outside. On <code>humanoid</code> this is exactly its own boxes.</li>
+<li><strong>Any other bone</strong> a slot covers is worn on its own boxes, with a texture laid out like the wearer's skin.</li>
+</ul>
+<p>Items in the world and in the hand are flat sprites with some thickness, the boxes of a block, or <a href="#blocks-and-items">a model of their own</a>. <code>F3+T</code> reloads models and animations along with textures while the game runs.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/models.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="./search-index.js"></script>
+<script src="../docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Events, chains and questions - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../assets/icon.png">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../docs.css">
+</head>
+<body class="docs" data-root="../docs/">
+<header class="bar">
+  <a class="bar-name" href="../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="blocks.html">Blocks</a><a href="items.html">Items</a><a href="entities.html">Entities</a><a href="details/liquids.html">Liquids</a><a href="details/effects.html">Status effects and potions</a><a href="details/recipes-loot.html">Recipes and loot</a><a href="details/world-content.html">World content</a><a href="block_entities.html">Block entities guide</a><a href="registration.html">Registration guide</a><a href="details/editing-others.html">Changing something of another mod</a></details><details class="group" open><summary>Behavior</summary><a class="current" aria-current="page" href="events.html">Events, chains and questions</a><a href="details/conditions.html">Conditions</a><a href="details/attributes.html">Attributes and modifiers</a><a href="details/poses-and-modes.html">Poses and game modes</a><a href="details/commands.html">Commands</a><a href="details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="world-api.html">World API</a><a href="details/world-blocks.html">Blocks in the world</a><a href="details/world-entities.html">Entities in the world</a><a href="details/hitboxes.html">Raycasts and hitboxes</a><a href="details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="client.html">Client side</a><a href="ui.html">UI guide</a><a href="details/camera.html">Camera modes</a><a href="models.html">Models and animations guide</a><a href="shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="textures.html">Textures guide</a><a href="ctm.html">CTM guide</a><a href="sky.html">Sky guide</a><a href="resourcepacks.html">Resource packs guide</a><a href="localization.html">Localization guide</a><a href="redstone.html">redstone.md</a><a href="worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="reference/index.html">All reference pages</a><a href="reference/blocks.html">Blocks</a><a href="reference/client.html">Client</a><a href="reference/commands.html">Commands</a><a href="reference/effects.html">Particles and effects</a><a href="reference/entities.html">Entities</a><a href="reference/events.html">Events and steps</a><a href="reference/items.html">Items</a><a href="reference/recipes.html">Recipes and loot</a><a href="reference/registration.html">Registration</a><a href="reference/ui.html">UI</a><a href="reference/world.html">World</a><a href="reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Events, chains and questions</h1><nav class="toc"><span>On this page</span><a href="#phases-and-ordering">Phases and ordering</a><a href="#how-a-hit-is-worked-out">How a hit is worked out</a><a href="#attributes">Attributes</a><a href="#timers-and-ticks">Timers and ticks</a><a href="#built-in-events">Built-in events</a><a href="#systems-and-energy">Systems and energy</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>Two mechanisms carry everything a mod hooks into: events, and values worked out step by step.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">// Events: batched, delivered once per tick, nobody can cancel them.
+static LEVEL_UP: Event&lt;LevelUp&gt; = Event::named("level_up");
+r.on_event(&amp;LEVEL_UP, |b| for e in b.iter() { /* do something */ });
+w.emit(&amp;LEVEL_UP, value);
+
+// Values worked out step by step: damage, an attribute, a question, your own. A step is any code.
+r.modify(&amp;chain::DAMAGE, &amp;phase::MULTIPLY, |m| m.value *= 0.5);
+r.modify(&amp;attribute::MOVEMENT_SPEED, &amp;phase::ADD, |m| m.value += 0.1);
+
+// A question is a value too, yes (1) or no (0). Each step says no, keeps what was said or says
+// yes, and the last that doesn't keep wins.
+r.before_event(&amp;actions::BREAK_BLOCK, |q| if is_protected(q.pos()) { Verdict::Deny } else { Verdict::Abstain });</code></pre></div>
+<section class="dsec" id="phases-and-ordering"><h2><button class="fold" aria-expanded="true">Phases and ordering</button><a class="anchor" href="#phases-and-ordering">#</a></h2><div class="sec-body">
+<p>Steps go by phase, never by who loaded first: <code>phase::BASE</code> (what the thing is), <code>ADD</code>, <code>PERCENT</code>, <code>MULTIPLY</code>, <code>RULES</code> (where <code>before_event</code> answers), <code>OVERRIDE</code>, <code>FINAL</code>. One mod setting every sword to 7 in <code>BASE</code> and another adding half for some armor in <code>MULTIPLY</code> come out right whichever loaded first. Inside a phase they go in load order unless one says otherwise, by name: <code>r.step(&amp;SHARP).on(&amp;attribute::ATTACK_DAMAGE).phase(&amp;phase::ADD).after("othermod:blunt").run(|m| ..)</code>. A phase of your own goes after one of these, <code>r.phase(&amp;CRITS, &amp;phase::MULTIPLY)</code>. If two mods still disagree, the pack decides in <code>config/step_order.txt</code>, a chain a line: <code>core:attack_damage: othermod:blunt, mymod:sharp</code>. <code>w.chain_explain(..)</code>, <code>w.attribute_explain(..)</code> and <code>--log modifiers=debug</code> list every step and what it did.</p>
+<p>A no past someone else's yes works the same way: armor that stops hits says no in <code>RULES</code>, the sword that always hits says yes in <code>OVERRIDE</code>. A deny nobody gets past (a claim) is a step in <code>FINAL</code>.</p>
+<p>What the engine works out is steps of its own, <code>core:</code> ones, and you can reorder, recode or take out any of them: <code>r.edit(&amp;Step::named("core:charge")).run(|m| m.value *= bell(m.query().charge))</code> makes a weapon hit hardest at half a swing, <code>r.remove(&amp;Step::named("core:vanilla_crit"))</code> ends crits.</p>
+</div></section>
+<section class="dsec" id="how-a-hit-is-worked-out"><h2><button class="fold" aria-expanded="true">How a hit is worked out</button><a class="anchor" href="#how-a-hit-is-worked-out">#</a></h2><div class="sec-body">
+<p>A melee hit: <code>question::ATTACK</code>, then the attacker's <code>attribute::ATTACK_DAMAGE</code> against the target (its own damage as vanilla's, 1 or its kind's <code>attack_damage</code>, plus what it holds over a bare hand by <code>core:weapon</code>, a 6 sword's 5, and strength's +3), then <code>chain::MELEE</code> (<code>core:charge</code> for how charged the swing was, <code>core:crit</code> times <code>attribute::CRIT_DAMAGE</code> when <code>question::CRIT</code> says so: <code>core:vanilla_crit</code>). Then the damage: <code>actions::HURT</code> (<code>core:immune</code>), <code>question::RECOVERING</code> (<code>core:hurt_cooldown</code>: <code>attribute::HURT_COOLDOWN</code>, 10 ticks; deny it for a weapon that ignores the pause), <code>chain::DAMAGE</code> (<code>core:resistance</code>, <code>core:not_lethal</code>), knockback from <code>chain::KNOCKBACK</code> (0.4, away from what hit), extra knockback from <code>attribute::ATTACK_KNOCKBACK</code> (a full swing while sprinting adds 1), and a sweep (<code>question::SWEEP</code>, <code>chain::SWEEP_DAMAGE</code>). Steps read the hit from the query: <code>charge</code>, <code>crit</code>, <code>direct</code> (an arrow), <code>item</code>.</p>
+</div></section>
+<section class="dsec" id="attributes"><h2><button class="fold" aria-expanded="true">Attributes</button><a class="anchor" href="#attributes">#</a></h2><div class="sec-body">
+<p>Attributes are chains with a base: <code>r.attribute(&amp;MANA, 100.0, 0.0, 1000.0)</code>. What things give them is a step with a number, a modifier: <code>Modifier::add</code>, <code>mul</code>, <code>set</code> (in <code>OVERRIDE</code> unless <code>.phase(..)</code> says; <code>FINAL</code> still comes after), <code>percent</code> (vanilla's percents, which add up: speed and slowness are +5%, not 1.2 x 0.85), and <code>Modifier::step(&amp;A, &amp;MY_STEP, 2.0)</code> runs a step of yours (<code>r.step(&amp;MY_STEP).run(..)</code> without <code>.on(..)</code>) with 2.0 as <code>m.arg</code>. <code>w.attribute_add_modifier(id, "spell", &amp;Modifier::mul(&amp;attribute::MOVEMENT_SPEED, 0.5), 200)</code> puts one on an entity for ten seconds, saved with it.</p>
+<p>See <a href="details/attributes.html">attributes</a> for the engine's own.</p>
+</div></section>
+<section class="dsec" id="timers-and-ticks"><h2><button class="fold" aria-expanded="true">Timers and ticks</button><a class="anchor" href="#timers-and-ticks">#</a></h2><div class="sec-body">
+<p>Two helpers go with them. <code>w.timer(holder, ticks, &amp;EVENT, value)</code> fires an event later, kept with whatever holds it: an entity (a calm-down after being hurt) and gone with it, a block (a fuse), or <code>Holder::NONE</code> for the dimension (an invasion at dawn). Time away counts, so a timer due while its holder wasn't loaded fires as soon as it is. A block's own tick is the same timer with the engine's <code>BLOCK_TICK</code> event, which is all <code>w.schedule_tick(pos, ticks)</code> does. <code>r.world_tick(|w| ..)</code> runs once per tick in every region for logic that is nobody's own, <code>w.players()</code> being the players there.</p>
+<p>Keeping someone quiet is a question too: <code>r.before_event(&amp;actions::CHAT, |q| if q.text().contains("spam") { Verdict::Deny } else { Verdict::Abstain })</code>. Reading what was said is <code>r.on_event(&amp;actions::CHAT, ..)</code> (<code>e.text()</code>, <code>e.player</code>).</p>
+</div></section>
+<section class="dsec" id="built-in-events"><h2><button class="fold" aria-expanded="true">Built-in events</button><a class="anchor" href="#built-in-events">#</a></h2><div class="sec-body">
+<p>Actions, each a question and an event under one name (<code>r.before_event(&amp;actions::X, ..)</code>, <code>r.on_event(&amp;actions::X, ..)</code>): <code>BREAK_BLOCK</code>, <code>PLACE_BLOCK</code>, <code>USE_BLOCK</code>, <code>USE_ITEM</code>, <code>INTERACT_ENTITY</code>, <code>HURT</code>, <code>DIE</code>, <code>PICKUP_ITEM</code>, <code>ENTER_DIMENSION</code>, <code>CHAT</code>, <code>MOUNT</code>, <code>DISMOUNT</code>, <code>SPAWN</code>, <code>EFFECT</code>, <code>PROJECTILE_HIT</code>. Events alone: <code>PLAYER_JOINED</code>, <code>PLAYER_RESPAWNED</code>, <code>ENTITY_HEALED</code>, <code>WEATHER_TICK</code>, <code>ENTITY_REMOVED</code>, <code>EFFECT_ENDED</code>, <code>KEY</code>. Questions alone: <code>question::ATTACK</code>, <code>CRIT</code>, <code>SWEEP</code>, <code>RECOVERING</code>, <code>CAMERA</code>, <code>FORCE_LOAD</code>. Chains: <code>chain::DAMAGE</code>, <code>MELEE</code>, <code>KNOCKBACK</code>, <code>SWEEP_DAMAGE</code>, <code>PROJECTILE_DAMAGE</code>, <code>FALL_DAMAGE</code> (hay, a trampoline: a step reading what is under the faller), <code>HEAL</code>, and every attribute.<br>base adds <code>base:smelted</code>.</p>
+</div></section>
+<section class="dsec" id="systems-and-energy"><h2><button class="fold" aria-expanded="true">Systems and energy</button><a class="anchor" href="#systems-and-energy">#</a></h2><div class="sec-body">
+<p>Systems run over every entity with a component all at once, and that is how block entities tick: <code>r.system(&amp;BURNER, |batch| for (id, m, ticks) in batch.iter_mut() { .. })</code>. <code>ticks</code> is 1 unless it is catching up on time it missed (unloaded, the time jumped): then it should do that many ticks of work at once, see <a href="block_entities.html#catching-up">block entities</a>.</p>
+<p>Energy is a built-in engine contract, you can give a block entity the <code>core:energy</code> component, tag
+cables with <code>conductor</code>, and every mod's generators and machines will work together.<br>Networks balance once per tick.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/events.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="./search-index.js"></script>
+<script src="../docs.js"></script>
+</body>
+</html>

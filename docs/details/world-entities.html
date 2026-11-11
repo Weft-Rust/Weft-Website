@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entities in the world - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="liquids.html">Liquids</a><a href="effects.html">Status effects and potions</a><a href="recipes-loot.html">Recipes and loot</a><a href="world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a href="editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="conditions.html">Conditions</a><a href="attributes.html">Attributes and modifiers</a><a href="poses-and-modes.html">Poses and game modes</a><a href="commands.html">Commands</a><a href="text.html">Text on the screen</a></details><details class="group" open><summary>World from code</summary><a href="../world-api.html">World API</a><a href="world-blocks.html">Blocks in the world</a><a class="current" aria-current="page" href="world-entities.html">Entities in the world</a><a href="hitboxes.html">Raycasts and hitboxes</a><a href="particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="../reference/index.html">All reference pages</a><a href="../reference/blocks.html">Blocks</a><a href="../reference/client.html">Client</a><a href="../reference/commands.html">Commands</a><a href="../reference/effects.html">Particles and effects</a><a href="../reference/entities.html">Entities</a><a href="../reference/events.html">Events and steps</a><a href="../reference/items.html">Items</a><a href="../reference/recipes.html">Recipes and loot</a><a href="../reference/registration.html">Registration</a><a href="../reference/ui.html">UI</a><a href="../reference/world.html">World</a><a href="../reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Entities in the world</h1>
+<p>What <code>w</code> can do with entities: spawning and finding them, making them walk, and changing what they are right now. Numbers like speed or reach are <a href="attributes.html">attributes</a>.</p>
+<section class="dsec" id="spawning-finding-hurting"><h2><button class="fold" aria-expanded="true">Spawning, finding, hurting</button><a class="anchor" href="#spawning-finding-hurting">#</a></h2><div class="sec-body">
+<ul>
+<li><code>spawn(&amp;KIND, pos)</code> and <code>spawn_with(&amp;KIND, pos, &amp;Spawn::new().velocity(v))</code> for one that starts moving</li>
+<li><code>spawn_item</code> for a dropped stack (<code>spawn_with(&amp;ITEM, ..)</code> with <code>.stack(s)</code> throws it)</li>
+<li><code>entity(id)</code>, <code>entities_near</code>, and <code>targets_near</code> for what can be hit</li>
+<li><code>damage</code>, <code>heal</code>, <code>push</code> (a trampoline or a blast, players too)</li>
+<li><code>game_mode</code>, <code>creative</code>, <code>outside_survival</code> for a mode that spares damage and hunger, <code>set_game_mode(player, &amp;game_modes::CREATIVE)</code></li>
+<li><code>navigate</code> for pathfinding</li>
+</ul>
+</div></section>
+<section class="dsec" id="walking-like-a-player"><h2><button class="fold" aria-expanded="true">Walking like a player</button><a class="anchor" href="#walking-like-a-player">#</a></h2><div class="sec-body">
+<p><code>w.walk(id, Walk::toward(dir, 1.0).sprint().jump())</code> holds the keys a player would: <code>.jump()</code>, <code>.sneak()</code> (careful at edges, holds on to ladders, crouches, flies down), <code>.sprint()</code>, <code>.fly()</code> (with <code>attribute::CAN_FLY</code> 1 or more), and the same physics answers; with <code>.poses()</code> on its kind the player's poses do too: sprinting into water it swims lying down, under a low ceiling it crouches. Speed and jump are attributes (<code>attribute::MOVEMENT_SPEED</code>, <code>JUMP_STRENGTH</code>) for mobs and players alike: <code>w.attribute_add_modifier(player, &amp;MOVEMENT_SPEED, ..)</code> is a speed effect, and <code>attribute::FOV</code> widens or narrows a player's view (a zoom, a speed rush).</p>
+</div></section>
+<section class="dsec" id="changing-what-an-entity-is-now"><h2><button class="fold" aria-expanded="true">Changing what an entity is now</button><a class="anchor" href="#changing-what-an-entity-is-now">#</a></h2><div class="sec-body">
+<p><code>w.entity_modify(id)</code> changes what an entity is now, only what you name, players' clients following: <code>.pos(..)</code>, <code>.velocity(..)</code>, <code>.yaw(..)</code>, <code>.pitch(..)</code>, <code>.health(..)</code>, <code>.fall_distance(0.0)</code> (a mace's smash, a parachute), <code>.flying(true)</code>, <code>.fire(ticks)</code>, <code>.selected(slot)</code>, <code>.persistent(true)</code>. Testmod's mace is a whole weapon on top of that and <code>attribute::ATTACK_DAMAGE</code>.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/details/world-entities.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>

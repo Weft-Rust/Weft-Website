@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Client reference - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="../details/liquids.html">Liquids</a><a href="../details/effects.html">Status effects and potions</a><a href="../details/recipes-loot.html">Recipes and loot</a><a href="../details/world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a href="../details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="../details/conditions.html">Conditions</a><a href="../details/attributes.html">Attributes and modifiers</a><a href="../details/poses-and-modes.html">Poses and game modes</a><a href="../details/commands.html">Commands</a><a href="../details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="../details/world-blocks.html">Blocks in the world</a><a href="../details/world-entities.html">Entities in the world</a><a href="../details/hitboxes.html">Raycasts and hitboxes</a><a href="../details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="../details/camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group" open><summary>Reference</summary><a href="index.html">All reference pages</a><a href="blocks.html">Blocks</a><a class="current" aria-current="page" href="client.html">Client</a><a href="commands.html">Commands</a><a href="effects.html">Particles and effects</a><a href="entities.html">Entities</a><a href="events.html">Events and steps</a><a href="items.html">Items</a><a href="recipes.html">Recipes and loot</a><a href="registration.html">Registration</a><a href="ui.html">UI</a><a href="world.html">World</a><a href="worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Client reference</h1><nav class="toc"><span>On this page</span><a href="#camerabuilder">CameraBuilder</a><a href="#channel">Channel</a><a href="#chatformat">ChatFormat</a><a href="#client">Client</a><a href="#cliententity">ClientEntity</a><a href="#drawing">Drawing</a><a href="#keybuilder">KeyBuilder</a><a href="#keys">Keys</a><a href="#packet">Packet</a><a href="#shot">Shot</a><a href="#show">Show</a><a href="#textplacebuilder">TextPlaceBuilder</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>The client side: input, camera, screen text, packets.</p>
+<section class="dsec" id="camerabuilder"><h2><button class="fold" aria-expanded="true">CameraBuilder</button><a class="anchor" href="#camerabuilder">#</a></h2><div class="sec-body">
+<p><code>Registry::camera</code>: registers when dropped.</p>
+<ul>
+<li><a id="CameraBuilder-shot"></a><code>.shot(shot: Shot)</code><span class="d">How it moves, with the tags that takes. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/camera.rs#L207">source</a></li>
+<li><a id="CameraBuilder-in_cycle"></a><code>.in_cycle()</code><span class="d">One F5 goes through. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/camera.rs#L215">source</a></li>
+<li><a id="CameraBuilder-when"></a><code>.when(c: impl Into&lt;crate::Cond&gt;)</code><span class="d">Only where this holds for the player, asked on the server, and the server lets it (<code>actions::CAMERA</code>): <code>.when(Cond::attribute(&amp;attribute::CAN_FLY, 1.0, f64::MAX))</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/camera.rs#L220">source</a></li>
+<li><a id="CameraBuilder-key"></a><code>.key(key: &amp;'static Key, default: &amp;str)</code><span class="d">A key that turns it on and back off, <code>default</code> as <code>Registry::key</code> takes it. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/camera.rs#L224">source</a></li>
+<li><a id="CameraBuilder-transition"></a><code>.transition(secs: f32, easing: u32)</code><span class="d">The change into it takes <code>secs</code>, eased by <code>easing</code> (<code>easing::*</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/camera.rs#L229">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="channel"><h2><button class="fold" aria-expanded="true">Channel</button><a class="anchor" href="#channel">#</a></h2><div class="sec-body">
+<p>A message channel between a mod's client and server halves, carrying <code>T</code>; both ends declare the same type, which the engine checks like event values:</p>
+<ul>
+<li><a id="Channel-named"></a><code>.named(name: &amp;'static str)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L485">source</a></li>
+<li><a id="Channel-generated"></a><code>.generated(name: String) -&gt; &amp;'static Self</code><span class="d">For names made at runtime; lives as long as the game. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L489">source</a></li>
+<li><a id="Channel-name"></a><code>.name() -&gt; &amp;str</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L492">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="chatformat"><h2><button class="fold" aria-expanded="true">ChatFormat</button><a class="anchor" href="#chatformat">#</a></h2><div class="sec-body">
+<p>A player's message on its way to the chat (<code>Registry::chat_format</code>).</p>
+<ul>
+<li><a id="ChatFormat-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L151">source</a></li>
+<li><a id="ChatFormat-player"></a><code>.player() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L155">source</a></li>
+<li><a id="ChatFormat-text"></a><code>.text() -&gt; &amp;str</code><span class="d">What they typed. Pass it as <code>Arg::Text</code>, or a player gets to format the line. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L160">source</a></li>
+<li><a id="ChatFormat-set"></a><code>.set(key: &amp;str, args: &amp;[Arg])</code><span class="d">The line everyone gets. Not called, it stays the engine's <code>&lt;name&gt; text</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L165">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="client"><h2><button class="fold" aria-expanded="true">Client</button><a class="anchor" href="#client">#</a></h2><div class="sec-body">
+<p>The local client during a client callback. Only valid for the duration of that callback.</p>
+<ul>
+<li><a id="Client-view"></a><code>.view() -&gt; ClientView</code><span class="d">The read-only view UI bindings get (own player, components, menu data). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L50">source</a></li>
+<li><a id="Client-state"></a><code>.state() -&gt; ClientState</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L54">source</a></li>
+<li><a id="Client-screen"></a><code>.screen() -&gt; String</code><span class="d">Top screen name (<code>core:menu</code>, <code>core:pause</code>, ...), empty in the world. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L61">source</a></li>
+<li><a id="Client-input_action"></a><code>.input_action(key: &amp;Key, secs: f32) -&gt; bool</code><span class="d">Presses the key bound to <code>key</code> (yours from <code>Registry::key</code>, or one of <code>keys::*</code>) for <code>secs</code> (0 = a tap). False for a key nobody registered. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L71">source</a></li>
+<li><a id="Client-input_key"></a><code>.input_key(key: &amp;str, secs: f32) -&gt; bool</code><span class="d">A key by its settings name (<code>Enter</code>, <code>Tab</code>, <code>KeyE</code>, <code>F3</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L76">source</a></li>
+<li><a id="Client-input_click"></a><code>.input_click(button: u32, secs: f32)</code><span class="d">Mouse button 0 left, 1 right, 2 middle. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L81">source</a></li>
+<li><a id="Client-input_cursor"></a><code>.input_cursor(x: f32, y: f32)</code><span class="d">Moves the mouse to fractions of the window. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L86">source</a></li>
+<li><a id="Client-input_scroll"></a><code>.input_scroll(steps: f32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L90">source</a></li>
+<li><a id="Client-input_type"></a><code>.input_type(text: &amp;str)</code><span class="d">Text typed into the focused field. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L95">source</a></li>
+<li><a id="Client-bone_turn"></a><code>.bone_turn(entity: u64, bone: &amp;str, degrees: [f32</code><span class="d">Turns a bone of <code>entity</code>'s model or of what it has on, for this frame, on top of its clips: degrees about x, y, z, the way Blockbench counts them. From <code>client_frame</code> or <code>client_entity_frame</code>, every frame it should last. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L106">source</a></li>
+<li><a id="Client-bone_move"></a><code>.bone_move(entity: u64, bone: &amp;str, pixels: [f32</code><span class="d">Moves a bone this far in pixels, for this frame, the same way. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L112">source</a></li>
+<li><a id="Client-bone_scale"></a><code>.bone_scale(entity: u64, bone: &amp;str, scale: [f32</code><span class="d">Scales a bone and what hangs on it, for this frame, the same way. All 0 hides it. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L117">source</a></li>
+<li><a id="Client-action_current"></a><code>.action_current(entity: u64) -&gt; Option&lt;String&gt;</code><span class="d">The action <code>entity</code> is playing now (<code>World::action_play</code>), until its clip is over. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L122">source</a></li>
+<li><a id="Client-clip_length"></a><code>.clip_length(entity: u64, name: &amp;str) -&gt; Option&lt;f32&gt;</code><span class="d">How long a clip of action <code>name</code> is on <code>entity</code>'s model, in seconds. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L128">source</a></li>
+<li><a id="Client-held_item"></a><code>.held_item(entity: u64, hand: Hand) -&gt; u32</code><span class="d">The item id in <code>entity</code>'s <code>hand</code>; 0 for none. Other players' stacks aren't sent, so this is the item without what is in it. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L135">source</a></li>
+<li><a id="Client-bone_position"></a><code>.bone_position(entity: u64, bone: &amp;str) -&gt; Option&lt;Vec3&gt;</code><span class="d">Where a bone of <code>entity</code>'s model or of what it has on was in the world the last frame: for sparks off a sword's tip, smoke over a lantern. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L141">source</a></li>
+<li><a id="Client-input_release_all"></a><code>.input_release_all()</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L146">source</a></li>
+<li><a id="Client-key"></a><code>.key(key: &amp;Key) -&gt; abi::KeyState</code><span class="d">What the key (yours from <code>Registry::key</code>, or one of <code>keys::*</code>) does now: pressed this frame, held, for how many ticks. Keys belong to the world: while a screen has the input they are up. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L153">source</a></li>
+<li><a id="Client-key_pressed"></a><code>.key_pressed(key: &amp;Key) -&gt; bool</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L159">source</a></li>
+<li><a id="Client-key_held"></a><code>.key_held(key: &amp;Key) -&gt; bool</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L163">source</a></li>
+<li><a id="Client-control"></a><code>.control(c: &amp;abi::PlayerControl)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L167">source</a></li>
+<li><a id="Client-set_look"></a><code>.set_look(yaw_deg: f32, pitch_deg: f32)</code><span class="d">Turns the local player, in degrees like the F3 screen. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L172">source</a></li>
+<li><a id="Client-teleport"></a><code>.teleport(pos: impl Into&lt;Vec3&gt;)</code><span class="d">Puts the local player's feet at <code>pos</code> (the server takes it as a move). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L182">source</a></li>
+<li><a id="Client-set_velocity"></a><code>.set_velocity(vel: impl Into&lt;Vec3&gt;)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L187">source</a></li>
+<li><a id="Client-set_flying"></a><code>.set_flying(on: bool)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L192">source</a></li>
+<li><a id="Client-set_fly_speed"></a><code>.set_fly_speed(mul: f32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L196">source</a></li>
+<li><a id="Client-select_slot"></a><code>.select_slot(slot: u32)</code><span class="d">Hotbar slot 0..9. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L201">source</a></li>
+<li><a id="Client-say"></a><code>.say(line: &amp;str)</code><span class="d">A chat line or <code>/command</code>, as if the player typed and sent it. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L210">source</a></li>
+<li><a id="Client-screenshot"></a><code>.screenshot(path: &amp;str) -&gt; u64</code><span class="d">Captures the next frame to <code>path</code> (a bare name goes into <code>screenshots/</code>). The pixels are available a frame later through <code>image(id)</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L216">source</a></li>
+<li><a id="Client-quit"></a><code>.quit(code: i32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L220">source</a></li>
+<li><a id="Client-world_open"></a><code>.world_open(name: &amp;str, seed: u64)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L224">source</a></li>
+<li><a id="Client-world_create"></a><code>.world_create(name: &amp;str, seed: u64)</code><span class="d">Opens a fresh world, deleting a save of the same name first. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L229">source</a></li>
+<li><a id="Client-world_leave"></a><code>.world_leave()</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L233">source</a></li>
+<li><a id="Client-world_host"></a><code>.world_host()</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L237">source</a></li>
+<li><a id="Client-world_join"></a><code>.world_join(ticket: &amp;str)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L241">source</a></li>
+<li><a id="Client-menu_open"></a><code>.menu_open(screen: &amp;Menu) -&gt; bool</code><span class="d">A mod's screen or one of the engine's (<code>screens::*</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L246">source</a></li>
+<li><a id="Client-menu_close"></a><code>.menu_close()</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L250">source</a></li>
+<li><a id="Client-menu_sort"></a><code>.menu_sort(slot: Option&lt;u32&gt;) -&gt; bool</code><span class="d">Sorts the open menu's storage: slot <code>slot</code>'s group, or with <code>None</code> what the menu is opened on (a chest), else the player's main inventory. Items of a kind come together, stacked, in the order they were registered. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L257">source</a></li>
+<li><a id="Client-reload_assets"></a><code>.reload_assets()</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L261">source</a></li>
+<li><a id="Client-bench"></a><code>.bench(secs: f32, label: &amp;str)</code><span class="d">Statistics over <code>secs</code>, logged as a <code>BENCH</code> line; numbers in <code>state().bench_*</code> once <code>state().benches</code> goes up. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L267">source</a></li>
+<li><a id="Client-respawn"></a><code>.respawn()</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L271">source</a></li>
+<li><a id="Client-ticket"></a><code>.ticket() -&gt; String</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L283">source</a></li>
+<li><a id="Client-run_dir"></a><code>.run_dir() -&gt; String</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L287">source</a></li>
+<li><a id="Client-chat_line"></a><code>.chat_line(index: u32) -&gt; String</code><span class="d">Chat line <code>index</code> back from the newest, empty past the end. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L292">source</a></li>
+<li><a id="Client-bench_line"></a><code>.bench_line() -&gt; String</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L296">source</a></li>
+<li><a id="Client-focused_text"></a><code>.focused_text() -&gt; String</code><span class="d">Text of the top screen's focused input field. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L301">source</a></li>
+<li><a id="Client-block"></a><code>.block(pos: impl Into&lt;BlockPos&gt;) -&gt; Option&lt;u32&gt;</code><span class="d">The block the client has at <code>pos</code>, <code>None</code> while that cube is not loaded. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L306">source</a></li>
+<li><a id="Client-body_block"></a><code>.body_block(entity: u64, pos: impl Into&lt;BlockPos&gt;) -&gt; Option&lt;u32&gt;</code><span class="d">The block the client has at <code>pos</code> of moving body <code>entity</code> (0: the world). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L311">source</a></li>
+<li><a id="Client-cube_shown"></a><code>.cube_shown(pos: impl Into&lt;BlockPos&gt;) -&gt; bool</code><span class="d">Whether the cube holding <code>pos</code> is here and has been drawn. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L318">source</a></li>
+<li><a id="Client-light"></a><code>.light(pos: impl Into&lt;BlockPos&gt;) -&gt; Option&lt;u32&gt;</code><span class="d">The light the client has at <code>pos</code> (sky level in the low byte, then block red, green, blue), <code>None</code> while that cube is not loaded. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L325">source</a></li>
+<li><a id="Client-menu_slot"></a><code>.menu_slot(slot: u32) -&gt; ItemStack</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L331">source</a></li>
+<li><a id="Client-cursor_stack"></a><code>.cursor_stack() -&gt; ItemStack</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L335">source</a></li>
+<li><a id="Client-menu"></a><code>.menu() -&gt; Option&lt;abi::OpenMenu&gt;</code><span class="d">The open menu. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L340">source</a></li>
+<li><a id="Client-entities"></a><code>.entities() -&gt; Vec&lt;u64&gt;</code><span class="d">Entities the client knows, the local player left out. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L346">source</a></li>
+<li><a id="Client-entity"></a><code>.entity(id: u64) -&gt; Option&lt;abi::EntityState&gt;</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L357">source</a></li>
+<li><a id="Client-ui_rect"></a><code>.ui_rect(query: &amp;str) -&gt; Option&lt;abi::Rect&gt;</code><span class="d">Where an element of the top screen is (fractions of the window): <code>slot:N</code>, <code>item:N</code> (creative list), <code>entity</code> (the entity figure), <code>scrollbar</code> (the first scroll bar's track), <code>class:name</code> (the first part of that theme class), <code>id:name</code> or <code>text:words</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L364">source</a></li>
+<li><a id="Client-ui_click"></a><code>.ui_click(query: &amp;str, button: u32) -&gt; bool</code><span class="d">Moves the mouse to the middle of a UI element and clicks it with <code>button</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L370">source</a></li>
+<li><a id="Client-draw_screen_text"></a><code>.draw_screen_text(x: f32, y: f32, key: &amp;str, args: &amp;[crate::Arg], color: u32, size: f32)</code><span class="d">The translation <code>key</code> with <code>args</code>, centered at fractions of the window, <code>size</code> times as big as menu text. Part of the GUI: F1 hides it with the rest. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L379">source</a></li>
+<li><a id="Client-send"></a><code>.send&lt;T: Payload&gt;(channel: &amp;Channel&lt;T&gt;, value: &amp;T)</code><span class="d">Sends <code>value</code> on <code>channel</code> to the server. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L385">source</a></li>
+<li><a id="Client-run_command"></a><code>.run_command(line: &amp;str) -&gt; u32</code><span class="d">Runs a command as this player (<code>/tp ~ ~5 ~</code>): a client command here, any other on the server. The answer goes to <code>command_reply(id)</code>, not the chat. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L392">source</a></li>
+<li><a id="Client-command_reply"></a><code>.command_reply(id: u32) -&gt; Option&lt;String&gt;</code><span class="d">The answer of <code>run_command</code>'s <code>id</code> once it came, its lines in the client's language; read once. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L398">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="cliententity"><h2><button class="fold" aria-expanded="true">ClientEntity</button><a class="anchor" href="#cliententity">#</a></h2><div class="sec-body">
+<p>One entity in <code>Registry::client_entity_frame</code>.</p>
+<ul>
+<li><a id="ClientEntity-id"></a><code>.id() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L758">source</a></li>
+<li><a id="ClientEntity-kind"></a><code>.kind() -&gt; u32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L761">source</a></li>
+<li><a id="ClientEntity-pos"></a><code>.pos() -&gt; Vec3</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L764">source</a></li>
+<li><a id="ClientEntity-yaw"></a><code>.yaw() -&gt; f32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L767">source</a></li>
+<li><a id="ClientEntity-walked"></a><code>.walked() -&gt; f32</code><span class="d">Distance walked so far; steps go by how it grows. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L771">source</a></li>
+<li><a id="ClientEntity-dying"></a><code>.dying() -&gt; Option&lt;f32&gt;</code><span class="d">Seconds into its death animation (1: over, the last call), <code>None</code> while alive. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L775">source</a></li>
+<li><a id="ClientEntity-age"></a><code>.age() -&gt; f32</code><span class="d">Seconds since this client first saw it. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L779">source</a></li>
+<li><a id="ClientEntity-dt"></a><code>.dt() -&gt; f32</code><span class="d">Seconds since the last call. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L783">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="drawing"><h2><button class="fold" aria-expanded="true">Drawing</button><a class="anchor" href="#drawing">#</a></h2><div class="sec-body">
+<p>Gizmo shapes, drawn when this is dropped (<code>Output::draw_line</code> ..).</p>
+<ul>
+<li><a id="Drawing-to"></a><code>.to(who: impl Into&lt;Who&gt;)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/out.rs#L157">source</a></li>
+<li><a id="Drawing-ticks"></a><code>.ticks(n: u32)</code><span class="d">Ticks the server's stay; a client draws for the frame. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/out.rs#L163">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="keybuilder"><h2><button class="fold" aria-expanded="true">KeyBuilder</button><a class="anchor" href="#keybuilder">#</a></h2><div class="sec-body">
+<ul>
+<li><a id="KeyBuilder-on_client"></a><code>.on_client(f: impl Fn(&amp;Client) + Send + Sync + 'static)</code><span class="d">On the client, every time the key goes down. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L619">source</a></li>
+<li><a id="KeyBuilder-on_server"></a><code>.on_server(f: impl Fn(&amp;crate::World, u64) + Send + Sync + 'static)</code><span class="d">On the server, for the player who pressed it (world, player): <code>crate::KEY</code> filtered to this key going down. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L636">source</a></li>
+<li><a id="KeyBuilder-on_release_server"></a><code>.on_release_server(f: impl Fn(&amp;crate::World, u64, u32) + Send + Sync + 'static)</code><span class="d">On the server, when the player lets it go (world, player, ticks it was held): a charge. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L647">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="keys"><h2><button class="fold" aria-expanded="true">Keys</button><a class="anchor" href="#keys">#</a></h2><div class="sec-body">
+<p>The keys as a mount's steering or a camera mode reads them, any action by its handle, and where the player looks (radians; a detached camera's own look).</p>
+<ul>
+<li><a id="Keys-state"></a><code>.state(key: &amp;Key) -&gt; abi::KeyState</code><span class="d">Pressed, held and its charge: ticks held, and held before being let go this tick. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L673">source</a></li>
+<li><a id="Keys-held"></a><code>.held(key: &amp;Key) -&gt; bool</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L679">source</a></li>
+<li><a id="Keys-axis"></a><code>.axis(plus: &amp;Key, minus: &amp;Key) -&gt; f32</code><span class="d">-1..1 from <code>minus</code> held to <code>plus</code> held: <code>axis(&amp;keys::FORWARD, &amp;keys::BACK)</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L684">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="packet"><h2><button class="fold" aria-expanded="true">Packet</button><a class="anchor" href="#packet">#</a></h2><div class="sec-body">
+<p>A message on a channel, on the server.</p>
+<ul>
+<li><a id="Packet-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L529">source</a></li>
+<li><a id="Packet-player"></a><code>.player() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L532">source</a></li>
+<li><a id="Packet-reply"></a><code>.reply&lt;R: Payload&gt;(channel: &amp;Channel&lt;R&gt;, value: &amp;R)</code><span class="d">Answers the sender on <code>channel</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/client.rs#L536">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="shot"><h2><button class="fold" aria-expanded="true">Shot</button><a class="anchor" href="#shot">#</a></h2><div class="sec-body">
+<p>How a camera moves: called each frame on the client with the keys, the player's eyes and last frame's camera (<code>CameraArgs</code>), it sets <code>out</code>. It brings the tags it needs along (<code>comp::camera</code>: a free camera is <code>DETACHED</code>), <code>CameraBuilder::shot</code> adds them.</p>
+<ul>
+<li><a id="Shot-new"></a><code>.new(tags: &amp;'static [&amp;'static str], f: impl Fn(&amp;mut CameraArgs) + Send + Sync + 'static) -&gt; Shot</code><span class="d">Yours: <code>|a| a.out.pos = ..</code>, with these tags (<code>comp::camera</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/camera.rs#L45">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="show"><h2><button class="fold" aria-expanded="true">Show</button><a class="anchor" href="#show">#</a></h2><div class="sec-body">
+<p>Text on its way to the screen: it goes when this is dropped, at the end of the statement.</p>
+<ul>
+<li><a id="Show-to"></a><code>.to(who: impl Into&lt;Who&gt;)</code><span class="d">Who sees it, of the players on the server (everyone in the dimension unless said); a client shows it only if this takes it in. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L92">source</a></li>
+<li><a id="Show-id"></a><code>.id(id: &amp;'a str)</code><span class="d">New text with the same place and id replaces this one instead of adding another: a timer counting in one chat line, several free texts side by side. Empty key and no args takes it away. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L100">source</a></li>
+<li><a id="Show-at"></a><code>.at(x: f32, y: f32)</code><span class="d">This point of the text at the same point of the window, in fractions of either: (0, 0) the top left corner of both, (0.5, 0.5) centered, (1, 1) the bottom right corner of both. It stands by itself then, whatever its place. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L108">source</a></li>
+<li><a id="Show-scale"></a><code>.scale(scale: f32)</code><span class="d">How big, 1 being menu text. A title is 4, a subtitle 2. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L114">source</a></li>
+<li><a id="Show-times"></a><code>.times(fade_in: f32, stay: f32, fade_out: f32)</code><span class="d">Seconds of fading in, staying and fading out. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L120">source</a></li>
+<li><a id="Show-color"></a><code>.color(rgb: u32)</code><span class="d"><code>0xRRGGBB</code>, for what doesn't color itself. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L126">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="textplacebuilder"><h2><button class="fold" aria-expanded="true">TextPlaceBuilder</button><a class="anchor" href="#textplacebuilder">#</a></h2><div class="sec-body">
+<p>A place for text a mod adds (<code>Registry::text_place</code>): an element of the HUD the player can move and hide, and how text there looks unless <code>show</code> says otherwise.</p>
+<ul>
+<li><a id="TextPlaceBuilder-hud"></a><code>.hud(anchor: &amp;str, order: i32)</code><span class="d">Where the HUD puts it by default: an anchor (<code>hud_anchor::TOP_RIGHT</code>) and its order there. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L44">source</a></li>
+<li><a id="TextPlaceBuilder-at"></a><code>.at(x: f32, y: f32, dx: f32, dy: f32)</code><span class="d">A spot of its own by default instead: this point of it at the same point of the window, moved by <code>dx</code>, <code>dy</code> GUI pixels. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L50">source</a></li>
+<li><a id="TextPlaceBuilder-scale"></a><code>.scale(scale: f32)</code><span class="d">How big, 1 being menu text. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L55">source</a></li>
+<li><a id="TextPlaceBuilder-times"></a><code>.times(fade_in: f32, stay: f32, fade_out: f32)</code><span class="d">Seconds of fading in, staying and fading out, by default. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L59">source</a></li>
+<li><a id="TextPlaceBuilder-stacks"></a><code>.stacks()</code><span class="d">Several texts at once, one under another; by default a new one replaces what is there. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L63">source</a></li>
+<li><a id="TextPlaceBuilder-class"></a><code>.class(class: &amp;str)</code><span class="d">Theme class of its text (<code>label</code> by default). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L67">source</a></li>
+<li><a id="TextPlaceBuilder-sample"></a><code>.sample(key: &amp;str)</code><span class="d">The translation the HUD editor shows while the place is empty. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/show.rs#L71">source</a></li>
+</ul>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/reference/client.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>

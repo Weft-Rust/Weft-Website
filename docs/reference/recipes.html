@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recipes and loot reference - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="../details/liquids.html">Liquids</a><a href="../details/effects.html">Status effects and potions</a><a href="../details/recipes-loot.html">Recipes and loot</a><a href="../details/world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a href="../details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="../details/conditions.html">Conditions</a><a href="../details/attributes.html">Attributes and modifiers</a><a href="../details/poses-and-modes.html">Poses and game modes</a><a href="../details/commands.html">Commands</a><a href="../details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="../details/world-blocks.html">Blocks in the world</a><a href="../details/world-entities.html">Entities in the world</a><a href="../details/hitboxes.html">Raycasts and hitboxes</a><a href="../details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="../details/camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group" open><summary>Reference</summary><a href="index.html">All reference pages</a><a href="blocks.html">Blocks</a><a href="client.html">Client</a><a href="commands.html">Commands</a><a href="effects.html">Particles and effects</a><a href="entities.html">Entities</a><a href="events.html">Events and steps</a><a href="items.html">Items</a><a class="current" aria-current="page" href="recipes.html">Recipes and loot</a><a href="registration.html">Registration</a><a href="ui.html">UI</a><a href="world.html">World</a><a href="worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Recipes and loot reference</h1><nav class="toc"><span>On this page</span><a href="#lootbuilder">LootBuilder</a><a href="#pool">Pool</a><a href="#recipebuilder">RecipeBuilder</a><a href="#recipekindbuilder">RecipeKindBuilder</a><a href="#recipeview">RecipeView</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>Recipe kinds, recipes, loot tables and their pools.</p>
+<section class="dsec" id="lootbuilder"><h2><button class="fold" aria-expanded="true">LootBuilder</button><a class="anchor" href="#lootbuilder">#</a></h2><div class="sec-body">
+<p>A loot table being registered (<code>Registry::loot</code>) or changed (<code>r.edit(ZOMBIE.loot())</code>); sent when dropped.</p>
+<ul>
+<li><a id="LootBuilder-pool"></a><code>.pool(p: Pool)</code><span class="d">One more pool, after the table's. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L920">source</a></li>
+<li><a id="LootBuilder-replace_drop"></a><code>.replace_drop(from: &amp;str, to: &amp;str)</code><span class="d">Every entry of item <code>from</code> gives <code>to</code> instead, in whatever pools the table has in the end. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L925">source</a></li>
+<li><a id="LootBuilder-remove_drop"></a><code>.remove_drop(item: &amp;str)</code><span class="d">Entries of <code>item</code> are left out, likewise. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L930">source</a></li>
+<li><a id="LootBuilder-clear"></a><code>.clear()</code><span class="d">Empties the table, its swaps too; pools added after it stay. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L935">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="pool"><h2><button class="fold" aria-expanded="true">Pool</button><a class="anchor" href="#pool">#</a></h2><div class="sec-body">
+<p>Rolls (1 by default) of one weighted choice each.</p>
+<ul>
+<li><a id="Pool-new"></a><code>.new() -&gt; Pool</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L865">source</a></li>
+<li><a id="Pool-rolls"></a><code>.rolls(min: u32, max: u32) -&gt; Pool</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L868">source</a></li>
+<li><a id="Pool-when"></a><code>.when(c: impl Into&lt;Cond&gt;) -&gt; Pool</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L872">source</a></li>
+<li><a id="Pool-entry"></a><code>.entry(e: Entry) -&gt; Pool</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L876">source</a></li>
+<li><a id="Pool-item"></a><code>.item(name: &amp;str) -&gt; Pool</code><span class="d">One of <code>name</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L881">source</a></li>
+<li><a id="Pool-items"></a><code>.items(name: &amp;str, min: u32, max: u32) -&gt; Pool</code><span class="d"><code>min..=max</code> of <code>name</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/extend.rs#L885">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="recipebuilder"><h2><button class="fold" aria-expanded="true">RecipeBuilder</button><a class="anchor" href="#recipebuilder">#</a></h2><div class="sec-body">
+<ul>
+<li><a id="RecipeBuilder-named"></a><code>.named(name: &amp;str)</code><span class="d">Its name instead of <code>&lt;mod&gt;:&lt;kind&gt;/&lt;output&gt;</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1919">source</a></li>
+<li><a id="RecipeBuilder-input_amounts"></a><code>.input_amounts(counts: &amp;[u32])</code><span class="d">How many of each input it takes, in the order of the inputs (millibuckets for liquids). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1925">source</a></li>
+<li><a id="RecipeBuilder-output"></a><code>.output(item: &amp;str, count: u32)</code><span class="d">Another result (an item, or a liquid by its name and millibuckets). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1929">source</a></li>
+<li><a id="RecipeBuilder-output_chance"></a><code>.output_chance(item: &amp;str, count: u32, chance: f32)</code><span class="d">A result that comes out with chance <code>chance</code> (0..1) each time: a pool of it and nothing. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1933">source</a></li>
+<li><a id="RecipeBuilder-extra"></a><code>.extra(pool: crate::Pool)</code><span class="d">Rolls of more results, as a loot table's (<code>r.loot(..).pool(..)</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1941">source</a></li>
+<li><a id="RecipeBuilder-keep"></a><code>.keep(key: impl RecipeSlot)</code><span class="d">Works, but the recipe viewer doesn't list it. Ingredient <code>key</code> (its pattern character, or for a recipe without a pattern its place among the inputs) stays as it is: a mold, a catalyst. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1948">source</a></li>
+<li><a id="RecipeBuilder-wear"></a><code>.wear(key: impl RecipeSlot, amount: u32)</code><span class="d">Ingredient <code>key</code> stays and wears by <code>amount</code> a run, breaking when it is worn out: a hammer. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1952">source</a></li>
+<li><a id="RecipeBuilder-leaves"></a><code>.leaves(key: impl RecipeSlot, item: &amp;str)</code><span class="d">Ingredient <code>key</code> is used up and <code>item</code> takes its place (any mod's): a lava bucket leaving its bucket. Without this one leaves its item's <code>remainder</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1957">source</a></li>
+<li><a id="RecipeBuilder-hidden"></a><code>.hidden()</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1965">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="recipekindbuilder"><h2><button class="fold" aria-expanded="true">RecipeKindBuilder</button><a class="anchor" href="#recipekindbuilder">#</a></h2><div class="sec-body">
+<p>A recipe kind being registered; sent when dropped.</p>
+<ul>
+<li><a id="RecipeKindBuilder-inputs"></a><code>.inputs(cols: u32, rows: u32)</code><span class="d">The recipe viewer shows inputs as a grid this big, whatever a recipe uses (a crafting table's 3 x 3). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1991">source</a></li>
+<li><a id="RecipeKindBuilder-outputs"></a><code>.outputs(cols: u32, rows: u32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1994">source</a></li>
+<li><a id="RecipeKindBuilder-info_line"></a><code>.info_line(key: &amp;str, values: &amp;[&amp;str])</code><span class="d">A line under each recipe: translation <code>key</code>, its <code>{0}</code>.. filled with <code>values</code>: <code>time</code> (seconds) or components the recipe carries (<code>mymod:energy_per_tick</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1999">source</a></li>
+<li><a id="RecipeKindBuilder-layout"></a><code>.layout(f: impl Fn(&amp;mut Ui, &amp;RecipeView) + Send + Sync + 'static)</code><span class="d">Builds each recipe yourself instead of the usual inputs, arrow, outputs: <code>ui.recipe_inputs()</code>, <code>ui.recipe_outputs()</code> and <code>ui.recipe_input(i)</code> place its slots. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2006">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="recipeview"><h2><button class="fold" aria-expanded="true">RecipeView</button><a class="anchor" href="#recipeview">#</a></h2><div class="sec-body">
+<p>One recipe of a kind, found by <code>recipe_find</code> (or shown by a kind's <code>layout</code>).</p>
+<ul>
+<li><a id="RecipeView-time"></a><code>.time() -&gt; u32</code><span class="d">Its time in ticks. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2126">source</a></li>
+<li><a id="RecipeView-outputs"></a><code>.outputs() -&gt; Vec&lt;(ItemStack, f32)&gt;</code><span class="d">Its results with their chances; a liquid's is its item by the millibucket. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2130">source</a></li>
+<li><a id="RecipeView-roll"></a><code>.roll(w: &amp;crate::World) -&gt; Vec&lt;ItemStack&gt;</code><span class="d">What else one run of it gives this time, its pools rolled. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2140">source</a></li>
+<li><a id="RecipeView-value"></a><code>.value&lt;T: Value, K&gt;(comp: &amp;Component&lt;T, K&gt;) -&gt; Option&lt;T&gt;</code><span class="d">A value the recipe carries (<code>r.shaped(..).set(&amp;COMP, v)</code>): its entry's. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2147">source</a></li>
+<li><a id="RecipeView-consume"></a><code>.consume(stacks: &amp;mut [ItemStack]) -&gt; bool</code><span class="d">Takes its inputs out of <code>stacks</code> (the ones <code>recipe_find</code> was given); false, and nothing taken, if they are not all there. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2152">source</a></li>
+</ul>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/reference/recipes.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>

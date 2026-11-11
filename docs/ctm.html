@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CTM guide - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../assets/icon.png">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../docs.css">
+</head>
+<body class="docs" data-root="../docs/">
+<header class="bar">
+  <a class="bar-name" href="../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="blocks.html">Blocks</a><a href="items.html">Items</a><a href="entities.html">Entities</a><a href="details/liquids.html">Liquids</a><a href="details/effects.html">Status effects and potions</a><a href="details/recipes-loot.html">Recipes and loot</a><a href="details/world-content.html">World content</a><a href="block_entities.html">Block entities guide</a><a href="registration.html">Registration guide</a><a href="details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="events.html">Events, chains and questions</a><a href="details/conditions.html">Conditions</a><a href="details/attributes.html">Attributes and modifiers</a><a href="details/poses-and-modes.html">Poses and game modes</a><a href="details/commands.html">Commands</a><a href="details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="world-api.html">World API</a><a href="details/world-blocks.html">Blocks in the world</a><a href="details/world-entities.html">Entities in the world</a><a href="details/hitboxes.html">Raycasts and hitboxes</a><a href="details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="client.html">Client side</a><a href="ui.html">UI guide</a><a href="details/camera.html">Camera modes</a><a href="models.html">Models and animations guide</a><a href="shaders.html">Shaders guide</a></details><details class="group" open><summary>Assets</summary><a href="textures.html">Textures guide</a><a class="current" aria-current="page" href="ctm.html">CTM guide</a><a href="sky.html">Sky guide</a><a href="resourcepacks.html">Resource packs guide</a><a href="localization.html">Localization guide</a><a href="redstone.html">redstone.md</a><a href="worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="reference/index.html">All reference pages</a><a href="reference/blocks.html">Blocks</a><a href="reference/client.html">Client</a><a href="reference/commands.html">Commands</a><a href="reference/effects.html">Particles and effects</a><a href="reference/entities.html">Entities</a><a href="reference/events.html">Events and steps</a><a href="reference/items.html">Items</a><a href="reference/recipes.html">Recipes and loot</a><a href="reference/registration.html">Registration</a><a href="reference/ui.html">UI</a><a href="reference/world.html">World</a><a href="reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>CTM guide</h1><nav class="toc"><span>On this page</span><a href="#note">Note</a><a href="#quick-links">Quick links</a><a href="#where-the-files-go">Where the files go</a><a href="#structure-of-ctm-files">Structure of .ctm files</a><a href="#method-1">Method</a><a href="#models-as-tiles">Models as tiles</a><a href="#examples">Examples</a><a href="#debugging">Debugging</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>CTM is connected and varied block textures like glass that merges with its neighbors, logs that look
+like one trunk, stone that doesn't repeat itself, etc.<br>Everything is almost identical to OptiFine/MCPatcher CTM, so packs made for
+those port with little more than moving files.</p>
+<section class="dsec" id="note"><h2><button class="fold" aria-expanded="true">Note</button><a class="anchor" href="#note">#</a></h2><div class="sec-body">
+<p>CTM is created without code and works from both mods and resource packs, a pack's file overrides the mod's one.<br>It works on blocks only, so no CTM on items or entities.<br>Every method works on every block except for liquids: a method looks at neighbors, not at what is drawn. A plant is one west face, so <code>vertical</code> and <code>top</code> are what it has most use for, and <code>horizontal</code> looks along z. The one exception is <code>compact</code>. Its tiles are cut for a cube's face: on a texture a plant or a model shows it logs <code>compact ctm doesn't support custom models</code> and stops the game. Use full <code>ctm</code>, or keep it off them with <code>blocks =</code>.<br>A tile can also <a href="#models-as-tiles">be a model</a>.<br>Examples to copy from are in <code>mods/base/assets/textures/block/</code>: <code>glass/</code>, <code>stone/</code>, <code>iron_ore/</code>.</p>
+<p>Check <a href="textures.html">textures guide</a> for more texturing options like overlays, glow and animation.</p>
+</div></section>
+<section class="dsec" id="quick-links"><h2><button class="fold" aria-expanded="true">Quick links</button><a class="anchor" href="#quick-links">#</a></h2><div class="sec-body">
+<p><a href="#method">method</a> | <a href="#tiles">tiles</a> | <a href="#connect">connect</a> | <a href="#faces">faces</a> | <a href="#inner_seams">inner_seams</a> | <a href="#blocks">blocks</a> | <a href="#heights">heights</a> | <a href="#biomes">biomes</a> | <a href="#weights">weights</a> | <a href="#symmetry">symmetry</a> | <a href="#width-and-height">width and height</a></p>
+</div></section>
+<section class="dsec" id="where-the-files-go"><h2><button class="fold" aria-expanded="true">Where the files go</button><a class="anchor" href="#where-the-files-go">#</a></h2><div class="sec-body">
+<p>A texture with CTM is a folder instead of a picture: the rules <code>&lt;name&gt;.ctm</code> and the tiles go in <code>&lt;name&gt;/</code>, and blocks keep naming it <code>glass</code> as before.</p>
+<h3 id="base-mod-example">Base mod example: <a class="anchor" href="#base-mod-example">#</a></h3>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">assets/textures/block/
+    glass/glass.ctm    &lt;- the rules
+    glass/0.png        &lt;- the tiles the rules point to
+    glass/1.png
+    ...</code></pre></div>
+<p>Where nothing connects it (an item, breaking particles, distant terrain, a face no rule is for), the texture is the tile a block alone gets: tile <code>0</code> (all edges for <code>ctm</code> and <code>compact</code>, the first one for <code>random</code>, <code>repeat</code>, <code>fixed</code> and <code>top</code>), tile <code>3</code> (both ends) for <code>horizontal</code>, <code>vertical</code>, <code>h+v</code> and <code>v+h</code>. So there is no <code>glass.png</code> beside the folder; one mod or pack with both stops the game.</p>
+<p>The rules apply to every face that shows this texture on any block.<br>For example if a block uses glass texture as one of the faces, it will get the same CTM as glass block for that face.</p>
+<p>A mod can only add rules for its own textures.<br>A resource pack can add them for any mod's texture, since packs keep files in a folder per namespace:<br>the base game's glass is <code>&lt;pack&gt;/base/textures/block/glass/glass.ctm</code> with its tiles beside it.</p>
+<p>A pack that has a plain <code>glass.png</code> turns the mod's rules for it off: you get your picture as it is. A pack's folder goes over a mod's picture or folder, and a pack replacing only <code>glass/0.png</code> keeps the mod's rules with its own tile.</p>
+<p>The file uses <code>key = value</code> lines.<br>Comments are whole lines starting with <code>#</code>. A <code>#</code> after a value is a part of that value, so don't do it.</p>
+<p>A file can hold several rules, each new one starts with a line <code>[any text]</code> as a separator, the text inside doesn't matter.<br>The first rule whose conditions pass for the face wins, so put specific ones first.</p>
+</div></section>
+<section class="dsec" id="structure-of-ctm-files"><h2><button class="fold" aria-expanded="true">Structure of .ctm files</button><a class="anchor" href="#structure-of-ctm-files">#</a></h2><div class="sec-body">
+<h3 id="method">method <a class="anchor" href="#method">#</a></h3>
+<p>What the tiles mean and how many are needed. Default is <code>ctm</code>.</p>
+<p>values: <code>ctm</code>, <code>compact</code>, <code>horizontal</code>, <code>vertical</code>, <code>h+v</code>, <code>v+h</code>, <code>top</code>, <code>random</code>, <code>repeat</code>, <code>fixed</code><br>(also accepted: <code>glass</code>, <code>bookshelf</code>, <code>sandstone</code>, <code>pattern</code>, <code>static</code>, <code>horizontal+vertical</code>, <code>vertical+horizontal</code>, <code>ctm_compact</code>)</p>
+<p>example: <code>method = compact</code></p>
+<hr>
+<h3 id="tiles">tiles <a class="anchor" href="#tiles">#</a></h3>
+<p>Which textures the method uses, in order.</p>
+<p>A name is a file in the folder (a full <code>namespace:path</code> also works).<br><code>a-b</code> at the end of a name expands to numbers: <code>0-4</code> is <code>0 1 2 3 4</code>.</p>
+<p>examples:<br><code>tiles = 0-4</code><br><code>tiles = 3 1 2</code><br><code>tiles = 0 1 2 3</code></p>
+<p>A tile with a model file of the same name is that model, see <a href="#models-as-tiles">models as tiles</a>.</p>
+<p>If there are fewer tiles than the method needs, the rule is skipped and the log says <code>needs N tiles, has M</code>.</p>
+<hr>
+<h3 id="connect">connect <a class="anchor" href="#connect">#</a></h3>
+<p>What counts as "a neighbor" for the connecting methods.</p>
+<p>values:<br><code>tile</code>: the neighbor shows this texture on that face, whatever block it is (default)<br><code>block</code>: the neighbor is the same block<br><code>state</code>: the neighbor is the same block state</p>
+<p>example: <code>connect = block</code></p>
+<hr>
+<h3 id="faces">faces <a class="anchor" href="#faces">#</a></h3>
+<p>Which faces of a block the rule works on.</p>
+<p>values: <code>all</code> (default), <code>top</code>, <code>bottom</code>, <code>sides</code>, <code>north</code>, <code>south</code>, <code>east</code>, <code>west</code>, any of them separated by spaces</p>
+<p>example: <code>faces = sides</code></p>
+<hr>
+<h3 id="inner_seams">inner_seams <a class="anchor" href="#inner_seams">#</a></h3>
+<p>If the neighbor's face is covered by another opaque block, that neighbor doesn't connect.<br>Default <code>false</code>, glass uses <code>true</code>.</p>
+<p>values: <code>true</code>, <code>false</code></p>
+<hr>
+<h3 id="blocks">blocks <a class="anchor" href="#blocks">#</a></h3>
+<p>Only for these blocks, separated by spaces. Written like blocks are named anywhere else: a full name, a state (<code>base:furnace[lit=true]</code>), a tag (<code>#logs</code>, <code>#ores/*</code>), and <code>!</code> before any of them to leave it out. A name nothing has is reported in the log with the file.</p>
+<p>example: <code>blocks = #logs !base:oak_log[axis=y]</code></p>
+<hr>
+<h3 id="heights">heights <a class="anchor" href="#heights">#</a></h3>
+<p>Only inside these world heights (Y of the block).</p>
+<p>example: <code>heights = 0-40 100-</code><br>(<code>100-</code> means from 100 up, <code>0-40</code> up to 40)</p>
+<hr>
+<h3 id="biomes">biomes <a class="anchor" href="#biomes">#</a></h3>
+<p>Only in these biomes, by name or by tag. A <code>!</code> in front turns the list around.</p>
+<p>examples:<br><code>biomes = base:desert base:beach</code><br><code>biomes = #cold</code><br><code>biomes = !base:desert</code></p>
+<hr>
+<h3 id="weights">weights <a class="anchor" href="#weights">#</a></h3>
+<p>For <code>random</code>: how often each tile appears, in the order of <code>tiles</code>. Missing ones get the average.</p>
+<p>example: <code>weights = 4 2 2 2</code></p>
+<hr>
+<h3 id="symmetry">symmetry <a class="anchor" href="#symmetry">#</a></h3>
+<p>For <code>random</code>: do faces of one block get the same tile?</p>
+<p>values: <code>none</code> (default), <code>opposite</code> (opposite faces share it), <code>all</code> (all six faces share it)</p>
+<hr>
+<h3 id="width-and-height">width and height <a class="anchor" href="#width-and-height">#</a></h3>
+<p>For <code>repeat</code>: the size of the pattern in blocks, tiles go left to right, top to bottom.</p>
+<p>example: <code>width = 2</code> and <code>height = 2</code> with four tiles</p>
+</div></section>
+<section class="dsec" id="method-1"><h2><button class="fold" aria-expanded="true">Method</button><a class="anchor" href="#method-1">#</a></h2><div class="sec-body">
+<h3 id="ctm">ctm <a class="anchor" href="#ctm">#</a></h3>
+<p>Every neighbor of the 8 around the face decides which of 47 tiles is shown. Requires exactly 47 tiles, the most versatile and the most size-heavy method.</p>
+<p>Tile numbers (the same as OptiFine's template), so tile <code>0</code> is the file <code>0.png</code> and so on. Each tile shows the face with the edges where it does <strong>not</strong> connect to a neighbor:</p>
+<p><img alt="the numbered 47 tiles" src="img/ctm_full_layout.png" loading="lazy"></p>
+<p>Tile 0 is the face alone, with no neighbors. Draw each file as the picture shows: a dark border on the sides that have no neighbor, a dark dot in a corner where both sides connect but the diagonal one doesn't.</p>
+<h3 id="compact">compact <a class="anchor" href="#compact">#</a></h3>
+<p>Same result as <code>ctm</code> from only 5 tiles, the other 42 are built when the game loads. Each face is split into 4 quadrants, and every quadrant takes one of the 5 tiles depending on its two edges and the diagonal:</p>
+<table><thead><tr><th>tile</th><th>when the quadrant is...</th></tr></thead><tbody><tr><td>0</td><td>alone (all borders)</td></tr><tr><td>1</td><td>connected on all sides (no borders)</td></tr><tr><td>2</td><td>vertical lines only</td></tr><tr><td>3</td><td>connected left and right only</td></tr><tr><td>4</td><td>an inner corner: both sides connect but the diagonal doesn't</td></tr></tbody></table>
+<p>Here is how 4 quadrants of the input become a stitched result, on a 3x3 pattern with a cutout:</p>
+<p><img alt="compact tiles, split, rearranged and stitched" src="img/ctm_compact.png" loading="lazy"></p>
+<p>One limit: a quadrant is half the tile, so an edge or a corner can't be wider than half of it (8x8 pixels on a 16x16 texture). Textures with thicker borders need full CTM. Check <code>mods/base/assets/textures/block/glass/</code> for a real example.</p>
+<h3 id="horizontal-vertical">horizontal, vertical <a class="anchor" href="#horizontal-vertical">#</a></h3>
+<p>4 tiles. Connects only left-right (or up-down), like bookshelves or logs.</p>
+<p><code>horizontal</code>, seen from the front:<br><img alt="horizontal tiles" src="img/ctm_horizontal.png" loading="lazy"></p>
+<p><code>vertical</code>, seen from the front:<br><img alt="vertical tiles, top to bottom" src="img/ctm_vertical.png" loading="lazy"></p>
+<h3 id="hv-vh">h+v, v+h <a class="anchor" href="#hv-vh">#</a></h3>
+<p><code>h+v</code>, the extra tiles go down the left column:</p>
+<p><img alt="h+v tiles" src="img/ctm_h_v.png" loading="lazy"></p>
+<p><code>v+h</code>:</p>
+<p><img alt="v+h tiles" src="img/ctm_v_h.png" loading="lazy"></p>
+<h3 id="top">top <a class="anchor" href="#top">#</a></h3>
+<p>2 tiles: the plain one, and the one side faces use when the same block is above them (sandstone-like). Top and bottom faces use the plain one.</p>
+<h3 id="random">random <a class="anchor" href="#random">#</a></h3>
+<p>Picks a tile from the position, so the same block always looks the same.<br>Any number of tiles, see <code>weights</code> and <code>symmetry</code> for more values.</p>
+<h3 id="repeat">repeat <a class="anchor" href="#repeat">#</a></h3>
+<p>A pattern of <code>width</code> x <code>height</code> tiles that continues across blocks, tiles go row by row.<br>Needs <code>width * height</code> tiles.</p>
+<h3 id="fixed">fixed <a class="anchor" href="#fixed">#</a></h3>
+<p>always 1 tile. Handy together with <code>blocks</code>, <code>heights</code> or <code>biomes</code> to swap the texture there.</p>
+</div></section>
+<section class="dsec" id="models-as-tiles"><h2><button class="fold" aria-expanded="true">Models as tiles</button><a class="anchor" href="#models-as-tiles">#</a></h2><div class="sec-body">
+<p>A tile doesn't have to be a picture. If <code>models/block/&lt;tile&gt;.json</code> exists, a Java block model the way Blockbench exports it, that tile redraws the whole block, whatever shape it had before. Every method can pick one, and every block can get one.</p>
+<p>A random cactus, one in five with a flower or a branch:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">textures/block/cactus_side/cactus_side.ctm
+textures/block/cactus_side/0.png   &lt;- the plain side
+textures/block/cactus_side/1.png   &lt;- an unwrap, any size
+models/block/cactus_side/1.json
+...</code></pre></div>
+<p><code>cactus_side.ctm</code>:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">method = random
+tiles = 0-3
+weights = 12 1 1 1</code></pre></div>
+<p>The method chooses the tile and the model shows its picture: a face the file gives no texture shows the picture named like the tile (<code>textures/block/cactus_side/1.png</code>), else the texture the rules belong to. A file can name its own textures as usual, each face with its <code>uv</code> on them, in a model's 0 to 16 across the picture however big it is. Fractions are fine down to 1/8, that's what an unwrap on a 64x64 or 128x128 texture comes down to. The edge of a part can bleed a screen pixel into what is next to it on the picture, so leave a pixel of margin in the same color. A tile without a model file (<code>0</code> here) keeps the block as it was.</p>
+<p>Only the visual changes: collision, selection and light stay what the mod gave every player, since a server knows nothing of packs. Items show the block's plain model. A model is picked by its block's position, so <code>symmetry</code> has no say and all of its faces agree.</p>
+<p>Model corners go by whole model pixels, a corner at 1.5 lands on 2.</p>
+<h3 id="hides_neighbors">hides_neighbors <a class="anchor" href="#hides_neighbors">#</a></h3>
+<p>A block the mod made opaque keeps hiding the faces next to it. If a model leaves gaps in such a block, you would look through the world there, so say it does:</p>
+<p><code>hides_neighbors = false</code></p>
+<p>The faces next to any block the rule goes for are then drawn. It goes on any rule, a <code>fixed</code> one with <code>tiles = 0</code> is enough for a <code>models/block/&lt;name&gt;.json</code> of a pack. Light still treats the block as solid, so those faces take their light from what is around.</p>
+</div></section>
+<section class="dsec" id="examples"><h2><button class="fold" aria-expanded="true">Examples</button><a class="anchor" href="#examples">#</a></h2><div class="sec-body">
+<h3 id="sugar-cane">Sugar cane <a class="anchor" href="#sugar-cane">#</a></h3>
+<p><code>reeds/reeds.ctm</code>:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">method = vertical
+tiles = 0-3</code></pre></div>
+<h3 id="glass">Glass <a class="anchor" href="#glass">#</a></h3>
+<p><code>glass/glass.ctm</code>:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">method = compact
+tiles = 0-4
+inner_seams = true</code></pre></div>
+<p>with <code>glass/0.png</code> ... <code>glass/4.png</code> beside it.</p>
+<h3 id="logs-that-look-like-one-trunk">Logs that look like one trunk <a class="anchor" href="#logs-that-look-like-one-trunk">#</a></h3>
+<p>A pack's <code>log_oak/log_oak.ctm</code>:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">method = vertical
+tiles = 0-3
+faces = sides</code></pre></div>
+<h3 id="stone-that-doesnt-repeat">Stone that doesn't repeat <a class="anchor" href="#stone-that-doesnt-repeat">#</a></h3>
+<p><code>stone/stone.ctm</code>:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">method = random
+tiles = 1-3
+weights = 6 2 2</code></pre></div>
+<h3 id="several-rules-in-one-file">Several rules in one file <a class="anchor" href="#several-rules-in-one-file">#</a></h3>
+<p>Only in deserts, a different one elsewhere:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">method = fixed
+tiles = smooth
+biomes = base:desert
+
+[the rest of the world]
+method = random
+tiles = 0 1 2</code></pre></div>
+</div></section>
+<section class="dsec" id="debugging"><h2><button class="fold" aria-expanded="true">Debugging</button><a class="anchor" href="#debugging">#</a></h2><div class="sec-body">
+<p>The log says <code>connected textures: N rules, M models, T textures, K generated</code> when any rule is loaded.<br><code>unknown method</code> or <code>needs N tiles</code> lines name the file and the rule that was skipped, and a skipped
+rule just shows the texture's alone tile.<br>A tile file that doesn't exist shows up as the "missing texture" pattern.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/ctm.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="./search-index.js"></script>
+<script src="../docs.js"></script>
+</body>
+</html>

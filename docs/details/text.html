@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Text on the screen - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="liquids.html">Liquids</a><a href="effects.html">Status effects and potions</a><a href="recipes-loot.html">Recipes and loot</a><a href="world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a href="editing-others.html">Changing something of another mod</a></details><details class="group" open><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="conditions.html">Conditions</a><a href="attributes.html">Attributes and modifiers</a><a href="poses-and-modes.html">Poses and game modes</a><a href="commands.html">Commands</a><a class="current" aria-current="page" href="text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="world-blocks.html">Blocks in the world</a><a href="world-entities.html">Entities in the world</a><a href="hitboxes.html">Raycasts and hitboxes</a><a href="particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="../reference/index.html">All reference pages</a><a href="../reference/blocks.html">Blocks</a><a href="../reference/client.html">Client</a><a href="../reference/commands.html">Commands</a><a href="../reference/effects.html">Particles and effects</a><a href="../reference/entities.html">Entities</a><a href="../reference/events.html">Events and steps</a><a href="../reference/items.html">Items</a><a href="../reference/recipes.html">Recipes and loot</a><a href="../reference/registration.html">Registration</a><a href="../reference/ui.html">UI</a><a href="../reference/world.html">World</a><a href="../reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Text on the screen</h1>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">w.hint("mymod.no_mana", &amp;[]).to(player);                          // a short line above the hotbar
+w.chat("mymod.boss_up", &amp;[Arg::Text(name)]).to(Who::All);           // a line in the chat
+w.title("mymod.round", &amp;[Arg::Int(3)]);                             // big, over the crosshair
+w.subtitle("mymod.get_ready", &amp;[]).to(Who::Near(w.dimension(), pos, 32.0)); // under the crosshair
+w.show("mymod.timer", &amp;[Arg::Int(left)])                            // by itself, anywhere
+    .to(player)
+    .id("mymod:timer")
+    .at(0.98, 0.02)
+    .scale(2.0);</code></pre></div>
+<p><code>.to(..)</code> takes a player's id or a <code>Who</code>; without it the text goes to everyone in the dimension. It is sent at the end of the statement, and everything can be changed on any of them:</p>
+<ul>
+<li><code>.at(x, y)</code> in fractions of the window. That point of the text lies at the same point of the window, so <code>.at(1.0, 0.0)</code> is exactly the top right corner. A hint with <code>.at</code> is no longer in the HUD's flow.</li>
+<li><code>.scale(s)</code>: 1 is menu text, a subtitle is 2, a title 4.</li>
+<li><code>.times(fade_in, stay, fade_out)</code> in seconds.</li>
+<li><code>.color(0xRRGGBB)</code> for what doesn't color itself with <code>{#color}</code>.</li>
+<li><code>.id("mymod:timer")</code>: new text with the same place and id replaces the old one, so a timer counts down in one chat line instead of filling the chat. An empty key with no args takes it away.</li>
+</ul>
+<p>Text, sounds, particles and gizmo shapes are one <code>Output</code> that the server's <code>World</code> and a <code>Client</code> both have, with the same calls. On the server each goes to whoever it reaches by itself unless <code>.to(..)</code> says otherwise: a sound to the players in its range, particles to those near them, a gizmo to those showing its group, text to the dimension. On a client it goes to that client alone, and only if its <code>.to(..)</code> takes that player in, so code both sides run writes it once: <code>out.play_sound(&amp;CHIME, None, 1.0).to(player)</code> dings for that player whichever side calls it.</p>
+<p>Players move or hide hints and titles in the HUD editor (<code>core:hint</code>, <code>core:title</code>, <code>core:subtitle</code>), so use those for anything a player might want elsewhere, and <code>.at</code> when the position is the point. A place of your own works the same: <code>r.text_place(&amp;QUEST).hud(hud_anchor::TOP_RIGHT, 0).stacks()</code> makes one more element of the HUD, and <code>w.show_at(player, &amp;QUEST, key, args)</code> puts text there; the engine's are in <code>text_places</code>, and <code>hint</code>, <code>title</code> and the rest are <code>show_at</code> with one of them. The client has the same calls for its own screen: <code>c.show</code>, <code>c.show_at</code>, <code>c.hint</code>, <code>c.title</code>, <code>c.subtitle</code>, <code>c.chat</code> (<code>c.say</code> sends a line as if typed). A check that reads the world can serve both sides: written over <code>&amp;impl View</code> (<code>raining</code>, <code>day_time</code>, <code>block</code>, <code>light</code>, <code>entity</code>, <code>component_of</code>), it takes the server's <code>w</code> and the client's <code>c.view()</code> alike. <code>c.draw_screen_text</code> is different: it draws for one frame, for what you animate yourself.</p>
+<p>A player's message goes through one mod, the last loaded that asked. Pass what they typed as <code>Arg::Text</code>, or players get to format the line:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.chat_format(|f| f.set("mymod.chat", &amp;[Arg::Text(rank(f.player())), Arg::Text(f.text())]));</code></pre></div>
+<p>Commands: <code>/title &lt;who&gt; title|subtitle|hint &lt;text&gt;</code>, <code>/title &lt;who&gt; show &lt;x&gt; &lt;y&gt; &lt;size&gt; &lt;text&gt;</code>, <code>/title &lt;who&gt; times &lt;in&gt; &lt;stay&gt; &lt;out&gt;</code>, <code>/title &lt;who&gt; clear|reset</code>, <code>/say</code>, <code>/msg</code>, <code>/tellraw &lt;who&gt; &lt;text&gt;</code>. Text in <code>/title</code> and <code>/tellraw</code> can use <code>{#color}</code> and the rest; what <code>/say</code>, <code>/msg</code> and the chat get stays as typed.</p>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/details/text.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>

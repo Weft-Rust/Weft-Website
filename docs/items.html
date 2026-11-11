@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Items - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../assets/icon.png">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../docs.css">
+</head>
+<body class="docs" data-root="../docs/">
+<header class="bar">
+  <a class="bar-name" href="../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="index.html">Weft modding quick start</a></details><details class="group" open><summary>Content</summary><a href="blocks.html">Blocks</a><a class="current" aria-current="page" href="items.html">Items</a><a href="entities.html">Entities</a><a href="details/liquids.html">Liquids</a><a href="details/effects.html">Status effects and potions</a><a href="details/recipes-loot.html">Recipes and loot</a><a href="details/world-content.html">World content</a><a href="block_entities.html">Block entities guide</a><a href="registration.html">Registration guide</a><a href="details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="events.html">Events, chains and questions</a><a href="details/conditions.html">Conditions</a><a href="details/attributes.html">Attributes and modifiers</a><a href="details/poses-and-modes.html">Poses and game modes</a><a href="details/commands.html">Commands</a><a href="details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="world-api.html">World API</a><a href="details/world-blocks.html">Blocks in the world</a><a href="details/world-entities.html">Entities in the world</a><a href="details/hitboxes.html">Raycasts and hitboxes</a><a href="details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="client.html">Client side</a><a href="ui.html">UI guide</a><a href="details/camera.html">Camera modes</a><a href="models.html">Models and animations guide</a><a href="shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="textures.html">Textures guide</a><a href="ctm.html">CTM guide</a><a href="sky.html">Sky guide</a><a href="resourcepacks.html">Resource packs guide</a><a href="localization.html">Localization guide</a><a href="redstone.html">redstone.md</a><a href="worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="reference/index.html">All reference pages</a><a href="reference/blocks.html">Blocks</a><a href="reference/client.html">Client</a><a href="reference/commands.html">Commands</a><a href="reference/effects.html">Particles and effects</a><a href="reference/entities.html">Entities</a><a href="reference/events.html">Events and steps</a><a href="reference/items.html">Items</a><a href="reference/recipes.html">Recipes and loot</a><a href="reference/registration.html">Registration</a><a href="reference/ui.html">UI</a><a href="reference/world.html">World</a><a href="reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Items</h1>
+<p><code>r.item(&amp;ITEM)</code> and then the calls below. Stacks that carry values of their own are at the end. Every method is in the <a href="reference/items.html">reference</a>.</p>
+<section class="dsec" id="settings"><h2><button class="fold" aria-expanded="true">Settings</button><a class="anchor" href="#settings">#</a></h2><div class="sec-body">
+<ul>
+<li><code>texture</code></li>
+<li><code>max_stack(N)</code></li>
+<li><code>durability</code></li>
+<li><code>tool("pickaxe", tier)</code>, <code>mining_speed(speed)</code></li>
+<li><code>attack_damage</code>, <code>attack_speed(per_second)</code> (hitting before it has recharged does less; a sword is 1.6, and without it an item swings at an empty hand's 4) and <code>sweeps()</code> (a full swing on the ground also hits what stands next to the target: 1, plus <code>attribute::SWEEPING_DAMAGE_RATIO</code> of the hit)</li>
+<li>Advancements read tags, so yours count by tagging them: <code>cooked_meat</code> on food, <code>hostile</code> and <code>livestock</code> on mobs, <code>logs</code>, <code>torches</code>, <code>furnaces</code>, etc etc</li>
+<li><code>no_tab()</code>: in no creative tab nor its search, still obtainable (a variant you hand out, a spoiler); another mod brings it back with <code>.untag(abi::comp::NO_TAB)</code></li>
+<li><code>no_creative_break()</code>: in creative it doesn't break blocks, like a sword. Both sides know, so nothing flickers; a rule that depends on more is <code>actions::BREAK_BLOCK</code>, which is asked when mining starts and tells the client no right away</li>
+<li><code>spawns(&amp;ENTITY)</code>: used on a block it puts the entity there. Every entity already has an egg of its own, see below</li>
+<li><code>places(&amp;BLOCK)</code></li>
+<li><code>handheld()</code>: held by its end and pointing ahead in third person, like a stick. <code>tool(..)</code> does it already, and so does the tag <code>handheld</code></li>
+<li><code>wearable(&amp;HEAD, inflate, texture)</code> for armor and anything else worn in an equipment slot</li>
+<li><code>light(14)</code>, <code>light_rgb(r, g, b)</code>: lights up around whoever holds or wears it, or where it lies. Every client draws that light itself, so it doesn't spawn-proof or grow anything. An item that places a block already gives that block's light</li>
+</ul>
+</div></section>
+<section class="dsec" id="using-an-item"><h2><button class="fold" aria-expanded="true">Using an item</button><a class="anchor" href="#using-an-item">#</a></h2><div class="sec-body">
+<ul>
+<li><code>two_handed()</code>, <code>one_handed_action(action)</code>, <code>use_priority(n)</code>: <a href="models.html#items-in-the-hand">what it does in the hands</a></li>
+<li><code>on_use</code>: what using it does. Before it runs anyone can say no to <code>actions::USE_ITEM</code>, and after it the same action's event tells every mod (testmod heals with base's food through it). <code>base_api::eat</code> is the base game's eating: <code>.set(&amp;FOOD, ..).use_ticks(32).on_use(base_api::eat)</code></li>
+<li><code>use_until_released()</code> and <code>on_release(|u| ..)</code>: held as long as the button is, and letting go does something, <code>u.held_ticks()</code> saying after how long. Base's bow is that: <code>.use_until_released().on_release(shoot_bow)</code>, the draw's strength from the ticks. While it is held, <code>w.entity(id)</code> says what is being used and for how long (<code>using</code>, <code>using_ticks</code>): base's bow narrows the view by a step on the <code>fov</code> attribute that reads them, and its <code>use</code> clip (arms, the string, the nocked arrow) plays by the seconds held. <code>on_release</code> also hears an item with <code>use_ticks</code> let go too early. Anything finer reads the keys themselves, see Client side</li>
+</ul>
+</div></section>
+<section class="dsec" id="stacks-with-their-own-data"><h2><button class="fold" aria-expanded="true">Stacks with their own data</button><a class="anchor" href="#stacks-with-their-own-data">#</a></h2><div class="sec-body">
+<p>A stack is an item, a count, and whatever values of components it carries of its own, like the damage a tool took. You never touch <code>data</code> yourself, it's only a handle to those values:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">value! { pub struct Quality { pub grade: u32, pub maker: u32 } }
+static QUALITY: Component&lt;Quality&gt; = Component::named("quality");
+
+// While registering, once:
+r.stack_component(&amp;QUALITY, 0);
+
+// Making one, a custom workbench's output for example:
+let out = PICKAXE.stack(1)
+    .with(&amp;QUALITY, Quality { grade: 3, maker: 7 })
+    .with_wear(10);
+inventory.set(slot, out);
+
+// Reading it:
+QUALITY.on_stack(&amp;stack);   // its own value, else what the item has
+QUALITY.on_stack_own(&amp;stack); // only its own
+stack.wear();
+let plain = stack.without(&amp;QUALITY);</code></pre></div>
+<p>A stack's own value wins over its item's for everything the engine reads too: give one stack its own <code>DURABILITY</code>, <code>MINING_SPEED</code>, <code>TOOL_LEVEL</code>, <code>ATTACK_DAMAGE</code>, <code>ATTACK_SPEED</code>, <code>USE_TICKS</code> or a <code>tools/&lt;class&gt;</code> tag and it digs, wears and hits by those, and <code>stack.with_modifiers(&amp;[Modifier::add(&amp;attribute::ATTACK_DAMAGE, 2.0)])</code> gives it modifiers of its own instead of its item's (an enchanted sword). Anything about a stack can be changed from outside: its item, count and any value, with <code>inventory.set(slot, ..)</code> and <code>.with(..)</code>.</p>
+<p>A tool made of parts keeps them in a storage (<code>r.storage(&amp;PARTS, 3)</code>, see <a href="block_entities.html">block entities</a>): <code>stack.stacks(&amp;PARTS)</code> and <code>stack.with_stacks(&amp;PARTS, &amp;[handle, head, binding])</code> read and write them right on the stack, no slot needed, and each part is a stack with its own values and parts, as deep as you go. Add the parts' values up when you make it and write the result onto the stack. <code>stack.with_layers(Layers::new().layer("rod").layer("pick_head").tint(0xB0B0B0))</code> makes it show its parts' pictures one over the other (<code>tint</code> colors the layer just added), in slots, in the hand and on the ground.</p>
+<p>Stacks with different data don't merge. <code>r.stack_component</code> says a component exists for stacks, its flags are <code>abi::stack_flags</code>: <code>SERVER_ONLY</code> (clients get the stack without it), <code>NO_SAVE</code>, or 0 for neither. <code>.with</code> on a component nobody declared does nothing and says so in the log. Ids in a value shift when a mod comes or goes, the same as in a <code>SAVE</code> component (see <a href="index.html#components-and-tags-as-inter-mod-communication">components</a>).</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/items.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="./search-index.js"></script>
+<script src="../docs.js"></script>
+</body>
+</html>

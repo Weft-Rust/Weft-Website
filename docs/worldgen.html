@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Worldgen guide - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../assets/icon.png">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../docs.css">
+</head>
+<body class="docs" data-root="../docs/">
+<header class="bar">
+  <a class="bar-name" href="../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="blocks.html">Blocks</a><a href="items.html">Items</a><a href="entities.html">Entities</a><a href="details/liquids.html">Liquids</a><a href="details/effects.html">Status effects and potions</a><a href="details/recipes-loot.html">Recipes and loot</a><a href="details/world-content.html">World content</a><a href="block_entities.html">Block entities guide</a><a href="registration.html">Registration guide</a><a href="details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="events.html">Events, chains and questions</a><a href="details/conditions.html">Conditions</a><a href="details/attributes.html">Attributes and modifiers</a><a href="details/poses-and-modes.html">Poses and game modes</a><a href="details/commands.html">Commands</a><a href="details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="world-api.html">World API</a><a href="details/world-blocks.html">Blocks in the world</a><a href="details/world-entities.html">Entities in the world</a><a href="details/hitboxes.html">Raycasts and hitboxes</a><a href="details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="client.html">Client side</a><a href="ui.html">UI guide</a><a href="details/camera.html">Camera modes</a><a href="models.html">Models and animations guide</a><a href="shaders.html">Shaders guide</a></details><details class="group" open><summary>Assets</summary><a href="textures.html">Textures guide</a><a href="ctm.html">CTM guide</a><a href="sky.html">Sky guide</a><a href="resourcepacks.html">Resource packs guide</a><a href="localization.html">Localization guide</a><a href="redstone.html">redstone.md</a><a class="current" aria-current="page" href="worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="reference/index.html">All reference pages</a><a href="reference/blocks.html">Blocks</a><a href="reference/client.html">Client</a><a href="reference/commands.html">Commands</a><a href="reference/effects.html">Particles and effects</a><a href="reference/entities.html">Entities</a><a href="reference/events.html">Events and steps</a><a href="reference/items.html">Items</a><a href="reference/recipes.html">Recipes and loot</a><a href="reference/registration.html">Registration</a><a href="reference/ui.html">UI</a><a href="reference/world.html">World</a><a href="reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Worldgen guide</h1><nav class="toc"><span>On this page</span><a href="#note">Note</a><a href="#quick-links">Quick links</a><a href="#how-generation-works">How generation works</a><a href="#features">Features</a><a href="#ores">Ores</a><a href="#structures">Structures</a><a href="#plans">Plans</a><a href="#placing-and-finding">Placing and finding</a><a href="#spawns">Spawns</a><a href="#biomes">Biomes</a><a href="#dimensions">Dimensions</a><a href="#terrain">Terrain</a><a href="#trees-and-other-scattered-things">Trees and other scattered things</a><a href="#decorations">Decorations</a><a href="#changing-another-mods-terrain">Changing another mod's terrain</a><a href="#writing-a-generator">Writing a generator</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>This covers everything that shapes the world: features (ores, structures, trees, grass), spawns, biomes, and whole dimensions with their own terrain.<br>Base builds its overworld with the functions described here, and other mods can change it with the same ones.</p>
+<section class="dsec" id="note"><h2><button class="fold" aria-expanded="true">Note</button><a class="anchor" href="#note">#</a></h2><div class="sec-body">
+<p>Examples to copy from:</p>
+<ul>
+<li><code>mods/testmod/src/lib.rs</code>: Mars, a planet made only from terrain presets, <code>void</code>, an island written by hand, and a biome, a rock needle and boulders added to Mars as from outside</li>
+<li><code>mods/testmod/src/looks.rs</code>: an obelisk structure standing in the dry parts of Mars, and outposts grown from pieces joined by their joints, one of them a file in <code>assets/structures/</code></li>
+<li><code>mods/base/src/worldgen.rs</code>: the overworld, with biomes, caves, trees and flowers</li>
+</ul>
+</div></section>
+<section class="dsec" id="quick-links"><h2><button class="fold" aria-expanded="true">Quick links</button><a class="anchor" href="#quick-links">#</a></h2><div class="sec-body">
+<p><a href="#how-generation-works">how generation works</a> | <a href="#features">features</a> | <a href="#ores">ores</a> | <a href="#structures">structures</a> | <a href="#plans">plans</a> | <a href="#placing-and-finding">placing and finding</a> | <a href="#spawns">spawns</a> | <a href="#biomes">biomes</a> | <a href="#dimensions">dimensions</a> | <a href="#terrain">terrain</a> | <a href="#trees-and-other-scattered-things">trees</a> | <a href="#decorations">decorations</a> | <a href="#changing-another-mods-terrain">changing another mod's terrain</a> | <a href="#writing-a-generator">writing a generator</a></p>
+</div></section>
+<section class="dsec" id="how-generation-works"><h2><button class="fold" aria-expanded="true">How generation works</button><a class="anchor" href="#how-generation-works">#</a></h2><div class="sec-body">
+<p>The world is made of 16x16x16 cubes, and each one is generated on its own, whenever somebody needs it. That's why a generator has to be a <strong>pure function</strong>: the same seed and position must always give the same blocks, on every machine and in any order. Don't use random numbers, clock, something remembered between cubes for worldgen.</p>
+<p>It matters more than it sounds: the server only generates what it simulates around players (<code>core:simulation_distance</code>, 8 cubes by default), and everything further away the client generates itself from the seed with your generator. If the two ever disagree, players see one thing and walk into another. The server only sends what differs from generation: blocks players changed and area edits like a crater.</p>
+<p>A cube is made in steps: the dimension's terrain (or its generator) first, then its features in order, and spawns happen later in the finished world. Everything after the terrain is a feature, so none of them cares how the others are made, which is also what lets a mod add one to a dimension that belongs to someone else. Features go into every dimension but bare ones by default: a tree follows its biome, an ore follows the stone it replaces.</p>
+<p>Cube coordinates are block coordinates divided by 16, so cube <code>y = 4</code> holds the blocks from 64 to 79.</p>
+</div></section>
+<section class="dsec" id="features"><h2><button class="fold" aria-expanded="true">Features</button><a class="anchor" href="#features">#</a></h2><div class="sec-body">
+<p>A feature is four answers: where it goes, how its starts spread, what shape it has, and how it writes its blocks. <code>r.ore</code>, <code>r.structure</code>, <code>r.scatter</code> and <code>r.decoration</code> are the usual mixes, and <code>r.feature(&amp;F)</code> starts from nothing, so a geode, a fossil or a village is the same kind of thing as an ore:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static GEODES: Feature = Feature::named("geodes");
+let shell = Shape::ball([0.0; 3], 4.0).subtract(Shape::ball([0.0; 3], 3.0));
+r.feature(&amp;GEODES).per_cube(1).height(Height::uniform(-50, 0)).vein(Vein::shape(&amp;shell)).block(&amp;AMETHYST).replaces("#stone");
+static FOSSILS: Feature = Feature::named("fossils");
+r.feature(&amp;FOSSILS).per_cube(1).y(-40, 20).template(&amp;SPINE).turns_and_mirrors();</code></pre></div>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td><strong>Spread</strong></td><td><code>per_cube(n)</code> starts in every cube over <code>y</code>/<code>height</code>; <code>spacing(n)</code> one start per <code>n</code> x <code>n</code> square on the ground, kept by <code>chance</code> or a biome's <code>density</code>; <code>generate(f)</code> runs on every cube and decides itself</td></tr><tr><td><strong>Where</strong></td><td><code>dimension</code>, <code>biome</code>, <code>y</code>; on a grid also <code>ground(..)</code>, <code>max_slope(n)</code>, <code>buried(n)</code>, and <code>over_water()</code> / <code>over_caves()</code> for what may stand there, which it otherwise doesn't</td></tr><tr><td><strong>Shape</strong></td><td><code>vein(..)</code> (a walk, blob, sphere, disk or any <code>Shape</code>), <code>template(&amp;T)</code> with <code>turns()</code>, <code>turns_and_mirrors()</code> and <code>palette(..)</code>, or <code>plan(f)</code> for a layout of your own</td></tr><tr><td><strong>Writing</strong></td><td>veins put <code>block</code> (an ore puts its own) where <code>replaces</code> takes, <code>replaces_with</code>, <code>exposed</code>; templates stand on <code>foundation(&amp;B)</code> or <code>foundation_of_ground()</code> and <code>clear_above()</code> cuts the hill away</td></tr><tr><td><strong>Order</strong></td><td><code>stage(stage::..)</code>: underground first, then structures, vegetation, decoration; <code>after(&amp;F)</code> and <code>before(&amp;F)</code> move it within that, load order decides the rest</td></tr></tbody></table>
+<p>Features on a grid have a <code>priority</code>: one of a higher priority keeps it <code>separation</code> blocks away, and only what really stands counts, so a cottage a village kept out keeps nothing out itself. Structures have 1, trees 0, which is why no tree grows through a house. Everything comes from the seed and the terrain's columns, never from blocks, so the server and every client agree without sending anything; a start is worked out once and each cube it reaches takes its part. A feature is named like its handle (an ore like its block, a structure like its template), and <code>r.edit</code>, <code>r.replace</code> and <code>r.remove</code> work on it like on anything else. Those on a grid stand on the surface of the dimension's <a href="#terrain">terrain</a>; a dimension generated by hand gets its surface from <code>.column(..)</code> instead, and without it has none of them.</p>
+</div></section>
+<section class="dsec" id="ores"><h2><button class="fold" aria-expanded="true">Ores</button><a class="anchor" href="#ores">#</a></h2><div class="sec-body">
+<p><code>r.ore(&amp;BLOCK)</code> adds veins of a block to every dimension whose ground it may replace, yours and other mods' alike: testmod's tin is in base's stone and in Mars' basalt from one line.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static TIN_ORE: Block = Block::named("tin_ore");
+r.ore(&amp;TIN_ORE).y(-64, 90).per_cube(5).vein_size(8).replaces("#stone_ore_replaceables");</code></pre></div>
+<ul>
+<li><code>y(min, max)</code>: the heights veins can start at, as many at each; <code>height(Height::triangle(-24, 56))</code> puts most in the middle like modern vanilla's iron, <code>Height::trapezoid(min, max, plateau)</code> keeps a flat top</li>
+<li><code>vein(Vein::blob(9))</code>: what a vein looks like, a random walk of <code>vein_size</code> blocks unless you say otherwise. <code>Vein::sphere(r)</code> and <code>Vein::disk(r, thickness)</code> (clay and gravel under water, with <code>replaces("#dirt")</code>) are the others, and <code>Vein::shape(&amp;shape)</code> takes any shape a fill does, about the start; none goes further than 16 blocks from its start</li>
+<li><code>per_cube(n)</code>: how many veins are started per cube (4 unless said)</li>
+<li><code>vein_size(n)</code>: blocks in a vein</li>
+<li><code>dimension(&amp;D)</code>: only there (call it again for more). Another mod's dimension is a handle with its full name, <code>Dimension::named("base:overworld")</code></li>
+<li><code>replaces(..)</code>: which blocks the ore may replace (<a href="index.html#references">written like this</a>); without it, anything</li>
+<li><code>replaces_with("#granite", &amp;GRANITE_IRON_ORE)</code>: where the vein meets these, that block goes instead, so a vein doesn't stop at a stone border</li>
+<li><code>exposed(0.5)</code>: leaves out that share of what would touch a cave, as vanilla's gold and diamonds</li>
+<li><code>biome("#cave")</code>: only in these biomes, underground ones included; names and tags like anywhere else, <code>!</code> leaving some out</li>
+</ul>
+<p>An ore is named like its block, so <code>r.edit(base::IRON_ORE.ore()).per_cube(10)</code> changes base's iron: what you set replaces its own (<code>replaces</code> too: a block in <code>#stone_ore_replaceables</code> is in every ore's way), and <code>r.remove(base::IRON_ORE.ore())</code> takes it out of the world.</p>
+</div></section>
+<section class="dsec" id="structures"><h2><button class="fold" aria-expanded="true">Structures</button><a class="anchor" href="#structures">#</a></h2><div class="sec-body">
+<p>A structure is a template, a fixed shape of blocks, that stands on the ground now and then. You draw a template in layers from the bottom up: each layer is a list of rows along z, and each character in a row is one block along x. A key says which block a character means, a space leaves whatever is already there, and <code>air</code> clears it. <code>fill(block, from, to)</code> adds a box instead. Its blocks are checked when the game loads, so a typo is an error then, and the same template serves a structure, a piece of a plan, a moving body (<code>.body(&amp;TEMPLATE)</code> on an entity) and code (<code>w.place_template</code>).</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static OBELISK: Template = Template::named("obelisk");
+r.template(&amp;OBELISK)
+    .layer(&amp;["sss", "sss", "sss"])
+    .layer(&amp;["   ", " g ", "   "])
+    .key('s', "base:sandstone").key('g', "glow_crystal");
+r.structure(&amp;OBELISK).dimension(&amp;MARS).spacing(128).chance(0.5).biome("#dry").buried(1).turns();</code></pre></div>
+<p>That's a sandstone obelisk with a glowing crystal inside, in every dry biome of Mars, each turned a random quarter, its stairs and doors with it. <code>turns_and_mirrors()</code> mirrors some too (a door's hinge and a stair's corner change sides), <code>max_slope(3)</code> keeps it off steep ground, <code>foundation_of_ground()</code> fills under it with the ground's own top block and <code>clear_above()</code> cuts away the hill it was set into. A structure is named like its template: <code>r.edit(OBELISK.structure()).spacing(256)</code> makes another mod's rarer, and <code>r.edit(&amp;OBELISK).fill(..)</code> adds blocks to the template itself.</p>
+<p><strong>Files.</strong> A file <code>assets/structures/&lt;path&gt;.json</code> of your mod is template <code>&lt;mod&gt;:&lt;path&gt;</code> with no code at all, and so is structgen's <code>.wst</code>. <code>/structure save &lt;name&gt; &lt;from&gt; &lt;to&gt;</code> writes a box of the world in our format to <code>structures/</code> beside the saves: every block, what chests and machines hold, the mobs standing in it. Put it in a mod's <code>structures/</code> and it is a template; an <code>r.template</code> of the same name adds to it. A key can name a block state too, like <code>furnace[facing=east,lit=true]</code>.</p>
+<p><strong>Slots.</strong> A key or a file's palette entry <code>@wall</code> is a slot: the block comes from where it is placed. <code>@wall:stairs[facing=north]</code> is the stairs <code>shapes_of</code> made of whatever <code>wall</code> is, so one drawing comes in planks, bricks or sandstone; <code>@ground</code> takes the column's own top block, grass on plains and sand on a beach. The template says what each slot takes unless told otherwise, and a palette tells it otherwise:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.template(&amp;HUT).layer(..).key('w', "@wall").key('r', "@wall:stairs[facing=north]").slot("wall", "base:oak_planks");
+r.palette(&amp;BRICK).slot("wall", "base:bricks");
+r.structure(&amp;HUT).palette(&amp;BRICK).palette(&amp;SANDSTONE); // the seed picks one per hut</code></pre></div>
+<p><strong>What it brings.</strong> <code>.loot(pos, &amp;TABLE)</code> fills the chest at <code>pos</code> when the template is placed, <code>.entity(&amp;KIND, pos)</code> puts a mob there, and a saved file brings what it saved. They come once the cube they are in joins the world, on the server.</p>
+</div></section>
+<section class="dsec" id="plans"><h2><button class="fold" aria-expanded="true">Plans</button><a class="anchor" href="#plans">#</a></h2><div class="sec-body">
+<p>A layout of your own, from any number of templates and blocks, is a plan. It runs once per start and puts things in world coordinates, as far as its <code>reach</code> lets it:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.feature(&amp;VILLAGE).spacing(512).chance(0.3).reach(96).reach_y(32, 16).palette(&amp;SPRUCE).plan(|p| {
+    let at = p.pos();
+    let Some(well) = p.fit(&amp;WELL, at.x, at.z, Transform::NONE, 3) else { return };
+    p.template(&amp;WELL, well, Transform::NONE).foundation_of_ground().clear_above();
+    p.loot([at.x + 2, at.y, at.z], &amp;WELL_LOOT);
+    p.entity(&amp;VILLAGER, [at.x + 4, at.y, at.z]);
+});</code></pre></div>
+<ul>
+<li><code>p.put(pos, state)</code> where there is air, <code>p.set(pos, state)</code> whatever is there, <code>p.fill(from, to, state)</code>, <code>p.replace(from, to, "#logs", state)</code></li>
+<li><code>p.template(&amp;T, corner, transform)</code>, then <code>.foundation(..)</code>, <code>.foundation_of_ground()</code>, <code>.clear_above()</code>, <code>.palette(&amp;P)</code>; it goes in when dropped, <code>.put()</code> says whether it did</li>
+<li><code>p.ground(x, z)</code>, <code>p.surface_carved(x, z)</code>, <code>p.size(&amp;T, t)</code>, <code>p.joints(&amp;T, t)</code> and <code>p.fit(&amp;T, x, z, t, max_slope)</code> to decide; <code>p.random()</code> and <code>p.random_n(n)</code> for the same numbers every time</li>
+<li>what would go past the reach is left out (and said in the log once), so a plan never puts half a house into a cube that already exists</li>
+</ul>
+<p><strong>Pieces that join.</strong> Templates can have joints, <code>.joint(pos, face, name, target, pool)</code> (or <code>joints</code> in a file): <code>p.grow(&amp;START, corner, t, &amp;pools, depth)</code> puts <code>START</code> there and then, joint by joint, a piece from the joint's pool whose own joint is called its <code>target</code>, faced back at it, turned whichever way fits and overlapping nothing so far. Dungeons, mineshafts and street grids come out of that with no layout code; <code>Pools::pool_on_ground</code> puts each piece of a pool down on the ground where it lands. Testmod's outposts are a hub with four doors and halls that go on, two steps out.</p>
+<p>The base game's trees are a plan too (see <a href="#trees-and-other-scattered-things">trees</a>), and a plan may use only the seed and the ground: it runs on the server and on every client, in any order.</p>
+</div></section>
+<section class="dsec" id="placing-and-finding"><h2><button class="fold" aria-expanded="true">Placing and finding</button><a class="anchor" href="#placing-and-finding">#</a></h2><div class="sec-body">
+<p><code>w.place_template(&amp;T, pos, transform, palette)</code> puts a template into the world now, <code>w.place_feature(&amp;F, pos)</code> a whole feature as if it started there, plan and all, with what they bring. Both give back what undoes them, <code>w.unplace(id)</code> (the last 16 of a dimension are kept), or nothing if part of the place isn't loaded. In the game, <code>/structure load &lt;name&gt; [pos] [transform]</code> places a template or a saved file (<code>transform</code> 0..7: quarter turns, plus 4 to mirror) and <code>/structure undo</code> takes the last one back.</p>
+<p><code>w.structure_near("mymod:village", pos, radius)</code> and <code>/structure locate &lt;name&gt;</code> give the nearest start of any feature on a grid, generated yet or not, and the engine event <code>FEATURE_PLACED</code> says when one is in the world: its id (<code>VILLAGE.id()</code>), dimension, start and transform, once its start's cube is generated, to put it on a map or name its guards.</p>
+</div></section>
+<section class="dsec" id="spawns"><h2><button class="fold" aria-expanded="true">Spawns</button><a class="anchor" href="#spawns">#</a></h2><div class="sec-body">
+<p><code>r.natural_spawn(entity)</code> decides where a mob shows up by itself:</p>
+<ul>
+<li><code>biome(tag)</code> and <code>ground(blocks)</code>: the mob needs a biome with that tag, and one of <a href="index.html#references">those blocks</a> under it</li>
+<li><code>place(SpawnPlace::in_liquid("#water"))</code> or <code>place(SpawnPlace::ceiling())</code>: a spot in a liquid or hanging under a block instead of on the ground. The mob's own height decides how much room it needs</li>
+<li><code>dimension(&amp;D)</code>: only in that dimension</li>
+<li><code>light(min, max)</code> and <code>y(min, max)</code>: the light level (0 to 15) and heights it needs</li>
+<li><code>when(cond)</code>: only where a <a href="index.html">condition</a> holds too, asked about the spot and the block under it: <code>when(Cond::new("night &amp; !block(#mycelium)"))</code></li>
+<li><code>pack_size(min, max)</code>: how many appear together</li>
+<li><code>weight(n)</code> and <code>chance(c)</code>: how likely it is picked among the rules that fit, and how likely it is to happen per try</li>
+</ul>
+<p>A rule is named <code>&lt;mod&gt;:&lt;entity&gt;</code>, then <code>/2</code>, <code>/3</code> for more of the same mob, or what <code>.named(..)</code> says, so with <code>static SPIDERS: SpawnRule = SpawnRule::named("base:spider/2")</code>, <code>r.edit(&amp;SPIDERS).weight(8)</code> or <code>r.remove(&amp;SPIDERS)</code> changes another mod's.</p>
+<p>A category's cap (<code>r.entity_category(&amp;C, cap, despawn)</code>) counts its mobs within 64 blocks of a player, or <code>.cap_radius(r)</code>.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.natural_spawn(&amp;GHOST).light(0, 4).weight(1);
+r.natural_spawn(&amp;SHEEP).biome("#animals").ground("#animal_spawn").light(7, 15).pack_size(2, 3).chance(0.05);</code></pre></div>
+</div></section>
+<section class="dsec" id="biomes"><h2><button class="fold" aria-expanded="true">Biomes</button><a class="anchor" href="#biomes">#</a></h2><div class="sec-body">
+<p>A biome says once what it is: the climate it likes, its ground, its colors, plus whatever data and tags you attach.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static DESERT: Biome = Biome::named("desert");
+r.biome(&amp;DESERT).temperature(0.35..).humidity(..0.0).surface("sand", "sand", 3).under("sandstone", 1).tint(&amp;tints::GRASS, 0xbfb755).tag("dry");</code></pre></div>
+<ul>
+<li><code>temperature(..)</code>, <code>humidity(..)</code>: where the climate fits it, as ranges like <code>0.35..</code> or <code>..-0.45</code> (the fields run about -1.4 to 1.4). Without them it fits anywhere.</li>
+<li><code>surface(top, filler, depth)</code>: a top block, <code>depth</code> blocks of filler, then the terrain's stone</li>
+<li><code>under(block, layers)</code>: the lowest layers of filler become another block (sandstone under sand)</li>
+<li><code>deep_top(block, below)</code>: a different top block where the ground is lower than <code>below</code> (gravel on a sea floor)</li>
+<li><code>bare_above(y)</code>: plain stone above this height</li>
+<li><code>frozen(block)</code>: the water surface turns into this block, and the biome gets the tag <code>frozen</code> (base grows no flowers there)</li>
+<li><code>tint(&amp;kind, color)</code>: what blocks tinted with that kind take here, <code>tints::GRASS</code>, <code>FOLIAGE</code>, <code>WATER</code> or a mod's own kind. Kinds you don't give keep their default, a kind given again takes the new color. To color another mod's biome with your kind, <code>r.edit(&amp;PLAINS).tint(&amp;kind, color)</code>.</li>
+<li><code>snows()</code>: rain falls as snow here</li>
+</ul>
+<p>Tags (<code>tag("animals")</code>) are how everything else asks what a biome is, since spawns, ores and structures look at tags and never at names. <code>set(&amp;COMPONENT, value)</code> attaches data, like how many trees base grows there.</p>
+<p>Registering a biome doesn't put it anywhere. The rules of a dimension's terrain decide where it appears, and that can be underground too: base's <code>deep_caves</code> is a biome of whole cubes deep below the surface. Your biome can go into your own dimension or into someone else's, see <a href="#changing-another-mods-terrain">changing another mod's terrain</a>.</p>
+</div></section>
+<section class="dsec" id="dimensions"><h2><button class="fold" aria-expanded="true">Dimensions</button><a class="anchor" href="#dimensions">#</a></h2><div class="sec-body">
+<p><code>r.dimension(&amp;MARS)</code> makes a separate world with its own terrain, sky and gravity, and players get there with <code>/dim mymod:mars</code>. It needs something to fill it, usually a <a href="#terrain">terrain</a> and sometimes a generator written by hand.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static MARS: Dimension = Dimension::named("mars");
+r.dimension(&amp;MARS)
+    .spawn_point(|seed| [8, MARS.column(seed, 8, 8).height + 1, 8].into())
+    .height_cubes(-4, 12)
+    .sky_above(11)
+    .gravity(12.0)
+    .fixed_time(5000)
+    .sky_color(0xd8a080, 0xe0b090);</code></pre></div>
+<p>All the settings:</p>
+<ul>
+<li><code>spawn_point(f)</code>: where a new player starts, from the seed. <code>MARS.column(seed, x, z)</code> gives the height and biome anywhere, even where nothing is generated yet. Without it the engine looks for open ground near 0, 0, in biomes tagged <code>spawn_biome</code> first, out of caves and trees</li>
+<li><code>player_spawn()</code>: new players start here and respawn here (without any dimension doing it, the first registered is used)</li>
+<li><code>generator(f)</code>: fills one cube by hand, see <a href="#writing-a-generator">writing a generator</a></li>
+<li><code>column(f)</code>: with a generator of your own, the surface height and biome of a column. It's the one place they come from: your generator reads them from <code>g.columns()</code>, and structures, trees and the spawn search stand on them</li>
+<li><code>bare()</code>: only ores, scatters and decorations that name this dimension come in (base's flat test world)</li>
+<li><code>height_cubes(min_cube, max_cube)</code>: the limits of the world, in cubes and inclusive</li>
+<li><code>sky_above(cube_y)</code>: cubes at this height and above are empty, so their sky light is free</li>
+<li><code>no_sky_light()</code>: no sky light at all, for caves and the like</li>
+<li><code>gravity(g)</code>: blocks per second squared, 32 by default</li>
+<li><code>day_length(ticks)</code> or <code>fixed_time(time)</code>: either a day of that length, or a time of day that never changes</li>
+<li><code>daylight(&amp;[(turn, level), ..])</code>: how bright the day gets when, if not vanilla's curve. The turn 0 is sunrise, 0.25 noon, 0.5 sunset, 0.75 midnight, and levels go in straight lines between the points, so <code>&amp;[(0.0, 0.4)]</code> is an endless dusk. Mobs, crops and burning in the sun follow it as well as the sky</li>
+<li><code>sky_color(sky, fog)</code>: the two colors</li>
+<li><code>ambient_light(level)</code>: the lowest light any block gets, 0 to 15</li>
+<li><code>no_block_updates()</code>: nothing grows, falls or flows here</li>
+</ul>
+</div></section>
+<section class="dsec" id="terrain"><h2><button class="fold" aria-expanded="true">Terrain</button><a class="anchor" href="#terrain">#</a></h2><div class="sec-body">
+<p>Most dimensions need real terrain, and writing noise by hand is the slow way. <code>r.terrain(&amp;dimension)</code> builds yours from parts: a base height, landforms that add to it, biome rules that choose a biome and its surface, then water and caves. The engine generates it, so there's no generator to write.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.terrain(&amp;MARS)
+    .stone("basalt")
+    .base_height(60.0)
+    .landform(preset::hills(8.0, 220.0))
+    .landform(preset::craters(32.0, 16.0, 150.0))
+    .landform(preset::dunes(3.0, 22.0).mask(Expr::noise(500.0).ramp(0.15, 0.45)))
+    .rule(BiomeRule::new("dust"));</code></pre></div>
+<p><code>stone</code> is the block the ground is made of and <code>base_height</code> the ground height when nothing is added. Blocks and biomes are given by name, like everywhere else: yours without a prefix, other mods' as <code>base:sand</code>.</p>
+<h3 id="landforms">Landforms <a class="anchor" href="#landforms">#</a></h3>
+<p>A landform adds height to every column. These come ready:</p>
+<table><thead><tr><th>preset</th><th>what it makes</th></tr></thead><tbody><tr><td><code>continents(depth)</code></td><td>land and oceans, <code>depth</code> blocks above or below the base</td></tr><tr><td><code>hills(height, size)</code></td><td>rolling hills</td></tr><tr><td><code>mountains(height, width)</code></td><td>ranges along ridge lines <code>width</code> blocks apart</td></tr><tr><td><code>plateaus(height, size, step)</code></td><td>flat mesas in terraces</td></tr><tr><td><code>canyons(depth, width)</code></td><td>winding cuts, filled with water below sea level</td></tr><tr><td><code>dunes(height, wavelength)</code></td><td>parallel sand waves</td></tr><tr><td><code>craters(radius, depth, spacing)</code></td><td>bowls with a raised rim</td></tr></tbody></table>
+<p>Each preset is <code>Landform::new</code> of a formula from <code>shape</code>, and yours is the same: <code>Landform::new(expr)</code> with an <code>Expr</code> built from numbers, the position and noise. The engine runs it on the GPU and on the CPU with the same integer math, so your shape costs what a preset costs and every machine gets the same world.</p>
+<ul>
+<li><code>Expr::blocks(12.0)</code> is a length, <code>Expr::value(0.5)</code> a plain number; a length times a number is a length</li>
+<li><code>Expr::x()</code>, <code>Expr::z()</code>: where the column is</li>
+<li><code>Expr::fbm(salt, scale, octaves)</code> and <code>Expr::noise(scale)</code>: noise about -1 to 1 in patches about <code>scale</code> blocks across; <code>Expr::ridge(salt, scale)</code> is 1 along winding lines</li>
+<li><code>Expr::sites(salt, spacing, chance, radius)</code>: points scattered one per <code>spacing</code> square, how far the nearest is in units of its radius (below 1 inside it), what craters are made of</li>
+<li><code>+</code>, <code>-</code>, <code>*</code>, <code>abs</code>, <code>min</code>, <code>max</code>, <code>clamp</code>, <code>idiv</code>, <code>modulo</code> (repeats along the world: terraces, waves)</li>
+<li><code>ramp(from, to)</code>: 0 at <code>from</code>, 1 at <code>to</code>, straight between; <code>from == to</code> is a step</li>
+<li><code>e.at(x, z)</code>: the same formula somewhere else, <code>noise.at(Expr::x() + warp, Expr::z())</code> bends it</li>
+</ul>
+<p>Testmod's needle, a column of rock 90 blocks high at one spot of Mars, is 1 within 3 blocks of it times 90:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">let far = (Expr::x() - Expr::blocks(1000.0)).abs().max((Expr::z() - Expr::blocks(1000.0)).abs());
+Landform::new(far.ramp_blocks(3.0, 3.0).not() * Expr::blocks(90.0)).named("needle")</code></pre></div>
+<p>The presets' own formulas in <code>crates/sdk/src/terrain.rs</code> are the easiest start: copy one and change it.</p>
+<h3 id="masks">Masks <a class="anchor" href="#masks">#</a></h3>
+<p><code>.mask(expr)</code> limits a landform to some places with a strength from 0 to 1 that fades in between; where it is 0 the height isn't even worked out. A mask is an expression like any other, usually a <code>ramp</code> of noise or of the climate (swap <code>from</code> and <code>to</code> to turn it around). Masks combine with <code>.and(..)</code> and flip with <code>.not()</code>.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">preset::hills(16.0, 110.0).mask(Expr::temperature().ramp(-0.35, -0.6).not())</code></pre></div>
+<h3 id="fields">Fields <a class="anchor" href="#fields">#</a></h3>
+<p>A field is a named value over the whole terrain. <code>temperature</code>, <code>humidity</code> and <code>continent</code> come with every terrain (all about -1.4 to 1.4, continentalness below 0 is sea); <code>.field(name, expr)</code> declares your own. Masks and other fields use one with <code>Expr::field(name)</code>, and biome rules ask for it. It's worked out once per column however many things use it, so one mask shared by a landform and a biome goes here. Base's mountains:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">.field("base:mountains", Expr::fbm(0x44, 700.0, 3).ramp(-0.1, 0.3).and(Expr::continent().ramp(0.0, 0.2)))
+.landform(preset::mountains(150.0, 260.0).mask(Expr::field("base:mountains")).named("mountains"))
+.rule(BiomeRule::new("mountains").field("base:mountains", 0.45..))</code></pre></div>
+<p>The name is used as written, so give yours your mod's prefix. A field can only use fields declared before it. Declaring one that exists, <code>temperature</code> included, replaces it for everything that uses it, which is how a mod gives the whole overworld another climate.</p>
+<h3 id="biome-rules">Biome rules <a class="anchor" href="#biome-rules">#</a></h3>
+<p>A rule puts a biome into a terrain. It starts from the biome's climate and surface, so <code>BiomeRule::new("desert")</code> is a whole rule. Rules are tried in order and the <strong>first one that fits wins</strong>, so specific ones go first and a plain catch-all goes last. What a rule adds is where else it must hold:</p>
+<ul>
+<li><code>height(..)</code>: the surface height, like <code>..=SEA + 1</code></li>
+<li><code>field(name, range)</code>: where a field is in a range like <code>0.45..</code> (from inclusive, to exclusive); <code>temperature(..)</code>, <code>humidity(..)</code> and <code>continent(..)</code> are the same for those three</li>
+</ul>
+<p>Any of the biome's own settings (<code>temperature</code>, <code>surface</code>, <code>frozen</code>...) can also be given on a rule, and then that rule uses its own.</p>
+<p>A rule is named like its biome, which is how other mods point at it (<code>base:desert</code>). When one biome has two rules, like base's snowy plains on the coast and inland, the second gets its own name with <code>.named("snowy_coast")</code>.</p>
+<h3 id="water-caves-and-underground-biomes">Water, caves and underground biomes <a class="anchor" href="#water-caves-and-underground-biomes">#</a></h3>
+<p><code>.sea(level, "water")</code> fills everything below a level with water. <code>.caves(Caves::new("lava", from_y, to_y))</code> carves tunnels and big caverns, and between those two heights some levels hold flat lava lakes. <code>.cave_biome("deep_caves", depth, size, threshold)</code> gives whole cubes at least <code>depth</code> blocks down a biome of their own, in patches about <code>size</code> across.</p>
+</div></section>
+<section class="dsec" id="trees-and-other-scattered-things"><h2><button class="fold" aria-expanded="true">Trees and other scattered things</button><a class="anchor" href="#trees-and-other-scattered-things">#</a></h2><div class="sec-body">
+<p>Anything bigger than a cube that stands on the ground here and there, like a tree, is a scatter: a feature on a grid whose chance comes from the biome. The engine picks one spot per cell from the seed, keeps it with the chance a biome component gives, and runs your plan for the blocks. It skips spots under the sea and where caves took the ground, puts the parts that reach into neighboring cubes there, keeps trees out of structures and players from spawning inside. That works in every dimension where the biome stands, so testmod's Mars grows trees in its patches of <code>base:forest</code> without any code of its own.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static TREE_SITES: Feature = Feature::named("trees");
+r.scatter(&amp;TREE_SITES).spacing(5).reach(3).density(&amp;TREES).plan(|p| {
+    let pos = p.pos();                                // the block above the ground
+    for dy in 0..5 { p.set(pos.offset(0, dy, 0), OAK_LOG.id()); }
+    p.put(pos.offset(0, 5, 0), OAK_LEAVES.id());       // put: only into air
+});</code></pre></div>
+<ul>
+<li><code>spacing(n)</code>: one spot per <code>n</code> x <code>n</code> blocks at most</li>
+<li><code>reach(n)</code>: how far the plan puts blocks sideways from its spot (up and down it may go 32 and 16, <code>reach_y</code> says otherwise)</li>
+<li><code>density(&amp;COMPONENT)</code>: a biome component, 0 to 1, the chance of a spot per cell; biomes without it get none</li>
+<li><code>ground("#plant_soil")</code>: only on these</li>
+<li><code>plan(f)</code>: the blocks, in world coordinates. <code>p.biome()</code> and <code>p.random()</code> (the same bits every time) pick the kind</li>
+<li><code>dimension(&amp;D)</code>: only there</li>
+</ul>
+<p><code>r.edit(&amp;TREE_SITES)</code> changes another mod's scatter by its handle.</p>
+<p>Base's real trees are in <code>mods/base/src/worldgen.rs</code>; how many grow where and which kinds are the biome components <code>trees</code> and <code>tree_kinds</code> (a <code>BlockList</code> of logs, <code>"birch_log:1 oak_log:4"</code>), and a log's leaves its <code>tree_leaves</code> (a <code>BlockRef</code>; logs tagged <code>cone_tree</code> grow spruce-like), so another mod can give a biome trees without touching code.</p>
+</div></section>
+<section class="dsec" id="decorations"><h2><button class="fold" aria-expanded="true">Decorations</button><a class="anchor" href="#decorations">#</a></h2><div class="sec-body">
+<p>Grass, flowers and anything else that is decided column by column go in <code>r.decoration(f)</code>, a feature that runs for every generated cube after the others, in every dimension (<code>.dimension(&amp;D)</code> to limit it, <code>.after(..)</code> to come after another mod's). It is named <code>&lt;mod&gt;:decoration</code>, <code>/2</code>.. or <code>.named(..)</code>, so another mod can limit it or <code>r.remove(&amp;Feature::named("base:decoration"))</code>. <code>g.columns()</code> has the surface <code>height</code> and <code>biome</code> of each of the cube's columns, indexed <code>z * 16 + x</code>. Base does grass, flowers and cacti like this:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">let Some(&amp;cols) = g.columns() else { return };
+for z in 0..16usize { for x in 0..16usize {
+    let col = &amp;cols[z * 16 + x];
+    let y = col.height + 1 - oy;           // the block above the ground, inside this cube
+    if (0..16).contains(&amp;y) &amp;&amp; g.get(x, y as usize, z) == 0 {
+        g.set(x, y as usize, z, TALL_GRASS.id());
+    }
+}}</code></pre></div>
+<p><code>g.column(x, z)</code> gives any other column in world coordinates, and <code>g.surface_carved(x, z)</code> says whether a cave opened the ground there. <code>g.get</code> only sees this cube, so when <code>y</code> is 0 the ground is out of its reach: <code>g.surface_block(x, z)</code> (world coordinates) says what the terrain left at the top of a column, 0 if nothing. How much grows where is data on the biome (the components <code>grass</code> and <code>flowers</code>), which another mod can attach to any biome with an edit, <code>r.edit(&amp;FOREST).set(&amp;COMPONENT, value)</code>.</p>
+</div></section>
+<section class="dsec" id="changing-another-mods-terrain"><h2><button class="fold" aria-expanded="true">Changing another mod's terrain</button><a class="anchor" href="#changing-another-mods-terrain">#</a></h2><div class="sec-body">
+<p><code>r.edit(OVERWORLD.terrain())</code> with <code>OVERWORLD = Dimension::named("base:overworld")</code> takes the same calls as your own terrain. Whatever you call on it is applied after the owner's description, and edits from several mods go in load order, so the result is the same on every machine. Testmod puts a hot, dry biome (<code>r.biome(&amp;SCORCHED).temperature(0.4..).humidity(..-0.1)...</code>) into base's deserts like this:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.edit(OVERWORLD.terrain())
+    .rule_before("base:desert", BiomeRule::new("scorched"))
+    .landform(Landform::new(needle).named("needle"));
+r.decoration(boulders).dimension(&amp;OVERWORLD);</code></pre></div>
+<p>Because rules are tried in order, a new biome goes in next to the rule it takes space from: <code>rule_before</code> takes the place where both would fit, <code>rule_after</code> only what the other leaves. A biome's climate and surface are its own, wherever it goes: <code>r.edit(&amp;DESERT).temperature(0.5..)</code> changes them in every dimension (each is a component, <code>comps::biome</code>, and a range of a field given again replaces the old one). The rest of the edits:</p>
+<table><thead><tr><th>call</th><th>what it does</th></tr></thead><tbody><tr><td><code>rule_before(rule, new)</code>, <code>rule_after(rule, new)</code></td><td>adds a rule next to another</td></tr><tr><td><code>rule_replace(rule, new)</code>, <code>rule_remove(rule)</code></td><td>swaps a rule for yours, or takes it out</td></tr><tr><td><code>rule_edit(rule, |r| r.height(..=90))</code></td><td>changes only what you set of a rule</td></tr><tr><td><code>landform(f)</code>, <code>landform_remove(name)</code></td><td>adds a landform or takes a named one out</td></tr><tr><td><code>landform_mask(name, mask)</code></td><td>limits a named landform further, its mask is multiplied by yours</td></tr><tr><td><code>field(name, expr)</code></td><td>adds a field, or replaces the one of that name</td></tr><tr><td><code>cave_biome(..)</code>, <code>cave_biome_remove(biome)</code></td><td>the same for underground biomes</td></tr><tr><td><code>sea</code>, <code>caves</code>, <code>stone</code>, <code>base_height</code></td><td>replace the owner's setting, the last mod in load order wins</td></tr></tbody></table>
+<p>A rule is named like its biome, <code>#0</code> names the first one whatever it is. The landforms, rules, fields and underground biomes are lists (<code>comps::terrain</code>), so <code>push</code>, <code>insert_before</code> and the rest work on them like on any list, and <code>r.replace(OVERWORLD.terrain())</code> describes a terrain from scratch. An edit whose target isn't there (a typo, or a rule another mod already removed) is a load error naming it, like any edit of something missing. A dimension generated by hand, like testmod's <code>void</code>, has no terrain to edit; there a mod can still add features and spawns, and tag its biomes.</p>
+</div></section>
+<section class="dsec" id="writing-a-generator"><h2><button class="fold" aria-expanded="true">Writing a generator</button><a class="anchor" href="#writing-a-generator">#</a></h2><div class="sec-body">
+<p>When terrain from parts doesn't fit, a dimension can fill its cubes in code with <code>.generator(f)</code>. A generator receives a <code>Gen</code>, the cube being made. <code>g.origin()</code> is the block position of its corner (<code>g.cube()</code> is the cube's own), <code>g.seed()</code> the world seed, <code>g.set(x, y, z, state)</code> and <code>g.get(x, y, z)</code> work with blocks (each coordinate 0 to 15, states come from <code>BLOCK.id()</code>), and <code>g.biomes()</code> is the biome id of each of the 256 columns, indexed <code>z * 16 + x</code>.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">fn island(g: &amp;mut Gen) {
+    let BlockPos { x: ox, y: oy, z: oz } = g.origin();
+    for y in 0..16usize { for z in 0..16usize { for x in 0..16usize {
+        let (wx, wy, wz) = ((ox + x as i32) as f32, oy + y as i32, (oz + z as i32) as f32);
+        if (wx * wx + wz * wz).sqrt() &lt; 24.0 &amp;&amp; wy &lt;= 63 {
+            g.set(x, y, z, STONE.id());
+        }
+    }}}
+}</code></pre></div>
+<p>That's <code>void</code> from testmod, a round island in an empty dimension.</p>
+<p>With <code>.column(f)</code> the generator doesn't work the surface out again: <code>g.columns()</code> hands it the heights and biomes <code>f</code> gave, the same ones structures and trees stand on.</p>
+<p>Two rules to keep, in generators and decorations alike. A cube only writes its own blocks, so anything bigger than a cube (a tree) is better a <a href="#trees-and-other-scattered-things">scatter</a>, where the engine does the asking around. And keep floats out of terrain: <code>sin</code>, <code>cos</code>, <code>exp</code> and even plain float math can come out slightly differently on another platform or a GPU, and neighboring cubes would stop matching. Use integers; <code>noise::hash</code> and the integer noise in <code>noise::fixed</code> (<code>perlin2</code>, <code>perlin3</code>, <code>fbm</code>) were written for this.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/worldgen.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="./search-index.js"></script>
+<script src="../docs.js"></script>
+</body>
+</html>

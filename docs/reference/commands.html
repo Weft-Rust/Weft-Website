@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Commands reference - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="../details/liquids.html">Liquids</a><a href="../details/effects.html">Status effects and potions</a><a href="../details/recipes-loot.html">Recipes and loot</a><a href="../details/world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a href="../details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="../details/conditions.html">Conditions</a><a href="../details/attributes.html">Attributes and modifiers</a><a href="../details/poses-and-modes.html">Poses and game modes</a><a href="../details/commands.html">Commands</a><a href="../details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="../details/world-blocks.html">Blocks in the world</a><a href="../details/world-entities.html">Entities in the world</a><a href="../details/hitboxes.html">Raycasts and hitboxes</a><a href="../details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="../details/camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group" open><summary>Reference</summary><a href="index.html">All reference pages</a><a href="blocks.html">Blocks</a><a href="client.html">Client</a><a class="current" aria-current="page" href="commands.html">Commands</a><a href="effects.html">Particles and effects</a><a href="entities.html">Entities</a><a href="events.html">Events and steps</a><a href="items.html">Items</a><a href="recipes.html">Recipes and loot</a><a href="registration.html">Registration</a><a href="ui.html">UI</a><a href="world.html">World</a><a href="worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Commands reference</h1><nav class="toc"><span>On this page</span><a href="#clientcommand">ClientCommand</a><a href="#command">Command</a><a href="#commandoptions">CommandOptions</a><a href="#servercommand">ServerCommand</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>Command definitions and what a command callback gets.</p>
+<section class="dsec" id="clientcommand"><h2><button class="fold" aria-expanded="true">ClientCommand</button><a class="anchor" href="#clientcommand">#</a></h2><div class="sec-body">
+<p>A command run on the client that typed it (<code>Registry::client_command</code>), never sent.</p>
+<ul>
+<li><a id="ClientCommand-client"></a><code>.client() -&gt; crate::Client</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/command.rs#L55">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="command"><h2><button class="fold" aria-expanded="true">Command</button><a class="anchor" href="#command">#</a></h2><div class="sec-body">
+<p>What every command gets: its arguments and a way to answer.</p>
+<ul>
+<li><a id="Command-player"></a><code>.player() -&gt; u64</code><span class="d">Entity id of the player who ran the command. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/command.rs#L85">source</a></li>
+<li><a id="Command-int"></a><code>.int(name: &amp;str) -&gt; Option&lt;i64&gt;</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/command.rs#L96">source</a></li>
+<li><a id="Command-float"></a><code>.float(name: &amp;str) -&gt; Option&lt;f64&gt;</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/command.rs#L102">source</a></li>
+<li><a id="Command-text"></a><code>.text(name: &amp;str) -&gt; Option&lt;&amp;str&gt;</code><span class="d">Words, text, player names, and the full names of items, blocks, entities, dimensions, attributes. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/command.rs#L110">source</a></li>
+<li><a id="Command-id"></a><code>.id(name: &amp;str) -&gt; Option&lt;u32&gt;</code><span class="d">Registry id of an item, block state, entity kind, dimension or attribute parameter. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/command.rs#L117">source</a></li>
+<li><a id="Command-targets"></a><code>.targets(name: &amp;str) -&gt; Vec&lt;u64&gt;</code><span class="d">Entities a <code>targets</code> parameter selected (<code>@e[type=zombie]</code>, a player name, ...). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/command.rs#L124">source</a></li>
+<li><a id="Command-pos"></a><code>.pos(name: &amp;str) -&gt; Option&lt;Vec3&gt;</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/command.rs#L135">source</a></li>
+<li><a id="Command-given"></a><code>.given(name: &amp;str) -&gt; bool</code><span class="d">Whether a literal word of the usage (or an optional parameter) was given. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/command.rs#L142">source</a></li>
+<li><a id="Command-reply"></a><code>.reply(key: &amp;str, args: &amp;[crate::Arg])</code><span class="d">A line for whoever ran the command: the translation <code>key</code> with <code>args</code>, formatted by their client in its own language. Call again for more lines. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/command.rs#L148">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="commandoptions"><h2><button class="fold" aria-expanded="true">CommandOptions</button><a class="anchor" href="#commandoptions">#</a></h2><div class="sec-body">
+<p>What <code>Registry::command</code> gives back, to say more about the command.</p>
+<ul>
+<li><a id="CommandOptions-permission"></a><code>.permission(level: u32)</code><span class="d">The <code>abi::permission</code> level it asks for. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/command.rs#L30">source</a></li>
+</ul>
+</div></section>
+<section class="dsec" id="servercommand"><h2><button class="fold" aria-expanded="true">ServerCommand</button><a class="anchor" href="#servercommand">#</a></h2><div class="sec-body">
+<p>A command run on the server (<code>Registry::command</code>).</p>
+<ul>
+<li><a id="ServerCommand-world"></a><code>.world() -&gt; World</code><span class="d">The world it runs in. What it changes settles when it returns (neighbors, events). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/command.rs#L46">source</a></li>
+</ul>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/reference/commands.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>

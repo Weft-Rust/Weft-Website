@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Textures guide - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../assets/icon.png">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../docs.css">
+</head>
+<body class="docs" data-root="../docs/">
+<header class="bar">
+  <a class="bar-name" href="../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="blocks.html">Blocks</a><a href="items.html">Items</a><a href="entities.html">Entities</a><a href="details/liquids.html">Liquids</a><a href="details/effects.html">Status effects and potions</a><a href="details/recipes-loot.html">Recipes and loot</a><a href="details/world-content.html">World content</a><a href="block_entities.html">Block entities guide</a><a href="registration.html">Registration guide</a><a href="details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="events.html">Events, chains and questions</a><a href="details/conditions.html">Conditions</a><a href="details/attributes.html">Attributes and modifiers</a><a href="details/poses-and-modes.html">Poses and game modes</a><a href="details/commands.html">Commands</a><a href="details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="world-api.html">World API</a><a href="details/world-blocks.html">Blocks in the world</a><a href="details/world-entities.html">Entities in the world</a><a href="details/hitboxes.html">Raycasts and hitboxes</a><a href="details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="client.html">Client side</a><a href="ui.html">UI guide</a><a href="details/camera.html">Camera modes</a><a href="models.html">Models and animations guide</a><a href="shaders.html">Shaders guide</a></details><details class="group" open><summary>Assets</summary><a class="current" aria-current="page" href="textures.html">Textures guide</a><a href="ctm.html">CTM guide</a><a href="sky.html">Sky guide</a><a href="resourcepacks.html">Resource packs guide</a><a href="localization.html">Localization guide</a><a href="redstone.html">redstone.md</a><a href="worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="reference/index.html">All reference pages</a><a href="reference/blocks.html">Blocks</a><a href="reference/client.html">Client</a><a href="reference/commands.html">Commands</a><a href="reference/effects.html">Particles and effects</a><a href="reference/entities.html">Entities</a><a href="reference/events.html">Events and steps</a><a href="reference/items.html">Items</a><a href="reference/recipes.html">Recipes and loot</a><a href="reference/registration.html">Registration</a><a href="reference/ui.html">UI</a><a href="reference/world.html">World</a><a href="reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Textures guide</h1><nav class="toc"><span>On this page</span><a href="#note">Note</a><a href="#quick-links">Quick links</a><a href="#animation">Animation</a><a href="#emission">Emission</a><a href="#overlays">Overlays</a><a href="#debugging">Debugging</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>Everything a texture can do beyond being a picture.<br>Made with files next to the texture, works from both mods and resource packs and requires no code.
+Connected and varied textures have their own guide: <a href="ctm.html">CTM</a>.</p>
+<section class="dsec" id="note"><h2><button class="fold" aria-expanded="true">Note</button><a class="anchor" href="#note">#</a></h2><div class="sec-body">
+<p>The extra files are found by the texture's name:<br>for <code>furnace_front_lit.png</code> they are<code>furnace_front_lit.anim</code>, <code>furnace_front_lit_e.png</code> etc. in the same folder.<br>They come from the same mod as the texture itself, so a pack that replaces the picture should have its own <code>_e</code> and <code>.anim</code> too.<br>Examples to copy from are in <code>mods/base/assets/textures/block/</code>:<br><code>water_still.anim</code>,<code>furnace_front_lit_e.png</code>, <code>grass_side_overlay.png</code>.</p>
+</div></section>
+<section class="dsec" id="quick-links"><h2><button class="fold" aria-expanded="true">Quick links</button><a class="anchor" href="#quick-links">#</a></h2><div class="sec-body">
+<p><a href="#animation">animation</a> | <a href="#emission">emission</a> | <a href="#overlays">overlays</a> | <a href="#debugging">debugging</a></p>
+</div></section>
+<section class="dsec" id="animation"><h2><button class="fold" aria-expanded="true">Animation</button><a class="anchor" href="#animation">#</a></h2><div class="sec-body">
+<p>A texture is animated when its picture is a vertical strip of square frames: a 16x16 texture with 8 frames is a 16x128 image, the frames go from top to bottom. Without a <code>.anim</code> file the frames play in order, one tick each (20 texture frames per second).</p>
+<p><code>&lt;texture&gt;.anim</code> is used to set those properties. It is <code>key = value</code> lines.</p>
+<h3 id="frametime">frametime <a class="anchor" href="#frametime">#</a></h3>
+<p>How many ticks one frame is shown. Default is <code>1</code>.</p>
+<p>example: <code>frametime = 2</code></p>
+<hr>
+<h3 id="interpolate">interpolate <a class="anchor" href="#interpolate">#</a></h3>
+<p>Blends smoothly towards the next frame instead of switching. Default <code>false</code>.</p>
+<p>values: <code>true</code>, <code>false</code></p>
+<hr>
+<h3 id="frames">frames <a class="anchor" href="#frames">#</a></h3>
+<p>The order of the frames, counting from 0. <code>N*M</code> shows frame N for M ticks, instead of <code>frametime</code>. Frames that don't exist are skipped. Without this line animation shows all frames in default order.</p>
+<p>example: <code>frames = 0 1 2 3*5 2 1</code></p>
+<h3 id="example">Example <a class="anchor" href="#example">#</a></h3>
+<p>Eight frames, slowly blended, the fourth one stays longer:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">frametime = 4
+interpolate = true
+frames = 0 1 2 3*10 4 5 6 7</code></pre></div>
+<p>A texture that is not square or not a whole number of frames tall shows as the "missing texture" pattern, and the log says <code>not square or a vertical strip</code>.</p>
+</div></section>
+<section class="dsec" id="emission"><h2><button class="fold" aria-expanded="true">Emission</button><a class="anchor" href="#emission">#</a></h2><div class="sec-body">
+<p>Parts of a texture can glow, they keep their color and don't get dark at night or in caves. It's only how the texture looks, it doesn't light up its surroundings (for that use the block's own light settings).</p>
+<p>Put the glowing parts in a second image next to the texture, with the same size and the same number of frames:</p>
+<h3 id="_epng"><code>&lt;texture&gt;_e.png</code> <a class="anchor" href="#_epng">#</a></h3>
+<p>Our own format. The red channel multiplied by alpha is how much a pixel glows: black or transparent
+is no glow, full red is full glow.<br>That's how the lit furnace works: <code>furnace_front_lit.png</code> is the front, <code>furnace_front_lit_e.png</code>
+has the fire pixels white and the rest black, so the fire shines in the dark and the stone doesn't.</p>
+<h3 id="_spng"><code>&lt;texture&gt;_s.png</code> <a class="anchor" href="#_spng">#</a></h3>
+<p>The specular map of LabPBR packs, so shader packs' textures work as they are. Only emission is read from it: uses alpha channel, <code>0</code> - <code>254</code> is glow strength, <code>255</code> means no emission at all (it's the empty value of the format).</p>
+<p>If both files exist, <code>_e</code> overrides <code>_s</code>.<br>Glow works for blocks and for entity skins (<code>_e</code> next to the skin png).</p>
+</div></section>
+<section class="dsec" id="overlays"><h2><button class="fold" aria-expanded="true">Overlays</button><a class="anchor" href="#overlays">#</a></h2><div class="sec-body">
+<p>A block's face is layers, pictures one over the other, set in code:
+<code>.sides("dirt").layer("grass_side_overlay").tint_kind(&amp;tints::GRASS)</code>.<br>That's how grass sides are done: the dirt stays brown, the grass fringe gets the biome's color.<br>Each layer is drawn by itself over the one under it, with its own animation, <code>.ctm</code> and tint.<br>A fixed tint (<code>.tint(0x303038)</code>) makes a tinted copy of the picture when the game loads, every
+frame and connected tile too, so one picture is many blocks. A pack changes them by replacing
+the pictures, like any other.<br>Different looks for different block states (a lit furnace) are different textures, not overlays.</p>
+<p>Each layer's <code>_e</code> glows where that layer shows.</p>
+</div></section>
+<section class="dsec" id="debugging"><h2><button class="fold" aria-expanded="true">Debugging</button><a class="anchor" href="#debugging">#</a></h2><div class="sec-body">
+<p>A broken picture never stops the game: a texture that is missing or has a wrong size shows the missing
+texture pattern, and the log says which file caused it.<br><code>F3+T</code> reloads the textures, so a <code>.anim</code> or an <code>_e</code> file can be changed while the game is running.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/textures.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="./search-index.js"></script>
+<script src="../docs.js"></script>
+</body>
+</html>

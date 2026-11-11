@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UI guide - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../assets/icon.png">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../docs.css">
+</head>
+<body class="docs" data-root="../docs/">
+<header class="bar">
+  <a class="bar-name" href="../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="blocks.html">Blocks</a><a href="items.html">Items</a><a href="entities.html">Entities</a><a href="details/liquids.html">Liquids</a><a href="details/effects.html">Status effects and potions</a><a href="details/recipes-loot.html">Recipes and loot</a><a href="details/world-content.html">World content</a><a href="block_entities.html">Block entities guide</a><a href="registration.html">Registration guide</a><a href="details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="events.html">Events, chains and questions</a><a href="details/conditions.html">Conditions</a><a href="details/attributes.html">Attributes and modifiers</a><a href="details/poses-and-modes.html">Poses and game modes</a><a href="details/commands.html">Commands</a><a href="details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="world-api.html">World API</a><a href="details/world-blocks.html">Blocks in the world</a><a href="details/world-entities.html">Entities in the world</a><a href="details/hitboxes.html">Raycasts and hitboxes</a><a href="details/particles-sounds.html">Particles and sounds</a></details><details class="group" open><summary>Client</summary><a href="client.html">Client side</a><a class="current" aria-current="page" href="ui.html">UI guide</a><a href="details/camera.html">Camera modes</a><a href="models.html">Models and animations guide</a><a href="shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="textures.html">Textures guide</a><a href="ctm.html">CTM guide</a><a href="sky.html">Sky guide</a><a href="resourcepacks.html">Resource packs guide</a><a href="localization.html">Localization guide</a><a href="redstone.html">redstone.md</a><a href="worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="reference/index.html">All reference pages</a><a href="reference/blocks.html">Blocks</a><a href="reference/client.html">Client</a><a href="reference/commands.html">Commands</a><a href="reference/effects.html">Particles and effects</a><a href="reference/entities.html">Entities</a><a href="reference/events.html">Events and steps</a><a href="reference/items.html">Items</a><a href="reference/recipes.html">Recipes and loot</a><a href="reference/registration.html">Registration</a><a href="reference/ui.html">UI</a><a href="reference/world.html">World</a><a href="reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>UI guide</h1><nav class="toc"><span>On this page</span><a href="#note">Note</a><a href="#quick-links">Quick links</a><a href="#the-parts">The parts</a><a href="#layout">Layout</a><a href="#live-values">Live values</a><a href="#screens">Screens</a><a href="#hud">HUD</a><a href="#menus">Menus</a><a href="#looks">Looks</a><a href="#gui-textures">GUI textures</a><a href="#shaders-and-animations">Shaders and animations</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>Screens, HUD parts and the menus of inventories and block entities, and how all of it looks.<br>Base's inventory, furnace, chest and health bars are built from the same small set of parts you get, so anything you see in the game you can make.</p>
+<section class="dsec" id="note"><h2><button class="fold" aria-expanded="true">Note</button><a class="anchor" href="#note">#</a></h2><div class="sec-body">
+<p>Examples to copy from:</p>
+<ul>
+<li><code>mods/base/src/player.rs</code>: the HUD bars, the inventory and the crafting table</li>
+<li><code>mods/base/src/block_entities.rs</code>: the furnace and the chest, with bars that follow data</li>
+<li><code>mods/testmod/src/lib.rs</code>: a screen of its own (<code>about</code>), its machines' screens on a panel of its own class, an F3 panel</li>
+<li><code>mods/base/assets/textures/gui/</code> and the <code>color.*</code> lines of <code>mods/base/assets/lang/en_us.lang</code>: the base game's look</li>
+</ul>
+</div></section>
+<section class="dsec" id="quick-links"><h2><button class="fold" aria-expanded="true">Quick links</button><a class="anchor" href="#quick-links">#</a></h2><div class="sec-body">
+<p><a href="#the-parts">the parts</a> | <a href="#layout">layout</a> | <a href="#live-values">live values</a> | <a href="#screens">screens</a> | <a href="#hud">HUD</a> | <a href="#menus">menus</a> | <a href="#looks">looks</a> | <a href="#gui-textures">GUI textures</a> | <a href="#shaders-and-animations">shaders and animations</a></p>
+</div></section>
+<section class="dsec" id="the-parts"><h2><button class="fold" aria-expanded="true">The parts</button><a class="anchor" href="#the-parts">#</a></h2><div class="sec-body">
+<p>A screen is a tree of parts built by a function that receives a <code>Ui</code>. Parts that hold others take a closure for their children:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">ui.panel("panel", S::column().pad(7.0).gap(4.0), |ui| {
+    ui.text("examplemod.title");
+    ui.row(S::row().gap(8.0), |ui| {
+        ui.group("input");
+        ui.button("examplemod.go", S::default(), |_| {});
+    });
+});</code></pre></div>
+<table><thead><tr><th>part</th><th>what it is</th></tr></thead><tbody><tr><td><code>column(s, ..)</code>, <code>row(s, ..)</code></td><td>children one under another, or side by side</td></tr><tr><td><code>panel(class, s, ..)</code></td><td>a column with the class's background, <code>"panel"</code> is the usual window</td></tr><tr><td><code>text(key)</code></td><td>a translation. <code>text_args(key, &amp;[Arg::Int(5)])</code> fills <code>{0}</code> and the rest, <code>text_styled(s, key, args)</code> takes a style too (class, size, one line, <code>mono</code>)</td></tr><tr><td><code>button(key, s, on_click)</code></td><td>a button with a translated label (<code>button_args</code> with arguments); the closure runs on click and can drive the game through <code>c.client()</code> (open screens and worlds, quit, change settings), even in the main menu</td></tr><tr><td><code>input(value, max, s, on_change)</code></td><td>a one-line text field; the closure gets the text after every edit</td></tr><tr><td><code>slider(s, value, on_change)</code></td><td>a slider at <code>value</code> (0..1, read every frame); the closure gets where it is dragged</td></tr><tr><td><code>item(id, count, s)</code></td><td>an item's icon with its count</td></tr><tr><td><code>image(texture, w, h)</code></td><td>a GUI texture such as <code>base:gui/arrow_bg</code></td></tr><tr><td><code>spacer()</code></td><td>an empty part that grows, to push others apart or center them</td></tr><tr><td><code>group(name)</code>, <code>group_slot(name, i)</code></td><td>a menu's slots, see <a href="#menus">menus</a></td></tr><tr><td><code>player_model(w, h)</code></td><td>the player with what they wear, the figure in the inventory</td></tr><tr><td><code>player_inventory(title)</code></td><td>the player's inventory and hotbar in a menu</td></tr><tr><td><code>progress_bind</code>, <code>icons</code></td><td>bars and icon rows driven by live values</td></tr></tbody></table>
+<p>Text is a translation key rather than a raw string, which keeps everything translatable and lets it use the rich text of the <a href="localization.html">tooltips guide</a>, pictures included. Text that isn't words of yours (a number, a player's name) goes in as an argument, <code>Arg::Text(..)</code> shows exactly what it holds; <code>Arg::Float(v, 2)</code> has two decimals. Any part with a style can have a tooltip too: <code>S::column().tooltip("examplemod.what_this_does")</code>, or <code>tooltip_args(key, &amp;[..])</code> with arguments.</p>
+<p>The engine's own pause, death and settings screens are built from exactly these parts, so a screen that replaces one can look and work the same.</p>
+</div></section>
+<section class="dsec" id="layout"><h2><button class="fold" aria-expanded="true">Layout</button><a class="anchor" href="#layout">#</a></h2><div class="sec-body">
+<p>Layout works like flexbox, and all sizes are in GUI pixels, so the GUI scale in the settings makes them bigger or smaller. <code>S</code> describes one part, starting from <code>S::column()</code> or <code>S::row()</code> (rows center their children vertically, columns start at the top left):</p>
+<ul>
+<li><code>gap(n)</code> is the space between children and <code>pad(n)</code> the space around them inside</li>
+<li><code>size(w, h)</code> and <code>w(n)</code> fix a size, otherwise a part is as big as its content</li>
+<li><code>grow()</code> takes whatever space is left in the parent</li>
+<li><code>center()</code> and <code>end()</code> position the children along the main axis</li>
+<li><code>stretch()</code> makes children fill the other axis, so rows get as wide as their column and a <code>spacer()</code> can center things</li>
+<li><code>w_pct(p)</code>, <code>h_pct(p)</code> size a part in percent of its parent; <code>min_w</code>, <code>min_h</code>, <code>max_w</code> limit it</li>
+<li><code>self_align(abi::ui_align::END)</code> places one part differently from its siblings</li>
+<li><code>scroll()</code> lets the children scroll with the wheel, with a bar when they don't fit</li>
+<li>for text: <code>class("title")</code> (its color, also <code>dim</code>, <code>button</code>, <code>chat</code>), <code>scale(2.0)</code>, <code>no_wrap()</code> and <code>mono()</code>, which puts every glyph in a digit-wide cell so numbers don't jump (<code>{mono}..{/mono}</code> does it for part of a text)</li>
+<li>for buttons: <code>disabled(true)</code> and <code>selected(true)</code> (the open tab)</li>
+</ul>
+</div></section>
+<section class="dsec" id="live-values"><h2><button class="fold" aria-expanded="true">Live values</button><a class="anchor" href="#live-values">#</a></h2><div class="sec-body">
+<p>Text and bars can change while a screen is open. A binding's closure runs every frame, and the part is redrawn when the value changed.</p>
+<ul>
+<li><code>text_bind(|view, out| out.set("examplemod.energy", &amp;[Arg::Int(stored), Arg::Int(capacity)]))</code> for text from data</li>
+<li><code>progress_bind(class, s, |view| 0.0..1.0)</code> for a bar, hidden while the value is negative, and <code>progress_bind_dir(.., dir, ..)</code> to fill another way, <code>abi::ui_dir::UP</code> for a flame</li>
+<li><code>icons(class, count, |view| value)</code> for a row of icons that shows a number in half-icon steps, like hearts. <code>.from_right()</code> fills it from the right, like hunger, <code>.dir(abi::ui_dir::UP)</code> any other way, and <code>.shaking()</code> makes it jump about at 4 or less, like hearts near the end. A negative value hides the row</li>
+</ul>
+<p><code>view</code> is a read-only look at the client, the same in HUD bindings, screens and frame hooks (<code>c.view()</code>): <code>view.player_state()</code> has your health and position, <code>view.inventory_group("core:equipment")</code> the stacks of a group of your inventory, <code>view.component(&amp;C)</code> a synced component of yours, <code>view.game_mode()</code> the game mode (<code>view.creative()</code>, <code>view.outside_survival()</code> for anything but survival), and <code>view.menu_component(&amp;C)</code> a component of the block entity whose menu is open (it needs the <code>SYNC_MENU</code> flag on that component, see the <a href="block_entities.html#creating-one">block entities guide</a>). Anything the client already has is better read than mirrored into a component: base's armor bar adds up the points of what you wear, the way the server's damage does. A component read without the flag that sends it there says so in the log.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static HEALTH: HudElement = HudElement::named("health");
+r.hud_element(&amp;HEALTH, hud_anchor::HOTBAR_LEFT, 0, |ui| {
+    ui.icons("heart", 10, |c| if c.outside_survival() { -1.0 } else { c.player_state().map_or(20.0, |s| s.health.ceil()) });
+});</code></pre></div>
+<p>The <code>class</code> ("heart", "arrow", "flame") names the textures, see <a href="#looks">looks</a>.</p>
+</div></section>
+<section class="dsec" id="screens"><h2><button class="fold" aria-expanded="true">Screens</button><a class="anchor" href="#screens">#</a></h2><div class="sec-body">
+<p>A screen is a menu: <code>r.menu(&amp;ABOUT).screen(|ui| ..)</code>. With no slots and nothing synced it stays on the client, opened by <code>menu_open</code>; with slots it is what <code>w.open_menu</code> opens from the server. What it does besides showing parts is declared on it, the same properties the engine's screens have:</p>
+<ul>
+<li><code>.pauses()</code>: single player stops while it is open</li>
+<li><code>.keep_on_escape()</code>: Escape doesn't close it (the death screen)</li>
+<li><code>.closes_on_respawn()</code></li>
+<li><code>.on_key(|view, key| ..)</code>: keys pressed while it is on top (<code>Enter</code>, <code>KeyE</code>, <code>mouse3</code>), before Escape</li>
+<li><code>.shows_chat()</code>: like the chat screen, the HUD leaves the messages to it and Enter sends the text of its input of class <code>chat</code></li>
+</ul>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static ABOUT: Menu = Menu::named("about");
+r.menu(&amp;ABOUT).screen(|ui| {
+    ui.panel("panel", S::column().pad(8.0).gap(4.0), |ui| {
+        ui.text("examplemod.about.title");
+    });
+});
+r.client_command("about", "", |c| { c.client().menu_open(&amp;ABOUT); });</code></pre></div>
+<p><code>menu_open(&amp;ABOUT)</code> works from a client command, a key or a button, and the command line takes it too as <code>--screen examplemod:about</code>.</p>
+<p>Registering an engine screen's handle replaces that screen, so <code>r.menu(&amp;screens::PAUSE).screen(..).pauses()</code> is your own pause screen. The engine's are in <code>screens::*</code>: <code>TITLE</code>, <code>PAUSE</code>, <code>SETTINGS</code>, <code>LANGUAGE</code>, <code>CONTROLS</code>, <code>SOUND</code>, <code>MOD_SETTINGS</code>, <code>MODS</code>, <code>PROFILE</code>, <code>WORLDS</code>, <code>CREATE_WORLD</code>, <code>MULTIPLAYER</code>, <code>RESOURCE_PACKS</code>, <code>SHADER_PACKS</code>, <code>CHAT</code> and <code>DEATH</code>. The engine's own screens open each other through the same names, so a replaced settings screen is the one the main menu's button opens.</p>
+<p>Most of the time a whole new screen is more than you need. A screen part adds to a place of a screen and leaves the rest alone, so several mods can add their buttons to the main menu side by side:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.screen_part(&amp;screens::TITLE, "buttons", 0, |ui| {
+    ui.button("examplemod.guide", S::default(), |c| {
+        c.client().menu_open(&amp;GUIDE);
+    });
+});</code></pre></div>
+<p>The places are <code>buttons</code> and <code>side</code> (the space right of the menu) on <code>core:title</code>, and <code>buttons</code> on <code>core:pause</code> and <code>core:settings</code>; a lower order comes first. A mod that replaces one of these screens keeps the others' parts by building the place in its own: <code>ui.screen_parts("core:title", "buttons")</code>. A part is named <code>&lt;mod&gt;:&lt;screen&gt;/&lt;area&gt;</code> (base's on the pause screen is <code>base:pause/buttons</code>, a second one of the same mod there <code>/2</code>), and other mods move or take it out by that name: <code>r.remove(&amp;ScreenPart::named("base:pause/buttons"))</code>.</p>
+<p>The main menu's logo is the GUI texture <code>logo</code> (drawn across the menu bar in whole multiples of its pixels) and <code>menu.news</code> shows beside it, so a pack or a mod puts its own picture there with one file. Its buttons have 9x9 icons of their own (<code>menu_singleplayer</code>, <code>menu_multiplayer</code>, <code>menu_mods</code>, <code>menu_settings</code>), Quit Game is the class <code>button_quit</code>, and the square beside Multiplayer shows the face of the player's skin.</p>
+</div></section>
+<section class="dsec" id="hud"><h2><button class="fold" aria-expanded="true">HUD</button><a class="anchor" href="#hud">#</a></h2><div class="sec-body">
+<p><code>r.hud_element(name, anchor, order, |ui| ..)</code> puts a part on the in-game overlay. The anchor says where, and <code>order</code> 0 sits nearest the anchor's edge; <code>r.edit(&amp;OTHER_ELEMENT).anchor(..).order(..)</code> moves another mod's.</p>
+<table><thead><tr><th>anchor (<code>hud_anchor::..</code>)</th><th>where</th></tr></thead><tbody><tr><td><code>TOP_LEFT</code>, <code>TOP_RIGHT</code>, <code>BOTTOM_LEFT</code>, <code>BOTTOM_RIGHT</code></td><td>the corners of the window</td></tr><tr><td><code>HOTBAR</code>, <code>HOTBAR_LEFT</code>, <code>HOTBAR_RIGHT</code></td><td>over the hotbar, on its left and right (health and hunger live there)</td></tr><tr><td><code>ABOVE_HOTBAR</code></td><td>centered above all of that (the held item's name)</td></tr><tr><td><code>UNDER_CROSSHAIR</code></td><td>just under the crosshair, which stays where it is (the attack indicator)</td></tr><tr><td><code>DEBUG_LEFT</code>, <code>DEBUG_RIGHT</code></td><td>a panel of the F3 overlay, titled by the element's name as a translation key</td></tr></tbody></table>
+<p>F3 panels from mods take the key numbers after the engine's five, so the first one is F3+6.</p>
+<p>The engine's own parts are elements like these: <code>core:hotbar</code>, <code>core:held_name</code>, <code>core:crosshair</code>, <code>core:chat</code> and the F3 panels, <code>core:debug.&lt;group&gt;</code>. Players arrange all of them, yours too, in <strong>Settings &gt; Arrange HUD</strong>: drag to move, right click to hide. You don't do anything for it, your element just needs a name, and <code>hud.element.&lt;mod&gt;.&lt;name&gt;</code> in your lang file is what the editor calls it. It ends up in <code>config/hud.txt</code>, which can be edited by hand too: <code>base:food = top_right 2</code> (anchor, then order), <code>core:hotbar = at 0.5 1 0 -4</code> (a point of the window and of the element, then GUI pixels from there), and <code>hidden</code> at the end of either.</p>
+<p>F3+F6 says when each line of the F3 overlay shows: with F3, always or never. A line set to always stays on the HUD without F3, and the editor can move it like the rest. A mod's F3 panel is one row there.</p>
+<p>Labels a mod draws (<code>w.draw_text</code>, <code>client.draw_text</code>, <code>client.draw_screen_text</code>) are text like everywhere else, icons and <code>{mono}</code> included, with a size: 1 is menu text, 2 twice that.</p>
+</div></section>
+<section class="dsec" id="menus"><h2><button class="fold" aria-expanded="true">Menus</button><a class="anchor" href="#menus">#</a></h2><div class="sec-body">
+<p>A menu is a set of slots that the server runs, plus the screen that shows them. <code>world.open_menu(player, &amp;MENU, holder)</code> opens one (on an entity, a block position, a held stack, or <code>Holder::NONE</code>), and <code>r.player_menu(&amp;INVENTORY)</code> picks the one the inventory key opens. Its slots come in named groups, described once; the server and the screen both build them from that, so nothing is numbered by hand. Here is the crafting table:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static CRAFTING: Menu = Menu::named("crafting_table");
+r.menu(&amp;CRAFTING)
+    .group("grid", Slots::grid(3, 3))
+    .group("result", Slots::single().output().large())
+    .player_inventory()
+    .on_change(|m| {
+        // a slot changed: show what the grid makes
+        let grid = m.group("grid");
+        let cells: Vec&lt;ItemStack&gt; = (0..grid.len()).map(|i| grid.get(i)).collect();
+        m.group("result").set(0, recipe_grid_output(&amp;CRAFTING_RECIPES, &amp;cells, 3, 3));
+    })
+    .on_take(|m| /* the result was taken: use up the grid */ {})
+    .screen(|ui| {
+        ui.panel("panel", S::column().pad(7.0).gap(4.0), |ui| {
+            ui.row(S::row().gap(8.0), |ui| {
+                ui.group("grid");
+                ui.group("result");
+            });
+            ui.player_inventory(true);
+        });
+    });</code></pre></div>
+<p>A group of a plain menu is the menu's own slots, given back to the player when the menu closes; <code>.equipment()</code> adds the equipment slots of what it is open on, a mob's or else the player's (drawn by <code>ui.equipment()</code>), and <code>holder()</code> groups are the inventory of what it is open on (a block entity's, a mob's, a backpack's). <code>player_inventory()</code> adds the player's inventory and hotbar, which <code>ui.player_inventory(title)</code> draws. The shapes and rules a group can have (<code>output</code>, <code>input</code>, <code>accepts</code>, <code>limit</code>, <code>large</code>, <code>background</code>, <code>tooltip</code>, <code>priority</code>) are listed in the <a href="block_entities.html#creating-one">block entities guide</a>. In <code>on_change</code> and <code>on_take</code>, <code>m.group(name)</code> reads and writes a group's slots by their place in it.</p>
+<p>A block entity's menu is one of these opened on its block, with the block entity's data and tick behind it. The <a href="block_entities.html">block entities guide</a> covers them, including the component flags that their screens read.</p>
+</div></section>
+<section class="dsec" id="looks"><h2><button class="fold" aria-expanded="true">Looks</button><a class="anchor" href="#looks">#</a></h2><div class="sec-body">
+<p>How a part looks follows from its class by name, there is no theme file. Class <code>button</code> is the texture <code>gui/button.png</code>; its states are <code>gui/button_hover.png</code>, <code>_pressed</code>, <code>_disabled</code> (and <code>_focused</code> for inputs). A bare class is looked up in the resource packs, then in the mods from the last loaded, then in the engine, so base's <code>base/textures/gui/button.png</code> dresses every button and a mod's own class (<code>testmod_panel</code>) lives in its own folder. <code>mymod:thing</code> looks only in <code>mymod</code>. A class without a texture shows a magenta and black checkerboard, like a missing block texture, so a typo can't hide.</p>
+<table><thead><tr><th>class</th><th>textures</th></tr></thead><tbody><tr><td><code>panel</code>, <code>well</code>, <code>sidebar</code>, <code>news</code>, <code>tooltip</code>, <code>overlay</code> (behind menus), <code>background</code>, <code>suggest</code>, <code>debug_panel</code>, <code>death</code></td><td>the class</td></tr><tr><td><code>button</code></td><td><code>_hover</code>, <code>_pressed</code>, <code>_disabled</code></td></tr><tr><td><code>input</code></td><td><code>_focused</code>, plus <code>input_selection</code> and <code>caret</code></td></tr><tr><td><code>slider</code>, <code>slider_knob</code></td><td><code>slider_knob_hover</code></td></tr><tr><td><code>scrollbar</code>, <code>scrollbar_handle</code></td><td><code>scrollbar_handle_hover</code></td></tr><tr><td><code>slot</code>, <code>recipe_slot</code>, <code>hotbar</code></td><td><code>hotbar_selected</code> (around the selected one), <code>slot_highlight</code> (over the hovered one)</td></tr><tr><td><code>crosshair</code></td><td>the class</td></tr><tr><td><code>heart</code>, <code>food</code>, <code>armor</code>, <code>air</code></td><td><code>_full</code>, <code>_half</code>, <code>_empty</code></td></tr><tr><td><code>arrow</code>, <code>flame</code> and bars of your own</td><td>the class behind, <code>_fill</code> filling it</td></tr></tbody></table>
+<p>A bar of your own is two pictures and nothing else: <code>gui/energy.png</code> and <code>gui/energy_fill.png</code>, then <code>ui.progress_bind("energy", ..)</code> draws it.</p>
+<p>Text colors are named colors in the language files: <code>color.&lt;class&gt;</code> for its text, and <code>color.&lt;class&gt;_hover</code>, <code>_disabled</code>, <code>_dim</code> and <code>_shadow</code> (<code>none</code> for no shadow) where they differ; whatever a class doesn't set comes from <code>color.default</code>. They hold <code>{#rrggbb}</code> like any text, so a pack changes one with a single line in its <code>lang/en_us.lang</code>:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">color.button = {#d8dceb}
+color.button_hover = {#ffffff}</code></pre></div>
+<p>The same names work inside any text: <code>{color:debug_title}Performance</code> takes the color <code>color.debug_title</code> holds. If you want your mod to be easy to restyle, name your colors this way instead of writing <code>{#hex}</code> in every line, so they are set once and changed once.</p>
+</div></section>
+<section class="dsec" id="gui-textures"><h2><button class="fold" aria-expanded="true">GUI textures</button><a class="anchor" href="#gui-textures">#</a></h2><div class="sec-body">
+<p>A texture used as a background has to be stretched over parts of any size, and a <code>.gui</code> file next to it says how (<code>panel.gui</code> for <code>panel.png</code>):</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">scaling = nine_slice
+border = 4</code></pre></div>
+<p><code>scaling</code> is <code>nine_slice</code> (the corners keep their size, the edges and middle stretch), <code>tile</code> or <code>stretch</code>. <code>border</code> is one number for all sides or <code>left top right bottom</code>, in GUI pixels. Two more keys exist for special cases: <code>size = w h</code> for an image with more pixels than the GUI pixels it stands for, and <code>outset = n</code> for textures that reach outside their box, like shadows. A square <code>tile</code> texture can take <code>turn = random</code>: every tile is turned and mirrored its own way, so a big background doesn't show the repeat. An image without one is simply stretched.</p>
+</div></section>
+<section class="dsec" id="shaders-and-animations"><h2><button class="fold" aria-expanded="true">Shaders and animations</button><a class="anchor" href="#shaders-and-animations">#</a></h2><div class="sec-body">
+<p>A class's <code>.gui</code> can name a shader, and the part is then filled by <code>shaders/gui/&lt;name&gt;.wgsl</code> instead of the picture (<code>testmod_panel.gui</code>):</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">border = 2
+shader = testmod:circuit
+animation = testmod:ui_panel</code></pre></div>
+<p>The file defines <code>fn fill(p: GuiPixel) -&gt; vec4&lt;f32&gt;</code>, where <code>p</code> has the position across the panel, its size in pixels and the time. The circuit board of the testmod machines is one, see the <a href="shaders.html">shaders guide</a> for the details.</p>
+<p>The <code>animation</code> line points at <code>animations/&lt;name&gt;.animation.json</code>. An animation called <code>open</code> plays once when the screen opens and <code>idle</code> loops afterwards. Both move one bone named <code>node</code>, with <code>position</code> (GUI pixels, y up), <code>rotation</code> (z only, clockwise degrees) and <code>scale</code>, around the center of the part. Testmod's panel grows from 85% and rises 10 pixels this way, and the file format is the one from the <a href="models.html#animations">models guide</a>. Item icons inside an animated panel don't follow it yet.</p>
+<p>The picture itself can be animated like a block texture: frames stacked down in one file and an <code>.anim</code> next to it, <code>frametime = 3</code> (ticks per frame) and <code>frame_height = 8</code> when the frames aren't square, as testmod's <code>energy_fill</code> does.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/ui.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="./search-index.js"></script>
+<script src="../docs.js"></script>
+</body>
+</html>

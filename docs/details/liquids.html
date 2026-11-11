@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liquids - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group" open><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a class="current" aria-current="page" href="liquids.html">Liquids</a><a href="effects.html">Status effects and potions</a><a href="recipes-loot.html">Recipes and loot</a><a href="world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a href="editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="conditions.html">Conditions</a><a href="attributes.html">Attributes and modifiers</a><a href="poses-and-modes.html">Poses and game modes</a><a href="commands.html">Commands</a><a href="text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="world-blocks.html">Blocks in the world</a><a href="world-entities.html">Entities in the world</a><a href="hitboxes.html">Raycasts and hitboxes</a><a href="particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group"><summary>Reference</summary><a href="../reference/index.html">All reference pages</a><a href="../reference/blocks.html">Blocks</a><a href="../reference/client.html">Client</a><a href="../reference/commands.html">Commands</a><a href="../reference/effects.html">Particles and effects</a><a href="../reference/entities.html">Entities</a><a href="../reference/events.html">Events and steps</a><a href="../reference/items.html">Items</a><a href="../reference/recipes.html">Recipes and loot</a><a href="../reference/registration.html">Registration</a><a href="../reference/ui.html">UI</a><a href="../reference/world.html">World</a><a href="../reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Liquids</h1>
+<p><code>r.liquid(&amp;LIQUID)</code> and then the calls below.</p>
+<ul>
+<li><code>block(|b| ..)</code>: its block like any other, on top of what makes it a liquid: <code>b.translucent()</code> to see through it (water, otherwise drawn solid like lava), <code>tint_kind</code>, <code>light</code>, <code>light_opacity</code>, <code>drag</code> (how fast things move inside: water 1, lava 0.4), <code>texture</code> (<code>&lt;name&gt;_still</code> by default), and its tags (<code>tag("water")</code>), which its item gets too</li>
+<li><code>flow_delay</code>, <code>drop_off</code>, <code>slope_find</code>, <code>flows_up()</code></li>
+<li><code>renewable(n)</code>: a new source where n sources meet (water 2)</li>
+<li><code>heat</code> (roughly Kelvin, 1000 and more burns)</li>
+<li>what can swim in it isn't the liquid's say: an entity kind's <code>SWIMS_IN</code> (which blocks, base gives players <code>#water</code>) and the same on anything it wears, so a suit with <code>.set_text(&amp;SWIMS_IN, "#lava")</code> swims in lava. It changes nothing else: a burning liquid keeps burning unless <code>actions::HURT</code> says no</li>
+<li><code>fog(rgb, blocks)</code> and <code>overlay(texture, opacity)</code> or <code>no_overlay()</code>: what you see from inside. By default both come from its texture; set them when the inside should look different from the surface: <code>r.liquid(&amp;TAR).fog(0x1A1408, 6.0).overlay("tar_inside", 0.4)</code></li>
+<li><code>bucket(..)</code></li>
+</ul>
+<p>Another mod's liquid: <code>r.edit(WATER.liquid()).fog(0x204020, 12.0)</code>, any of the above; what you don't set stays, and <code>.block(..)</code> there edits its block.</p>
+<section class="dsec" id="reactions"><h2><button class="fold" aria-expanded="true">Reactions</button><a class="anchor" href="#reactions">#</a></h2><div class="sec-body">
+<p>Reactions: <code>r.liquid_reaction("#hot", "#water").source_turns_into("obsidian")</code>, named <code>base:hot&gt;water</code> for others' <code>edit</code> and <code>remove</code> (<code>.named(..)</code> for one of your choice).<br>Every liquid is also an item of its name and tags, its count in millibuckets: what liquid slots (<code>Slots::liquid(capacity)</code>) hold and recipes count, see the <a href="../block_entities.html">block entities guide</a>.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/details/liquids.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>
