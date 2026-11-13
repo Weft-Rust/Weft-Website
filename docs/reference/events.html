@@ -66,34 +66,34 @@
 <section class="dsec" id="damage"><h2><button class="fold" aria-expanded="true">Damage</button><a class="anchor" href="#damage">#</a></h2><div class="sec-body">
 <p>A hurt described (<code>World::damage</code>): <code>Damage::new(4.0, &amp;damage_causes::ATTACK).by(shooter) .through(arrow)</code>. Steps see all of it (<code>Query::other</code>, <code>direct</code>, <code>item</code>, <code>crit</code>).</p>
 <ul>
-<li><a id="Damage-new"></a><code>.new(amount: f32, cause: impl Into&lt;Id&lt;crate::DamageCause&gt;&gt;) -&gt; Damage</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L87">source</a></li>
-<li><a id="Damage-by"></a><code>.by(source: u64)</code><span class="d">Who did it. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L91">source</a></li>
-<li><a id="Damage-through"></a><code>.through(direct: u64)</code><span class="d">What hit, when not <code>by</code> itself (the arrow): knockback goes away from it. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L96">source</a></li>
-<li><a id="Damage-with"></a><code>.with(item: ItemStack)</code><span class="d">What it was done with. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L101">source</a></li>
-<li><a id="Damage-knock"></a><code>.knock(way: impl Into&lt;Vec3&gt;)</code><span class="d">The way it pushes, instead of away from what hit. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L106">source</a></li>
-<li><a id="Damage-crit"></a><code>.crit(mut self)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L110">source</a></li>
-<li><a id="Damage-part"></a><code>.part(part: u32)</code><span class="d">The part of the hitbox it lands on (<code>hitbox_part::HEAD</code>, <code>hitbox_part_id("tail")</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L115">source</a></li>
+<li><a id="Damage-new"></a><code>.new(amount: f32, cause: impl Into&lt;Id&lt;crate::DamageCause&gt;&gt;) -&gt; Damage</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L93">source</a></li>
+<li><a id="Damage-by"></a><code>.by(source: u64)</code><span class="d">Who did it. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L97">source</a></li>
+<li><a id="Damage-through"></a><code>.through(direct: u64)</code><span class="d">What hit, when not <code>by</code> itself (the arrow): knockback goes away from it. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L102">source</a></li>
+<li><a id="Damage-with"></a><code>.with(item: ItemStack)</code><span class="d">What it was done with. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L107">source</a></li>
+<li><a id="Damage-knock"></a><code>.knock(way: impl Into&lt;Vec3&gt;)</code><span class="d">The way it pushes, instead of away from what hit. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L112">source</a></li>
+<li><a id="Damage-crit"></a><code>.crit(mut self)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L116">source</a></li>
+<li><a id="Damage-part"></a><code>.part(part: u32)</code><span class="d">The part of the hitbox it lands on (<code>hitbox_part::HEAD</code>, <code>hitbox_part_id("tail")</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L121">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="effecttick"><h2><button class="fold" aria-expanded="true">EffectTick</button><a class="anchor" href="#effecttick">#</a></h2><div class="sec-body">
 <p>An effect's tick (<code>EntityEffectBuilder::on_tick</code>): every entity that has it, with its level.</p>
 <ul>
-<li><a id="EffectTick-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L767">source</a></li>
-<li><a id="EffectTick-effect"></a><code>.effect() -&gt; u32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L770">source</a></li>
-<li><a id="EffectTick-iter"></a><code>.iter() -&gt; impl Iterator&lt;Item = (u64, u32)&gt; + '_</code><span class="d">(entity, level). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L774">source</a></li>
+<li><a id="EffectTick-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L773">source</a></li>
+<li><a id="EffectTick-effect"></a><code>.effect() -&gt; u32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L776">source</a></li>
+<li><a id="EffectTick-iter"></a><code>.iter() -&gt; impl Iterator&lt;Item = (u64, u32)&gt; + '_</code><span class="d">(entity, level). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L780">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="entityevent"><h2><button class="fold" aria-expanded="true">EntityEvent</button><a class="anchor" href="#entityevent">#</a></h2><div class="sec-body">
 <ul>
-<li><a id="EntityEvent-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L750">source</a></li>
-<li><a id="EntityEvent-entity"></a><code>.entity() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L753">source</a></li>
-<li><a id="EntityEvent-other"></a><code>.other() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L756">source</a></li>
+<li><a id="EntityEvent-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L756">source</a></li>
+<li><a id="EntityEvent-entity"></a><code>.entity() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L759">source</a></li>
+<li><a id="EntityEvent-other"></a><code>.other() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L762">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="entitytick"><h2><button class="fold" aria-expanded="true">EntityTick</button><a class="anchor" href="#entitytick">#</a></h2><div class="sec-body">
 <ul>
-<li><a id="EntityTick-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L737">source</a></li>
-<li><a id="EntityTick-ids"></a><code>.ids() -&gt; &amp;[u64]</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L740">source</a></li>
+<li><a id="EntityTick-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L743">source</a></li>
+<li><a id="EntityTick-ids"></a><code>.ids() -&gt; &amp;[u64]</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L746">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="event"><h2><button class="fold" aria-expanded="true">Event</button><a class="anchor" href="#event">#</a></h2><div class="sec-body">

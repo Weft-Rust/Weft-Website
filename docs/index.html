@@ -191,6 +191,7 @@ base_api = { path = "../../mods/base/api" }</code></pre></div>
 <p>The mod itself uses the same crate, so there's one declaration of everything, and other mods depend on types only, never on the mod's code. The engine still compares the layouts at load. Without depending on it, <code>r.has_mod("othermod")</code> tells whether it is loaded (all mods are known before any registers), to add what goes with it only then. A batch has the world too: <code>b.world()</code> in <code>r.on_event(&amp;actions::USE_BLOCK, |b| ..)</code>, and each <code>BlockChange</code> the player, position, state and item.</p>
 </div></section>
 <section class="dsec" id="where-to-go-next"><h2><button class="fold" aria-expanded="true">Where to go next</button><a class="anchor" href="#where-to-go-next">#</a></h2><div class="sec-body">
+<p>For HUD information about the crosshair's target, see <code>ClientView::target</code> and the target panel extension in the <a href="ui.html#hud">UI guide</a>. A projectile's relative launch speed uses <code>Spawn::inherit_velocity</code>, described in the <a href="entities.html#projectiles">entities guide</a>.</p>
 <p>The rest is split by what you are making. Each page starts with the common case and goes on to the rare ones; the <a href="reference/index.html">reference</a> lists every method of every builder with a link to its source.</p>
 <p><strong>Content you register</strong></p>
 <ul>
