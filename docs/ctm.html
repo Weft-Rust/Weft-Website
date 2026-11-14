@@ -87,7 +87,7 @@ those port with little more than moving files.</p>
 <p>example: <code>heights = 0-40 100-</code><br>(<code>100-</code> means from 100 up, <code>0-40</code> up to 40)</p>
 <hr>
 <h3 id="biomes">biomes <a class="anchor" href="#biomes">#</a></h3>
-<p>Only in these biomes, by name or by tag. A <code>!</code> in front turns the list around.</p>
+<p>Names and tags use the common matcher: included terms are joined, and exclusions are subtracted. A leading <code>!</code> inverts the whole list, as in earlier packs. For example, <code>!base:desert #cold</code> excludes both desert and cold biomes. An unknown name or invalid expression rejects the whole filter instead of keeping valid terms.</p>
 <p>examples:<br><code>biomes = base:desert base:beach</code><br><code>biomes = #cold</code><br><code>biomes = !base:desert</code></p>
 <hr>
 <h3 id="weights">weights <a class="anchor" href="#weights">#</a></h3>
