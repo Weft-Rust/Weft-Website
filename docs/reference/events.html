@@ -22,7 +22,7 @@
   <aside class="side">
     <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
     <div id="results" hidden></div>
-    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="../details/liquids.html">Liquids</a><a href="../details/effects.html">Status effects and potions</a><a href="../details/recipes-loot.html">Recipes and loot</a><a href="../details/world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a href="../details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="../details/conditions.html">Conditions</a><a href="../details/attributes.html">Attributes and modifiers</a><a href="../details/poses-and-modes.html">Poses and game modes</a><a href="../details/commands.html">Commands</a><a href="../details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="../details/world-blocks.html">Blocks in the world</a><a href="../details/world-entities.html">Entities in the world</a><a href="../details/hitboxes.html">Raycasts and hitboxes</a><a href="../details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="../details/camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group" open><summary>Reference</summary><a href="index.html">All reference pages</a><a href="blocks.html">Blocks</a><a href="client.html">Client</a><a href="commands.html">Commands</a><a href="effects.html">Particles and effects</a><a href="entities.html">Entities</a><a class="current" aria-current="page" href="events.html">Events and steps</a><a href="items.html">Items</a><a href="other.html">Everything else</a><a href="recipes.html">Recipes and loot</a><a href="registration.html">Registration</a><a href="ui.html">UI</a><a href="world.html">World</a><a href="worldgen.html">World generation</a></details></nav>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="../details/liquids.html">Liquids</a><a href="../details/effects.html">Status effects and potions</a><a href="../details/recipes-loot.html">Recipes and loot</a><a href="../details/world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a href="../details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="../details/conditions.html">Conditions</a><a href="../details/attributes.html">Attributes and modifiers</a><a href="../details/poses-and-modes.html">Poses and game modes</a><a href="../details/commands.html">Commands</a><a href="../details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="../details/world-blocks.html">Blocks in the world</a><a href="../details/world-entities.html">Entities in the world</a><a href="../details/hitboxes.html">Raycasts and hitboxes</a><a href="../details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="../details/camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group"><summary>More</summary><a href="../environment.html">Environment sources</a></details><details class="group" open><summary>Reference</summary><a href="index.html">All reference pages</a><a href="blocks.html">Blocks</a><a href="client.html">Client</a><a href="commands.html">Commands</a><a href="effects.html">Particles and effects</a><a href="entities.html">Entities</a><a class="current" aria-current="page" href="events.html">Events and steps</a><a href="items.html">Items</a><a href="other.html">Everything else</a><a href="recipes.html">Recipes and loot</a><a href="registration.html">Registration</a><a href="ui.html">UI</a><a href="world.html">World</a><a href="worldgen.html">World generation</a></details></nav>
   </aside>
   <main class="doc">
     <h1>Events and steps reference</h1><nav class="toc"><span>On this page</span><a href="#action">Action</a><a href="#ask">Ask</a><a href="#attributebuilder">AttributeBuilder</a><a href="#blockevent">BlockEvent</a><a href="#damage">Damage</a><a href="#effecttick">EffectTick</a><a href="#entityevent">EntityEvent</a><a href="#entitytick">EntityTick</a><a href="#event">Event</a><a href="#eventbatch">EventBatch</a><a href="#gate">Gate</a><a href="#gateinputs">GateInputs</a><a href="#itemuse">ItemUse</a><a href="#modifier">Modifier</a><a href="#modify">Modify</a><a href="#neighbors">Neighbors</a><a href="#phasebuilder">PhaseBuilder</a><a href="#place">Place</a><a href="#signalevent">SignalEvent</a><a href="#stepbuilder">StepBuilder</a><a href="#systembatch">SystemBatch</a><a href="#use">Use</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
@@ -55,12 +55,12 @@
 </div></section>
 <section class="dsec" id="blockevent"><h2><button class="fold" aria-expanded="true">BlockEvent</button><a class="anchor" href="#blockevent">#</a></h2><div class="sec-body">
 <ul>
-<li><a id="BlockEvent-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3487">source</a></li>
-<li><a id="BlockEvent-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3490">source</a></li>
-<li><a id="BlockEvent-state"></a><code>.state() -&gt; u32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3493">source</a></li>
-<li><a id="BlockEvent-neighbor"></a><code>.neighbor() -&gt; BlockPos</code><span class="d">The neighbor that changed, for <code>on_neighbor</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3497">source</a></li>
-<li><a id="BlockEvent-body_pos"></a><code>.body_pos() -&gt; BlockPos</code><span class="d">Where the block is on the body, for <code>on_carried</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3501">source</a></li>
-<li><a id="BlockEvent-entity"></a><code>.entity() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3504">source</a></li>
+<li><a id="BlockEvent-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3511">source</a></li>
+<li><a id="BlockEvent-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3514">source</a></li>
+<li><a id="BlockEvent-state"></a><code>.state() -&gt; u32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3517">source</a></li>
+<li><a id="BlockEvent-neighbor"></a><code>.neighbor() -&gt; BlockPos</code><span class="d">The neighbor that changed, for <code>on_neighbor</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3521">source</a></li>
+<li><a id="BlockEvent-body_pos"></a><code>.body_pos() -&gt; BlockPos</code><span class="d">Where the block is on the body, for <code>on_carried</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3525">source</a></li>
+<li><a id="BlockEvent-entity"></a><code>.entity() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3528">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="damage"><h2><button class="fold" aria-expanded="true">Damage</button><a class="anchor" href="#damage">#</a></h2><div class="sec-body">
@@ -116,31 +116,31 @@
 <section class="dsec" id="gate"><h2><button class="fold" aria-expanded="true">Gate</button><a class="anchor" href="#gate">#</a></h2><div class="sec-body">
 <p>Which faces of a <code>BlockBuilder::signal_gate</code> read power and give it (strongly, into the block there and on), and its delay.</p>
 <ul>
-<li><a id="Gate-new"></a><code>.new() -&gt; Gate</code><span class="d">Reads behind it and both sides, gives out of the front, one redstone tick late. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3427">source</a></li>
-<li><a id="Gate-inputs"></a><code>.inputs(sides: &amp;[Side]) -&gt; Gate</code><span class="d">The faces it reads; an output is never an input. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3431">source</a></li>
-<li><a id="Gate-outputs"></a><code>.outputs(sides: &amp;[Side]) -&gt; Gate</code><span class="d">The faces it gives at. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3436">source</a></li>
-<li><a id="Gate-delay"></a><code>.delay(ticks: u32) -&gt; Gate</code><span class="d">In redstone ticks, two game ticks each. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3442">source</a></li>
+<li><a id="Gate-new"></a><code>.new() -&gt; Gate</code><span class="d">Reads behind it and both sides, gives out of the front, one redstone tick late. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3451">source</a></li>
+<li><a id="Gate-inputs"></a><code>.inputs(sides: &amp;[Side]) -&gt; Gate</code><span class="d">The faces it reads; an output is never an input. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3455">source</a></li>
+<li><a id="Gate-outputs"></a><code>.outputs(sides: &amp;[Side]) -&gt; Gate</code><span class="d">The faces it gives at. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3460">source</a></li>
+<li><a id="Gate-delay"></a><code>.delay(ticks: u32) -&gt; Gate</code><span class="d">In redstone ticks, two game ticks each. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3466">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="gateinputs"><h2><button class="fold" aria-expanded="true">GateInputs</button><a class="anchor" href="#gateinputs">#</a></h2><div class="sec-body">
 <p>What comes in at a <code>BlockBuilder::signal_gate</code>'s faces.</p>
 <ul>
-<li><a id="GateInputs-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3463">source</a></li>
-<li><a id="GateInputs-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3466">source</a></li>
-<li><a id="GateInputs-side"></a><code>.side(side: Side) -&gt; u8</code><span class="d">Power coming in at <code>side</code>, 0 for a face it doesn't read. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3470">source</a></li>
-<li><a id="GateInputs-output"></a><code>.output() -&gt; u8</code><span class="d">What it gives now. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3474">source</a></li>
+<li><a id="GateInputs-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3487">source</a></li>
+<li><a id="GateInputs-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3490">source</a></li>
+<li><a id="GateInputs-side"></a><code>.side(side: Side) -&gt; u8</code><span class="d">Power coming in at <code>side</code>, 0 for a face it doesn't read. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3494">source</a></li>
+<li><a id="GateInputs-output"></a><code>.output() -&gt; u8</code><span class="d">What it gives now. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3498">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="itemuse"><h2><button class="fold" aria-expanded="true">ItemUse</button><a class="anchor" href="#itemuse">#</a></h2><div class="sec-body">
 <ul>
-<li><a id="ItemUse-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3581">source</a></li>
-<li><a id="ItemUse-entity"></a><code>.entity() -&gt; u64</code><span class="d">Who uses it: a player, or a mob (<code>World::use_item</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3585">source</a></li>
-<li><a id="ItemUse-target_block"></a><code>.target_block() -&gt; Option&lt;(BlockPos, u32)&gt;</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3588">source</a></li>
-<li><a id="ItemUse-held_ticks"></a><code>.held_ticks() -&gt; u32</code><span class="d">Ticks the use button was held, for <code>on_release</code> (a bow's draw); 0 for a use at once. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3592">source</a></li>
-<li><a id="ItemUse-stack"></a><code>.stack() -&gt; crate::ItemStack</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3595">source</a></li>
-<li><a id="ItemUse-slot"></a><code>.slot() -&gt; u32</code><span class="d">The slot of its inventory the stack is in. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3599">source</a></li>
-<li><a id="ItemUse-holder"></a><code>.holder() -&gt; crate::Holder</code><span class="d">The used stack as a holder: what a backpack opens its menu on. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3603">source</a></li>
-<li><a id="ItemUse-set_stack"></a><code>.set_stack(s: crate::ItemStack)</code><span class="d">Replaces the held stack (use count 0 to consume it entirely). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3607">source</a></li>
+<li><a id="ItemUse-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3605">source</a></li>
+<li><a id="ItemUse-entity"></a><code>.entity() -&gt; u64</code><span class="d">Who uses it: a player, or a mob (<code>World::use_item</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3609">source</a></li>
+<li><a id="ItemUse-target_block"></a><code>.target_block() -&gt; Option&lt;(BlockPos, u32)&gt;</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3612">source</a></li>
+<li><a id="ItemUse-held_ticks"></a><code>.held_ticks() -&gt; u32</code><span class="d">Ticks the use button was held, for <code>on_release</code> (a bow's draw); 0 for a use at once. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3616">source</a></li>
+<li><a id="ItemUse-stack"></a><code>.stack() -&gt; crate::ItemStack</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3619">source</a></li>
+<li><a id="ItemUse-slot"></a><code>.slot() -&gt; u32</code><span class="d">The slot of its inventory the stack is in. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3623">source</a></li>
+<li><a id="ItemUse-holder"></a><code>.holder() -&gt; crate::Holder</code><span class="d">The used stack as a holder: what a backpack opens its menu on. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3627">source</a></li>
+<li><a id="ItemUse-set_stack"></a><code>.set_stack(s: crate::ItemStack)</code><span class="d">Replaces the held stack (use count 0 to consume it entirely). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3631">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="modifier"><h2><button class="fold" aria-expanded="true">Modifier</button><a class="anchor" href="#modifier">#</a></h2><div class="sec-body">
@@ -167,9 +167,9 @@
 <section class="dsec" id="neighbors"><h2><button class="fold" aria-expanded="true">Neighbors</button><a class="anchor" href="#neighbors">#</a></h2><div class="sec-body">
 <p>The blocks around one (<code>BlockBuilder::derived</code>).</p>
 <ul>
-<li><a id="Neighbors-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L1920">source</a></li>
-<li><a id="Neighbors-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L1923">source</a></li>
-<li><a id="Neighbors-at"></a><code>.at(side: crate::Dir) -&gt; u32</code><span class="d">The block on that side, air where nothing is loaded. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L1927">source</a></li>
+<li><a id="Neighbors-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L1931">source</a></li>
+<li><a id="Neighbors-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L1934">source</a></li>
+<li><a id="Neighbors-at"></a><code>.at(side: crate::Dir) -&gt; u32</code><span class="d">The block on that side, air where nothing is loaded. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L1938">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="phasebuilder"><h2><button class="fold" aria-expanded="true">PhaseBuilder</button><a class="anchor" href="#phasebuilder">#</a></h2><div class="sec-body">
@@ -180,22 +180,22 @@
 </div></section>
 <section class="dsec" id="place"><h2><button class="fold" aria-expanded="true">Place</button><a class="anchor" href="#place">#</a></h2><div class="sec-body">
 <ul>
-<li><a id="Place-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3548">source</a></li>
-<li><a id="Place-face"></a><code>.face() -&gt; crate::Dir</code><span class="d">Face of the block that was clicked. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3552">source</a></li>
-<li><a id="Place-look_dir"></a><code>.look_dir() -&gt; crate::Vec3</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3555">source</a></li>
-<li><a id="Place-hit"></a><code>.hit() -&gt; crate::Vec3</code><span class="d">Just outside where it was clicked, 0..1 from this cell's corner: for a slab, <code>hit().y &gt; 0.5</code> is the upper half, on a floor, under a ceiling, against a wall or on another slab alike. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3560">source</a></li>
-<li><a id="Place-placed"></a><code>.placed(prop: &amp;str) -&gt; Option&lt;&amp;'static str&gt;</code><span class="d">In <code>merge</code>: a property of how its item would go. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3564">source</a></li>
+<li><a id="Place-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3572">source</a></li>
+<li><a id="Place-face"></a><code>.face() -&gt; crate::Dir</code><span class="d">Face of the block that was clicked. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3576">source</a></li>
+<li><a id="Place-look_dir"></a><code>.look_dir() -&gt; crate::Vec3</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3579">source</a></li>
+<li><a id="Place-hit"></a><code>.hit() -&gt; crate::Vec3</code><span class="d">Just outside where it was clicked, 0..1 from this cell's corner: for a slab, <code>hit().y &gt; 0.5</code> is the upper half, on a floor, under a ceiling, against a wall or on another slab alike. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3584">source</a></li>
+<li><a id="Place-placed"></a><code>.placed(prop: &amp;str) -&gt; Option&lt;&amp;'static str&gt;</code><span class="d">In <code>merge</code>: a property of how its item would go. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3588">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="signalevent"><h2><button class="fold" aria-expanded="true">SignalEvent</button><a class="anchor" href="#signalevent">#</a></h2><div class="sec-body">
 <p>What <code>BlockBuilder::on_signal</code> is told.</p>
 <ul>
-<li><a id="SignalEvent-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3371">source</a></li>
-<li><a id="SignalEvent-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3374">source</a></li>
-<li><a id="SignalEvent-state"></a><code>.state() -&gt; u32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3377">source</a></li>
-<li><a id="SignalEvent-level"></a><code>.level() -&gt; u8</code><span class="d">Power around it now, 0..15. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3381">source</a></li>
-<li><a id="SignalEvent-level_before"></a><code>.level_before() -&gt; u8</code><span class="d">What it was. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3385">source</a></li>
-<li><a id="SignalEvent-rising"></a><code>.rising() -&gt; bool</code><span class="d">It just got power. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3389">source</a></li>
+<li><a id="SignalEvent-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3395">source</a></li>
+<li><a id="SignalEvent-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3398">source</a></li>
+<li><a id="SignalEvent-state"></a><code>.state() -&gt; u32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3401">source</a></li>
+<li><a id="SignalEvent-level"></a><code>.level() -&gt; u8</code><span class="d">Power around it now, 0..15. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3405">source</a></li>
+<li><a id="SignalEvent-level_before"></a><code>.level_before() -&gt; u8</code><span class="d">What it was. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3409">source</a></li>
+<li><a id="SignalEvent-rising"></a><code>.rising() -&gt; bool</code><span class="d">It just got power. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3413">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="stepbuilder"><h2><button class="fold" aria-expanded="true">StepBuilder</button><a class="anchor" href="#stepbuilder">#</a></h2><div class="sec-body">
@@ -221,12 +221,12 @@
 </div></section>
 <section class="dsec" id="use"><h2><button class="fold" aria-expanded="true">Use</button><a class="anchor" href="#use">#</a></h2><div class="sec-body">
 <ul>
-<li><a id="Use-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3517">source</a></li>
-<li><a id="Use-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3520">source</a></li>
-<li><a id="Use-state"></a><code>.state() -&gt; u32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3523">source</a></li>
-<li><a id="Use-face"></a><code>.face() -&gt; crate::Dir</code><span class="d">Face of the block that was clicked. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3527">source</a></li>
-<li><a id="Use-player"></a><code>.player() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3530">source</a></li>
-<li><a id="Use-sneaking"></a><code>.sneaking() -&gt; bool</code><span class="d">The player sneaks: only with <code>.sneak_use(..)</code> saying so, or with empty hands. Returning false passes the click on to what it holds. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3535">source</a></li>
+<li><a id="Use-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3541">source</a></li>
+<li><a id="Use-pos"></a><code>.pos() -&gt; BlockPos</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3544">source</a></li>
+<li><a id="Use-state"></a><code>.state() -&gt; u32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3547">source</a></li>
+<li><a id="Use-face"></a><code>.face() -&gt; crate::Dir</code><span class="d">Face of the block that was clicked. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3551">source</a></li>
+<li><a id="Use-player"></a><code>.player() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3554">source</a></li>
+<li><a id="Use-sneaking"></a><code>.sneaking() -&gt; bool</code><span class="d">The player sneaks: only with <code>.sneak_use(..)</code> saying so, or with empty hands. Returning false passes the click on to what it holds. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3559">source</a></li>
 </ul>
 </div></section>
     <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/reference/events.md">Edit this page on GitHub</a></p>
