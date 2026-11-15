@@ -55,10 +55,10 @@
 <section class="dsec" id="hudelementbuilder"><h2><button class="fold" aria-expanded="true">HudElementBuilder</button><a class="anchor" href="#hudelementbuilder">#</a></h2><div class="sec-body">
 <p>A HUD element being registered (<code>Registry::hud_element</code>).</p>
 <ul>
-<li><a id="HudElementBuilder-rebuild_when"></a><code>.rebuild_when(f: impl Fn(&amp;crate::ClientView) -&gt; u64 + Send + Sync + 'static)</code><span class="d">Rebuilds the layout when this revision changes. Keep changing text and numbers in bindings; use this for a different set of widgets, such as a new inspected block. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2044">source</a></li>
-<li><a id="HudElementBuilder-anchor"></a><code>.anchor(anchor: &amp;str)</code><span class="d">Where it sits (<code>hud_anchor::*</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2053">source</a></li>
-<li><a id="HudElementBuilder-order"></a><code>.order(order: i32)</code><span class="d">0 sits nearest the anchor's edge. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2057">source</a></li>
-<li><a id="HudElementBuilder-ui"></a><code>.ui(f: impl Fn(&amp;mut Ui) + Send + Sync + 'static)</code><span class="d">What it shows. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2061">source</a></li>
+<li><a id="HudElementBuilder-rebuild_when"></a><code>.rebuild_when(f: impl Fn(&amp;crate::ClientView) -&gt; u64 + Send + Sync + 'static)</code><span class="d">Rebuilds the layout when this revision changes. Keep changing text and numbers in bindings; use this for a different set of widgets, such as a new inspected block. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2062">source</a></li>
+<li><a id="HudElementBuilder-anchor"></a><code>.anchor(anchor: &amp;str)</code><span class="d">Where it sits (<code>hud_anchor::*</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2071">source</a></li>
+<li><a id="HudElementBuilder-order"></a><code>.order(order: i32)</code><span class="d">0 sits nearest the anchor's edge. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2075">source</a></li>
+<li><a id="HudElementBuilder-ui"></a><code>.ui(f: impl Fn(&amp;mut Ui) + Send + Sync + 'static)</code><span class="d">What it shows. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2079">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="icons"><h2><button class="fold" aria-expanded="true">Icons</button><a class="anchor" href="#icons">#</a></h2><div class="sec-body">
@@ -81,13 +81,13 @@
 </div></section>
 <section class="dsec" id="menuctx"><h2><button class="fold" aria-expanded="true">MenuCtx</button><a class="anchor" href="#menuctx">#</a></h2><div class="sec-body">
 <ul>
-<li><a id="MenuCtx-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1317">source</a></li>
-<li><a id="MenuCtx-taken_in"></a><code>.taken_in(name: &amp;str) -&gt; Option&lt;u32&gt;</code><span class="d">In <code>on_take</code>, which slot of group <code>name</code> was taken from; <code>None</code> for another group's. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1321">source</a></li>
-<li><a id="MenuCtx-player"></a><code>.player() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1327">source</a></li>
-<li><a id="MenuCtx-times"></a><code>.times() -&gt; u32</code><span class="d">In <code>on_take</code> of a crafting grid's result (<code>Slots::crafting</code>), how many runs of its recipe that was (a shift-click crafts all that fit at once); 1 otherwise. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1332">source</a></li>
-<li><a id="MenuCtx-owner"></a><code>.owner() -&gt; Option&lt;Holder&gt;</code><span class="d">What the menu was opened on (a block entity, a mob, a pouch in a slot); <code>None</code> for the player's own and a crafting table's. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1337">source</a></li>
-<li><a id="MenuCtx-group"></a><code>.group(name: &amp;str) -&gt; SlotGroup&lt;'_&gt;</code><span class="d">Slot group <code>name</code> of this menu; asking for one it doesn't have is a mistake that gets logged, and the group is empty. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1342">source</a></li>
-<li><a id="MenuCtx-find_group"></a><code>.find_group(name: &amp;str) -&gt; Option&lt;SlotGroup&lt;'_&gt;&gt;</code><span class="d"><code>group</code>, when not having it is fine. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1349">source</a></li>
+<li><a id="MenuCtx-world"></a><code>.world() -&gt; World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1335">source</a></li>
+<li><a id="MenuCtx-taken_in"></a><code>.taken_in(name: &amp;str) -&gt; Option&lt;u32&gt;</code><span class="d">In <code>on_take</code>, which slot of group <code>name</code> was taken from; <code>None</code> for another group's. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1339">source</a></li>
+<li><a id="MenuCtx-player"></a><code>.player() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1345">source</a></li>
+<li><a id="MenuCtx-times"></a><code>.times() -&gt; u32</code><span class="d">In <code>on_take</code> of a crafting grid's result (<code>Slots::crafting</code>), how many runs of its recipe that was (a shift-click crafts all that fit at once); 1 otherwise. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1350">source</a></li>
+<li><a id="MenuCtx-owner"></a><code>.owner() -&gt; Option&lt;Holder&gt;</code><span class="d">What the menu was opened on (a block entity, a mob, a pouch in a slot); <code>None</code> for the player's own and a crafting table's. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1355">source</a></li>
+<li><a id="MenuCtx-group"></a><code>.group(name: &amp;str) -&gt; SlotGroup&lt;'_&gt;</code><span class="d">Slot group <code>name</code> of this menu; asking for one it doesn't have is a mistake that gets logged, and the group is empty. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1360">source</a></li>
+<li><a id="MenuCtx-find_group"></a><code>.find_group(name: &amp;str) -&gt; Option&lt;SlotGroup&lt;'_&gt;&gt;</code><span class="d"><code>group</code>, when not having it is fine. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L1367">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="s"><h2><button class="fold" aria-expanded="true">S</button><a class="anchor" href="#s">#</a></h2><div class="sec-body">
@@ -168,8 +168,8 @@
 <section class="dsec" id="wordsetbuilder"><h2><button class="fold" aria-expanded="true">WordSetBuilder</button><a class="anchor" href="#wordsetbuilder">#</a></h2><div class="sec-body">
 <p>A word set being registered or added to (<code>Registry::word_set</code>).</p>
 <ul>
-<li><a id="WordSetBuilder-words"></a><code>.words(words: &amp;[&amp;str])</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2079">source</a></li>
-<li><a id="WordSetBuilder-remove_word"></a><code>.remove_word(word: &amp;str)</code><span class="d">Takes a word out (another mod's, in an edit). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2085">source</a></li>
+<li><a id="WordSetBuilder-words"></a><code>.words(words: &amp;[&amp;str])</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2097">source</a></li>
+<li><a id="WordSetBuilder-remove_word"></a><code>.remove_word(word: &amp;str)</code><span class="d">Takes a word out (another mod's, in an edit). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2103">source</a></li>
 </ul>
 </div></section>
     <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/reference/ui.md">Edit this page on GitHub</a></p>
