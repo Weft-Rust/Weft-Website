@@ -61,6 +61,7 @@
 </div></section>
 <section class="dsec" id="settings"><h2><button class="fold" aria-expanded="true">Settings</button><a class="anchor" href="#settings">#</a></h2><div class="sec-body">
 <p>settings that show up in Mod Settings by themselves (<code>r.config(&amp;SPARKS).bool(true)</code>); the player's own by default, <code>.server()</code> for the server's value (sent to its players on every change), <code>.world()</code> for one saved with the world. The engine's settings are the same kind of thing (<code>settings::FOV</code>, <code>settings::LANGUAGE</code>, key bindings <code>core:key.&lt;action&gt;</code>, all in <code>config/core.txt</code>): set one and the client applies it</p>
+<p>Numeric settings tagged <code>config.logarithmic</code> use a logarithmic slider, with zero supported. Keyboard arrows move by the declared numeric step. Distant terrain uses this scale for its large distance range. Its detail follows projected surface area, render resolution and the active camera, within a pixel-derived tile budget. Coarser parents cover terrain while finer tiles load, including during zoom.</p>
 </div></section>
     <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/client.md">Edit this page on GitHub</a></p>
   </main>
