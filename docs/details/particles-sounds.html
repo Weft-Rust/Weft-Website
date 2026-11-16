@@ -32,6 +32,10 @@
 <section class="dsec" id="sounds"><h2><button class="fold" aria-expanded="true">Sounds</button><a class="anchor" href="#sounds">#</a></h2><div class="sec-body">
 <p><code>w.play_sound(&amp;S, pos, volume)</code> plays one, and <code>.pitch(2.0)</code> on it sets an exact playback speed. <code>r.sound(&amp;S).falloff(4.0, Falloff::Late(2))</code> keeps a sound loud further out.</p>
 </div></section>
+<section class="dsec" id="music-player"><h2><button class="fold" aria-expanded="true">Music player</button><a class="anchor" href="#music-player">#</a></h2><div class="sec-body">
+<p>Place <code>base:music_player</code> and right-click it. The folder icon opens the game's <code>music</code> directory (<code>run/music</code> when running from the source tree). Add MP3, FLAC, OGG Vorbis or PCM WAV files directly in that folder, then use the refresh icon beside it. Click a track to play it from the block. Use the controls under the list to seek, pause or resume, stop, or adjust the volume. Closing the screen leaves the track playing.</p>
+<p>Each client plays its own files. In a multiplayer world other players have separate playback and music folders. The music category and master volume still apply to the local player.</p>
+</div></section>
     <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/details/particles-sounds.md">Edit this page on GitHub</a></p>
   </main>
 </div>
