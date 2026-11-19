@@ -244,7 +244,7 @@ r.remove(&amp;Step::named("core:vanilla_sweep"));</code></pre></div>
 <div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.phase(&amp;CRITS, &amp;phase::MULTIPLY);</code></pre></div>
 </div></section>
 <section class="dsec" id="equipment-slot"><h2><button class="fold" aria-expanded="true">Equipment slot</button><a class="anchor" href="#equipment-slot">#</a></h2><div class="sec-body">
-<p>A slot things are worn in. <code>r.equipment_slot(&amp;S, covers, background)</code>. <code>comps::equipment_slot</code>: <code>COVERS</code> (<code>[str]</code> bones), <code>BACKGROUND</code> (<code>str</code>).</p>
+<p>A slot things are worn in. <code>r.equipment_slot(&amp;S, covers, background)</code> registers it. Its components are <code>COVERS</code> (<code>[str]</code> bones), <code>BACKGROUND</code> (<code>str</code>) and <code>PRIORITIES</code> (<code>[SlotPriority]</code> for quick transfers).</p>
 <div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.edit(&amp;base_api::CHEST).push(&amp;comps::equipment_slot::COVERS, "leftWing".to_string());</code></pre></div>
 </div></section>
 <section class="dsec" id="creative-tab"><h2><button class="fold" aria-expanded="true">Creative tab</button><a class="anchor" href="#creative-tab">#</a></h2><div class="sec-body">
@@ -278,8 +278,8 @@ r.edit(&amp;PAUSE_BUTTONS).set(&amp;comps::screen_part::ORDER, 10);</code></pre>
 <div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.edit(base_api::HUNGER.declaration()).untag("component.keep_on_respawn");</code></pre></div>
 </div></section>
 <section class="dsec" id="bone-motion"><h2><button class="fold" aria-expanded="true">Bone motion</button><a class="anchor" href="#bone-motion">#</a></h2><div class="sec-body">
-<p>A bone of a model file moving by itself, named <code>&lt;model&gt;/&lt;bone&gt;</code>. <code>r.bone_motion(model, bone, BoneMotion::..)</code>. <code>comps::bone_motion</code>: <code>GRAVITY</code>, <code>SPRING</code>, <code>DRAG</code> (<code>f32</code>, 0). There is no builder, so one bone takes one registration; <code>r.remove(Handle::&lt;kind::BoneMotion&gt;::generated(..))</code> takes another mod's away.</p>
-<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.bone_motion("tailmod:tail", "tail2", BoneMotion::SPRINGY);</code></pre></div>
+<p>A bone of a model file moving by itself, named <code>&lt;model&gt;/&lt;bone&gt;</code>. <code>r.bone_motion(model, bone, BoneMotion::..)</code> uses the preset's default angle. The components in <code>comps::bone_motion</code> are <code>GRAVITY</code>, <code>SPRING</code>, <code>DRAG</code> and <code>MAX_ANGLE</code> (degrees). One bone takes one registration. <code>r.remove(Handle::&lt;kind::BoneMotion&gt;::generated(..))</code> takes another mod's away.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.bone_motion_with_limit("tailmod:tail", "tail2", BoneMotion::SPRINGY, 45.0);</code></pre></div>
 </div></section>
 <section class="dsec" id="record"><h2><button class="fold" aria-expanded="true">Record</button><a class="anchor" href="#record">#</a></h2><div class="sec-body">
 <p>A mod's own data that other mods add to and change, the way they do the engine's: an API's structures, a machine's processing table, a quest. <code>r.record(&amp;R)</code>, named like its handle; it has nothing of its own, only the tags and components set on it, and those say what it is. Another mod's <code>r.edit(&amp;R)</code>, <code>r.replace</code> and <code>r.remove</code> work as on anything else, in load order, and an edit of a record nobody registered stops the load.</p>

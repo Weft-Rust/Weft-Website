@@ -25,7 +25,7 @@
     <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="../details/liquids.html">Liquids</a><a href="../details/effects.html">Status effects and potions</a><a href="../details/recipes-loot.html">Recipes and loot</a><a href="../details/world-content.html">World content</a><a href="../block_entities.html">Block entities guide</a><a href="../registration.html">Registration guide</a><a href="../details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="../details/conditions.html">Conditions</a><a href="../details/attributes.html">Attributes and modifiers</a><a href="../details/poses-and-modes.html">Poses and game modes</a><a href="../details/commands.html">Commands</a><a href="../details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="../details/world-blocks.html">Blocks in the world</a><a href="../details/world-entities.html">Entities in the world</a><a href="../details/hitboxes.html">Raycasts and hitboxes</a><a href="../details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="../details/camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group"><summary>More</summary><a href="../environment.html">Environment sources</a></details><details class="group" open><summary>Reference</summary><a href="index.html">All reference pages</a><a href="blocks.html">Blocks</a><a href="client.html">Client</a><a href="commands.html">Commands</a><a href="effects.html">Particles and effects</a><a href="entities.html">Entities</a><a href="events.html">Events and steps</a><a href="items.html">Items</a><a class="current" aria-current="page" href="other.html">Everything else</a><a href="recipes.html">Recipes and loot</a><a href="registration.html">Registration</a><a href="ui.html">UI</a><a href="world.html">World</a><a href="worldgen.html">World generation</a></details></nav>
   </aside>
   <main class="doc">
-    <h1>Everything else reference</h1><nav class="toc"><span>On this page</span><a href="#client">Client</a><a href="#declarationbuilder">DeclarationBuilder</a><a href="#environment">Environment</a><a href="#gatelogic">GateLogic</a><a href="#generation">Generation</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+    <h1>Everything else reference</h1><nav class="toc"><span>On this page</span><a href="#client">Client</a><a href="#declarationbuilder">DeclarationBuilder</a><a href="#environment">Environment</a><a href="#equipmentslotbuilder">EquipmentSlotBuilder</a><a href="#gatelogic">GateLogic</a><a href="#generation">Generation</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
 <p>Types that belong to no topic above.</p>
 <section class="dsec" id="client"><h2><button class="fold" aria-expanded="true">Client</button><a class="anchor" href="#client">#</a></h2><div class="sec-body">
 <ul>
@@ -37,7 +37,7 @@
 <section class="dsec" id="declarationbuilder"><h2><button class="fold" aria-expanded="true">DeclarationBuilder</button><a class="anchor" href="#declarationbuilder">#</a></h2><div class="sec-body">
 <p>A component's declaration being registered (<code>Registry::entity_component</code>, <code>stack_component</code>, <code>storage</code>); another mod's is <code>r.edit(COMP.declaration())</code>.</p>
 <ul>
-<li><a id="DeclarationBuilder-stack"></a><code>.stack(flags: u32)</code><span class="d">Stacks carry it, with <code>stack_flags</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2128">source</a></li>
+<li><a id="DeclarationBuilder-stack"></a><code>.stack(flags: u32)</code><span class="d">Stacks carry it, with <code>stack_flags</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2111">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="environment"><h2><button class="fold" aria-expanded="true">Environment</button><a class="anchor" href="#environment">#</a></h2><div class="sec-body">
@@ -65,10 +65,16 @@
 <li><a id="Environment-replace_post"></a><code>.replace_post(mut self)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L141">source</a></li>
 </ul>
 </div></section>
+<section class="dsec" id="equipmentslotbuilder"><h2><button class="fold" aria-expanded="true">EquipmentSlotBuilder</button><a class="anchor" href="#equipmentslotbuilder">#</a></h2><div class="sec-body">
+<p>An equipment slot being registered (<code>Registry::equipment_slot</code>).</p>
+<ul>
+<li><a id="EquipmentSlotBuilder-priority"></a><code>.priority(priority: i32, items: &amp;str)</code><span class="d">Sets quick-transfer preferences like <code>Slots::priority</code>. Explicit rules replace the worn slot's default priority of one. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2026">source</a></li>
+</ul>
+</div></section>
 <section class="dsec" id="gatelogic"><h2><button class="fold" aria-expanded="true">GateLogic</button><a class="anchor" href="#gatelogic">#</a></h2><div class="sec-body">
 <p>Common gate operations, usable through <code>BlockBuilder::logic_gate</code>.</p>
 <ul>
-<li><a id="GateLogic-name"></a><code>.name() -&gt; &amp;'static str</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3579">source</a></li>
+<li><a id="GateLogic-name"></a><code>.name() -&gt; &amp;'static str</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3581">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="generation"><h2><button class="fold" aria-expanded="true">Generation</button><a class="anchor" href="#generation">#</a></h2><div class="sec-body">

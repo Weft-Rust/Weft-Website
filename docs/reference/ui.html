@@ -55,10 +55,10 @@
 <section class="dsec" id="hudelementbuilder"><h2><button class="fold" aria-expanded="true">HudElementBuilder</button><a class="anchor" href="#hudelementbuilder">#</a></h2><div class="sec-body">
 <p>A HUD element being registered (<code>Registry::hud_element</code>).</p>
 <ul>
-<li><a id="HudElementBuilder-rebuild_when"></a><code>.rebuild_when(f: impl Fn(&amp;crate::ClientView) -&gt; u64 + Send + Sync + 'static)</code><span class="d">Rebuilds the layout when this revision changes. Keep changing text and numbers in bindings; use this for a different set of widgets, such as a new inspected block. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2063">source</a></li>
-<li><a id="HudElementBuilder-anchor"></a><code>.anchor(anchor: &amp;str)</code><span class="d">Where it sits (<code>hud_anchor::*</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2072">source</a></li>
-<li><a id="HudElementBuilder-order"></a><code>.order(order: i32)</code><span class="d">0 sits nearest the anchor's edge. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2076">source</a></li>
-<li><a id="HudElementBuilder-ui"></a><code>.ui(f: impl Fn(&amp;mut Ui) + Send + Sync + 'static)</code><span class="d">What it shows. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2080">source</a></li>
+<li><a id="HudElementBuilder-rebuild_when"></a><code>.rebuild_when(f: impl Fn(&amp;crate::ClientView) -&gt; u64 + Send + Sync + 'static)</code><span class="d">Rebuilds the layout when this revision changes. Keep changing text and numbers in bindings; use this for a different set of widgets, such as a new inspected block. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2046">source</a></li>
+<li><a id="HudElementBuilder-anchor"></a><code>.anchor(anchor: &amp;str)</code><span class="d">Where it sits (<code>hud_anchor::*</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2055">source</a></li>
+<li><a id="HudElementBuilder-order"></a><code>.order(order: i32)</code><span class="d">0 sits nearest the anchor's edge. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2059">source</a></li>
+<li><a id="HudElementBuilder-ui"></a><code>.ui(f: impl Fn(&amp;mut Ui) + Send + Sync + 'static)</code><span class="d">What it shows. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2063">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="icons"><h2><button class="fold" aria-expanded="true">Icons</button><a class="anchor" href="#icons">#</a></h2><div class="sec-body">
@@ -174,8 +174,8 @@
 <section class="dsec" id="wordsetbuilder"><h2><button class="fold" aria-expanded="true">WordSetBuilder</button><a class="anchor" href="#wordsetbuilder">#</a></h2><div class="sec-body">
 <p>A word set being registered or added to (<code>Registry::word_set</code>).</p>
 <ul>
-<li><a id="WordSetBuilder-words"></a><code>.words(words: &amp;[&amp;str])</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2098">source</a></li>
-<li><a id="WordSetBuilder-remove_word"></a><code>.remove_word(word: &amp;str)</code><span class="d">Takes a word out (another mod's, in an edit). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2104">source</a></li>
+<li><a id="WordSetBuilder-words"></a><code>.words(words: &amp;[&amp;str])</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2081">source</a></li>
+<li><a id="WordSetBuilder-remove_word"></a><code>.remove_word(word: &amp;str)</code><span class="d">Takes a word out (another mod's, in an edit). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2087">source</a></li>
 </ul>
 </div></section>
     <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/reference/ui.md">Edit this page on GitHub</a></p>

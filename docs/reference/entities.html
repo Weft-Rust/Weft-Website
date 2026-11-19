@@ -30,7 +30,7 @@
 <section class="dsec" id="categorybuilder"><h2><button class="fold" aria-expanded="true">CategoryBuilder</button><a class="anchor" href="#categorybuilder">#</a></h2><div class="sec-body">
 <p>An entity category being registered (<code>Registry::entity_category</code>).</p>
 <ul>
-<li><a id="CategoryBuilder-cap_radius"></a><code>.cap_radius(blocks: f32)</code><span class="d">How close to a player its mobs count for the cap (64 by default). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2201">source</a></li>
+<li><a id="CategoryBuilder-cap_radius"></a><code>.cap_radius(blocks: f32)</code><span class="d">How close to a player its mobs count for the cap (64 by default). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2184">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="damagecausebuilder"><h2><button class="fold" aria-expanded="true">DamageCauseBuilder</button><a class="anchor" href="#damagecausebuilder">#</a></h2><div class="sec-body">
@@ -182,24 +182,24 @@
 <section class="dsec" id="hitboxes"><h2><button class="fold" aria-expanded="true">Hitboxes</button><a class="anchor" href="#hitboxes">#</a></h2><div class="sec-body">
 <p>What hits land on, part by part (<code>EntityBuilder::hitboxes</code>): boxes in pixels (1/16 block, its feet at 0, -Z its front, -X its right) at the kind's size; one made bigger is hit bigger. Rays, arrows and blows tell the part they hit (<code>RayHit::part</code>, <code>Damage::part</code>, the <code>part</code> a chain step reads in its query). A box bound to a bone follows the registered model's base pose on the server and client. Its dimensions are authored independently of the model's mesh.</p>
 <ul>
-<li><a id="Hitboxes-new"></a><code>.new() -&gt; Hitboxes</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2346">source</a></li>
-<li><a id="Hitboxes-part"></a><code>.part(name: &amp;str, min: [f32</code><span class="d">A part going with the body. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2356">source</a></li>
-<li><a id="Hitboxes-bone"></a><code>.bone(name: &amp;str, bone: &amp;str, min: [f32</code><span class="d">A box in rest-pose model pixels that follows a bone of the registered entity model. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2364">source</a></li>
-<li><a id="Hitboxes-head"></a><code>.head(name: &amp;str, min: [f32</code><span class="d">A head: it turns with the look about <code>pivot</code>, its neck. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2368">source</a></li>
-<li><a id="Hitboxes-limb"></a><code>.limb(name: &amp;str, min: [f32</code><span class="d">A leg or an arm: it swings about <code>pivot</code> as it walks, <code>swing</code> radians at a full stride, <code>phase</code> radians after the beat (<code>PI</code> the other half of the step). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2373">source</a></li>
-<li><a id="Hitboxes-humanoid"></a><code>.humanoid() -&gt; Hitboxes</code><span class="d">Two legs, two arms, a body and a head, 32 pixels tall: the player's. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2377">source</a></li>
-<li><a id="Hitboxes-quadruped"></a><code>.quadruped() -&gt; Hitboxes</code><span class="d">A body on four legs with a head ahead, 25 pixels tall: a cow's. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2393">source</a></li>
-<li><a id="Hitboxes-reaching"></a><code>.reaching(mut self)</code><span class="d">Its arms held out ahead, not swinging, as a zombie's. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2409">source</a></li>
-<li><a id="Hitboxes-slim"></a><code>.slim(px: f32)</code><span class="d">Arms and legs <code>px</code> pixels thick, as a skeleton's. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2424">source</a></li>
+<li><a id="Hitboxes-new"></a><code>.new() -&gt; Hitboxes</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2329">source</a></li>
+<li><a id="Hitboxes-part"></a><code>.part(name: &amp;str, min: [f32</code><span class="d">A part going with the body. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2339">source</a></li>
+<li><a id="Hitboxes-bone"></a><code>.bone(name: &amp;str, bone: &amp;str, min: [f32</code><span class="d">A box in rest-pose model pixels that follows a bone of the registered entity model. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2347">source</a></li>
+<li><a id="Hitboxes-head"></a><code>.head(name: &amp;str, min: [f32</code><span class="d">A head: it turns with the look about <code>pivot</code>, its neck. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2351">source</a></li>
+<li><a id="Hitboxes-limb"></a><code>.limb(name: &amp;str, min: [f32</code><span class="d">A leg or an arm: it swings about <code>pivot</code> as it walks, <code>swing</code> radians at a full stride, <code>phase</code> radians after the beat (<code>PI</code> the other half of the step). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2356">source</a></li>
+<li><a id="Hitboxes-humanoid"></a><code>.humanoid() -&gt; Hitboxes</code><span class="d">Two legs, two arms, a body and a head, 32 pixels tall: the player's. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2360">source</a></li>
+<li><a id="Hitboxes-quadruped"></a><code>.quadruped() -&gt; Hitboxes</code><span class="d">A body on four legs with a head ahead, 25 pixels tall: a cow's. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2376">source</a></li>
+<li><a id="Hitboxes-reaching"></a><code>.reaching(mut self)</code><span class="d">Its arms held out ahead, not swinging, as a zombie's. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2392">source</a></li>
+<li><a id="Hitboxes-slim"></a><code>.slim(px: f32)</code><span class="d">Arms and legs <code>px</code> pixels thick, as a skeleton's. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2407">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="looks"><h2><button class="fold" aria-expanded="true">Looks</button><a class="anchor" href="#looks">#</a></h2><div class="sec-body">
 <p>What <code>ItemBuilder::condition</code> changes of a stack's look; what it doesn't set stays.</p>
 <ul>
-<li><a id="Looks-worn_model"></a><code>.worn_model(model: &amp;str, bone: &amp;str) -&gt; &amp;mut Self</code><span class="d">A model attached to a bone while this stack is in equipment. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L2978">source</a></li>
-<li><a id="Looks-worn_texture"></a><code>.worn_texture(texture: &amp;str) -&gt; &amp;mut Self</code><span class="d">A texture on the wearer's armor geometry, under <code>entity/</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L2983">source</a></li>
-<li><a id="Looks-texture"></a><code>.texture(t: &amp;str) -&gt; &amp;mut Self</code><span class="d">A texture from <code>item/</code> instead of its own. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L2988">source</a></li>
-<li><a id="Looks-model"></a><code>.model(m: &amp;str) -&gt; &amp;mut Self</code><span class="d">A model file instead of its own (<code>set_model</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L2993">source</a></li>
+<li><a id="Looks-worn_model"></a><code>.worn_model(model: &amp;str, bone: &amp;str) -&gt; &amp;mut Self</code><span class="d">A model attached to a bone while this stack is in equipment. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L2980">source</a></li>
+<li><a id="Looks-worn_texture"></a><code>.worn_texture(texture: &amp;str) -&gt; &amp;mut Self</code><span class="d">A texture on the wearer's armor geometry, under <code>entity/</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L2985">source</a></li>
+<li><a id="Looks-texture"></a><code>.texture(t: &amp;str) -&gt; &amp;mut Self</code><span class="d">A texture from <code>item/</code> instead of its own. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L2990">source</a></li>
+<li><a id="Looks-model"></a><code>.model(m: &amp;str) -&gt; &amp;mut Self</code><span class="d">A model file instead of its own (<code>set_model</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L2995">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="model"><h2><button class="fold" aria-expanded="true">Model</button><a class="anchor" href="#model">#</a></h2><div class="sec-body">
@@ -239,10 +239,10 @@
 <section class="dsec" id="projectile"><h2><button class="fold" aria-expanded="true">Projectile</button><a class="anchor" href="#projectile">#</a></h2><div class="sec-body">
 <p>How a projectile flies (<code>EntityBuilder::projectile</code>): vanilla's arrow unless said otherwise, 2 damage per block a tick of speed, 0.99 of its speed kept a tick in the air and 0.6 in a liquid, gone where it hits a block.</p>
 <ul>
-<li><a id="Projectile-new"></a><code>.new() -&gt; Projectile</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2318">source</a></li>
-<li><a id="Projectile-damage"></a><code>.damage(per_speed: f32)</code><span class="d">Damage per block a tick of its speed, rounded up (<code>chain::PROJECTILE_DAMAGE</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2322">source</a></li>
-<li><a id="Projectile-drag"></a><code>.drag(air: f32, liquid: f32)</code><span class="d">Shares of its speed kept each tick in the air and in a liquid. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2327">source</a></li>
-<li><a id="Projectile-sticks"></a><code>.sticks(ticks: u32)</code><span class="d">It stays stuck where it hits a block, for <code>ticks</code> (vanilla's arrow a minute). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2332">source</a></li>
+<li><a id="Projectile-new"></a><code>.new() -&gt; Projectile</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2301">source</a></li>
+<li><a id="Projectile-damage"></a><code>.damage(per_speed: f32)</code><span class="d">Damage per block a tick of its speed, rounded up (<code>chain::PROJECTILE_DAMAGE</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2305">source</a></li>
+<li><a id="Projectile-drag"></a><code>.drag(air: f32, liquid: f32)</code><span class="d">Shares of its speed kept each tick in the air and in a liquid. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2310">source</a></li>
+<li><a id="Projectile-sticks"></a><code>.sticks(ticks: u32)</code><span class="d">It stays stuck where it hits a block, for <code>ticks</code> (vanilla's arrow a minute). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2315">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="riderrules"><h2><button class="fold" aria-expanded="true">RiderRules</button><a class="anchor" href="#riderrules">#</a></h2><div class="sec-body">
@@ -278,22 +278,22 @@
 <section class="dsec" id="spawnbuilder"><h2><button class="fold" aria-expanded="true">SpawnBuilder</button><a class="anchor" href="#spawnbuilder">#</a></h2><div class="sec-body">
 <p>A natural spawning rule (see <code>abi::comp::spawn</code>), named <code>&lt;mod&gt;:&lt;entity&gt;</code>, <code>/2</code>.. unless <code>named</code>: <code>r.natural_spawn(&amp;PIG).biome("#animals").ground("#animal_spawn").light(9, 15).pack_size(2, 3).chance(0.05)</code>.</p>
 <ul>
-<li><a id="SpawnBuilder-named"></a><code>.named(name: &amp;str)</code><span class="d">Its name instead of <code>&lt;mod&gt;:&lt;entity&gt;</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2259">source</a></li>
-<li><a id="SpawnBuilder-ground"></a><code>.ground(what: &amp;str)</code><span class="d">Only on blocks <code>what</code> takes (a block matcher; under the spot, what <code>place</code> says it rests on): <code>when(Cond::block(what))</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2266">source</a></li>
-<li><a id="SpawnBuilder-place"></a><code>.place(place: SpawnPlace)</code><span class="d">What kind of spot it takes: on the ground (the default), in a liquid, under a ceiling. The mob's height decides how much room it needs. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2271">source</a></li>
-<li><a id="SpawnBuilder-when"></a><code>.when(c: impl Into&lt;crate::Cond&gt;)</code><span class="d">Only where this holds too (asked about the spot and the block it rests on). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2279">source</a></li>
-<li><a id="SpawnBuilder-light"></a><code>.light(min: u32, max: u32)</code><span class="d">Light at the spot, inclusive (0..15): <code>when(Cond::light(min, max))</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2283">source</a></li>
-<li><a id="SpawnBuilder-pack_size"></a><code>.pack_size(min: u32, max: u32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2286">source</a></li>
-<li><a id="SpawnBuilder-weight"></a><code>.weight(w: u32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2289">source</a></li>
-<li><a id="SpawnBuilder-chance"></a><code>.chance(c: f32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2292">source</a></li>
+<li><a id="SpawnBuilder-named"></a><code>.named(name: &amp;str)</code><span class="d">Its name instead of <code>&lt;mod&gt;:&lt;entity&gt;</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2242">source</a></li>
+<li><a id="SpawnBuilder-ground"></a><code>.ground(what: &amp;str)</code><span class="d">Only on blocks <code>what</code> takes (a block matcher; under the spot, what <code>place</code> says it rests on): <code>when(Cond::block(what))</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2249">source</a></li>
+<li><a id="SpawnBuilder-place"></a><code>.place(place: SpawnPlace)</code><span class="d">What kind of spot it takes: on the ground (the default), in a liquid, under a ceiling. The mob's height decides how much room it needs. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2254">source</a></li>
+<li><a id="SpawnBuilder-when"></a><code>.when(c: impl Into&lt;crate::Cond&gt;)</code><span class="d">Only where this holds too (asked about the spot and the block it rests on). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2262">source</a></li>
+<li><a id="SpawnBuilder-light"></a><code>.light(min: u32, max: u32)</code><span class="d">Light at the spot, inclusive (0..15): <code>when(Cond::light(min, max))</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2266">source</a></li>
+<li><a id="SpawnBuilder-pack_size"></a><code>.pack_size(min: u32, max: u32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2269">source</a></li>
+<li><a id="SpawnBuilder-weight"></a><code>.weight(w: u32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2272">source</a></li>
+<li><a id="SpawnBuilder-chance"></a><code>.chance(c: f32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2275">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="spawnplace"><h2><button class="fold" aria-expanded="true">SpawnPlace</button><a class="anchor" href="#spawnplace">#</a></h2><div class="sec-body">
 <p>Where a natural spawn stands (<code>SpawnBuilder::place</code>).</p>
 <ul>
-<li><a id="SpawnPlace-ground"></a><code>.ground() -&gt; SpawnPlace</code><span class="d">On a solid block, in air. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2224">source</a></li>
-<li><a id="SpawnPlace-in_liquid"></a><code>.in_liquid(tag: &amp;'static str) -&gt; SpawnPlace</code><span class="d">Inside a liquid with this tag (<code>"#water"</code>): fish, squid. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2228">source</a></li>
-<li><a id="SpawnPlace-ceiling"></a><code>.ceiling() -&gt; SpawnPlace</code><span class="d">Hanging under a solid block: bats. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2232">source</a></li>
+<li><a id="SpawnPlace-ground"></a><code>.ground() -&gt; SpawnPlace</code><span class="d">On a solid block, in air. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2207">source</a></li>
+<li><a id="SpawnPlace-in_liquid"></a><code>.in_liquid(tag: &amp;'static str) -&gt; SpawnPlace</code><span class="d">Inside a liquid with this tag (<code>"#water"</code>): fish, squid. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2211">source</a></li>
+<li><a id="SpawnPlace-ceiling"></a><code>.ceiling() -&gt; SpawnPlace</code><span class="d">Hanging under a solid block: bats. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2215">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="steering"><h2><button class="fold" aria-expanded="true">Steering</button><a class="anchor" href="#steering">#</a></h2><div class="sec-body">
@@ -321,11 +321,11 @@
 <section class="dsec" id="walk"><h2><button class="fold" aria-expanded="true">Walk</button><a class="anchor" href="#walk">#</a></h2><div class="sec-body">
 <p>One tick of a mob's walking for <code>World::walk</code>: a direction and the keys a player would hold.</p>
 <ul>
-<li><a id="Walk-toward"></a><code>.toward(dir: [f32</code><span class="d">Toward <code>dir</code> (x, z, length up to 1) at <code>speed</code> times its kind's walking speed. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2486">source</a></li>
-<li><a id="Walk-jump"></a><code>.jump()</code><span class="d">Jumps; swims and flies up. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2490">source</a></li>
-<li><a id="Walk-sneak"></a><code>.sneak()</code><span class="d">Never steps off an edge, holds on to ladders, crouches; flies down. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2494">source</a></li>
-<li><a id="Walk-sprint"></a><code>.sprint()</code><span class="d">Faster, a longer jump, swims lying down in a liquid it swims in. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2498">source</a></li>
-<li><a id="Walk-fly"></a><code>.fly()</code><span class="d">Takes off and flies, if its <code>attribute::CAN_FLY</code> is 1 or more (<code>.attribute(..)</code> on its kind, a modifier); it comes down when it lands without <code>jump</code>, as a player does. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2503">source</a></li>
+<li><a id="Walk-toward"></a><code>.toward(dir: [f32</code><span class="d">Toward <code>dir</code> (x, z, length up to 1) at <code>speed</code> times its kind's walking speed. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2469">source</a></li>
+<li><a id="Walk-jump"></a><code>.jump()</code><span class="d">Jumps; swims and flies up. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2473">source</a></li>
+<li><a id="Walk-sneak"></a><code>.sneak()</code><span class="d">Never steps off an edge, holds on to ladders, crouches; flies down. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2477">source</a></li>
+<li><a id="Walk-sprint"></a><code>.sprint()</code><span class="d">Faster, a longer jump, swims lying down in a liquid it swims in. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2481">source</a></li>
+<li><a id="Walk-fly"></a><code>.fly()</code><span class="d">Takes off and flies, if its <code>attribute::CAN_FLY</code> is 1 or more (<code>.attribute(..)</code> on its kind, a modifier); it comes down when it lands without <code>jump</code>, as a player does. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/game.rs#L2486">source</a></li>
 </ul>
 </div></section>
     <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/reference/entities.md">Edit this page on GitHub</a></p>
