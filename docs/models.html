@@ -153,7 +153,7 @@ r.set_model("#food", "foodmod:food/{name}");       // all food at once; what has
 <section class="dsec" id="models-on-models"><h2><button class="fold" aria-expanded="true">Models on models</button><a class="anchor" href="#models-on-models">#</a></h2><div class="sec-body">
 <p>A second model can sit on a bone of the first, with its own texture and clips, like a tail:</p>
 <div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.bone_model(&amp;PLAYER, "tailmod:tail", "body");                                  // on every player
-r.item(&amp;TAIL).wearable_model(&amp;base_api::CHEST, "tailmod:tail", "body");           // on who wears it</code></pre></div>
+r.item(&amp;TAIL).wearable_model(&amp;base_api::slots::CHEST, "tailmod:tail", "body");           // on who wears it</code></pre></div>
 <p>Draw it in the pixels of the model it goes on, with the same origin (<code>player_template.geo.json</code> in the example mod is good to draw on top of). What plays on the wearer plays on it: its own <code>walk</code> plays with theirs, and when someone's <code>walk</code> names a bone <code>tail</code> that is in your model, it moves. Nobody knowing of the other two mods is needed for that.</p>
 </div></section>
 <section class="dsec" id="bones-that-move-by-themselves"><h2><button class="fold" aria-expanded="true">Bones that move by themselves</button><a class="anchor" href="#bones-that-move-by-themselves">#</a></h2><div class="sec-body">

@@ -149,14 +149,14 @@ if STONE.is(w.block(pos)) { .. }</code></pre></div>
 <div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static GLOWSTONE: Block = Block::named("base:glowstone");
 
 r.edit(&amp;GLOWSTONE).light(10);                                   // on every state, the rest stays
-r.edit(&amp;base_api::OVERWORLD).push(&amp;comps::dimension::WEATHERS, ACID_RAIN.name().into());
+r.edit(&amp;base_api::dimensions::OVERWORLD).push(&amp;comps::dimension::WEATHERS, ACID_RAIN.name().into());
 r.remove(&amp;Recipe::named("base:crafting/torch"));
 r.edit_pattern::&lt;kind::Block&gt;("#logs").hardness(3.0);</code></pre></div>
 <p>Edits wait for what they edit, so load order only matters between two mods changing the same thing: the later one wins (<code>after</code>/<code>before</code> in <code>declare_mod!</code> decide it without depending on the other), and edits by pattern (<code>r.set</code> too) come after edits by name. Every kind with all its components and an example of changing someone else's is in the <a href="registration.html">registration guide</a>.</p>
 </div></section>
 <section class="dsec" id="components-and-tags-as-inter-mod-communication"><h2><button class="fold" aria-expanded="true">Components and tags as inter-mod communication</button><a class="anchor" href="#components-and-tags-as-inter-mod-communication">#</a></h2><div class="sec-body">
 <p>This is the most important part that you should remember to make life easier for you and other modders working with your mod.<br>Properties are named values on content. Things like fuel, food, durability, etc etc, are components or tags.<br>This is done so any mod reads and writes them without depending on whoever added a certain block.</p>
-<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">// Declared where it's used, or taken from the mod that reads it (`base_api::FUEL`, see below)
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">// Declared where it's used, or taken from the mod that reads it (`base_api::components::FUEL`, see below)
 static FUEL: Component&lt;u32&gt; = Component::named("fuel");
 static HOT: Tag = Tag::named("hot");
 
@@ -187,7 +187,7 @@ static BURNER: Component&lt;Burner&gt; = Component::named("mymod:burner");</code
 <div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-toml">[dependencies]
 weft_sdk = { path = "../../crates/sdk" }
 base_api = { path = "../../mods/base/api" }</code></pre></div>
-<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.on_event(&amp;base_api::SMELTED, |b| for s in b.iter() { /* s.furnace, s.input, s.output */ });</code></pre></div>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.on_event(&amp;base_api::events::SMELTED, |b| for s in b.iter() { /* s.furnace, s.input, s.output */ });</code></pre></div>
 <p>The mod itself uses the same crate, so there's one declaration of everything, and other mods depend on types only, never on the mod's code. The engine still compares the layouts at load. Without depending on it, <code>r.has_mod("othermod")</code> tells whether it is loaded (all mods are known before any registers), to add what goes with it only then. A batch has the world too: <code>b.world()</code> in <code>r.on_event(&amp;actions::USE_BLOCK, |b| ..)</code>, and each <code>BlockChange</code> the player, position, state and item.</p>
 </div></section>
 <section class="dsec" id="where-to-go-next"><h2><button class="fold" aria-expanded="true">Where to go next</button><a class="anchor" href="#where-to-go-next">#</a></h2><div class="sec-body">
@@ -239,7 +239,7 @@ base_api = { path = "../../mods/base/api" }</code></pre></div>
 </div></section>
 <section class="dsec" id="content-editor-methods"><h2><button class="fold" aria-expanded="true">Content editor methods</button><a class="anchor" href="#content-editor-methods">#</a></h2><div class="sec-body">
 <p>The editor emits ordinary builder calls with their own parameters. SDK methods appear from their source signatures. Mods can register extension methods with <code>r.editor_method(editor::Method { .. })</code>. <code>editor::parameter</code> derives a parameter's schema and initial Rust literal from a typed value. Its component name lets ready examples fill the same form from registered data. The method's <code>import</code> names its public extension trait.</p>
-<p>Food uses the shared <code>base_api</code> crate, through <code>use base_api::{Food, FoodItem}</code> and <code>.food(Food { hunger: 4, saturation: 2.4 })</code>. This sets the food component and its eating behavior on the new item. Generated snippets include the trait import. Add <code>base_api</code> to your mod's dependencies, as in <code>examples/examplemod</code>.</p>
+<p>Food uses the shared <code>base_api</code> crate, through <code>use base_api::components::{Food, FoodItem}</code> and <code>.food(Food { hunger: 4, saturation: 2.4 })</code>. This sets the food component and its eating behavior on the new item. Generated snippets include the trait import. Add <code>base_api</code> to your mod's dependencies, as in <code>examples/examplemod</code>.</p>
 <p>Logic gates use <code>.logic_gate(Gate::new().inputs(&amp;[Side::Left, Side::Right]).outputs(&amp;[Side::Front]).delay(1), GateLogic::And)</code>. The editor exposes each input and output face, the delay and the operation. Custom logic uses the existing <code>.signal_gate(gate, |g| ..)</code> callback API.</p>
 </div></section>
     <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/modding.md">Edit this page on GitHub</a></p>
