@@ -245,6 +245,8 @@ r.scatter(&amp;TREE_SITES).spacing(5).reach(3).density(&amp;TREES).plan(|p| {
 <li><code>dimension(&amp;D)</code>: only there</li>
 </ul>
 <p><code>r.edit(&amp;TREE_SITES)</code> changes another mod's scatter by its handle.</p>
+<p><code>.impostor()</code> adds the <code>feature.impostor</code> tag to a grid feature. Distant terrain draws a view-dependent image of its occupied voxels. Loaded cubes show the placed blocks. Both grid odds and biome density work with the tag, including templates and plans.</p>
+<p><code>.surface_cover(sample)</code> adds the <code>surface_projection</code> tag and supplies the callback for a terrain projection. Share the sampler with the decoration's placement rules. It returns the block state to use for the projection at a position, or air for no cover. A solid block can supply a projection texture by carrying the same tag.</p>
 <p>Base's real trees are in <code>mods/base/src/worldgen.rs</code>; how many grow where and which kinds are the biome components <code>trees</code> and <code>tree_kinds</code> (a <code>BlockList</code> of logs, <code>"birch_log:1 oak_log:4"</code>), and a log's leaves its <code>tree_leaves</code> (a <code>BlockRef</code>; logs tagged <code>cone_tree</code> grow spruce-like), so another mod can give a biome trees without touching code.</p>
 </div></section>
 <section class="dsec" id="decorations"><h2><button class="fold" aria-expanded="true">Decorations</button><a class="anchor" href="#decorations">#</a></h2><div class="sec-body">
