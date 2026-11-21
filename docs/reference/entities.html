@@ -148,8 +148,9 @@
 <ul>
 <li><a id="Exit-nearest"></a><code>.nearest(reach: f64) -&gt; Exit</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L68">source</a></li>
 <li><a id="Exit-offset"></a><code>.offset(at: impl Into&lt;Vec3&gt;) -&gt; Exit</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L71">source</a></li>
-<li><a id="Exit-stay"></a><code>.stay() -&gt; Exit</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L74">source</a></li>
-<li><a id="Exit-call"></a><code>.call(f: impl Fn(&amp;World, u64, u64, Vec3) -&gt; Vec3 + Send + Sync + 'static) -&gt; Exit</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L77">source</a></li>
+<li><a id="Exit-stay"></a><code>.stay() -&gt; Exit</code><span class="d">Get off on the deck at the seat, looking up by at most half a block. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L75">source</a></li>
+<li><a id="Exit-stay_on_deck"></a><code>.stay_on_deck(max_rise: f64) -&gt; Exit</code><span class="d">Get off on a block-built deck at the seat, with a custom upward search distance in blocks. If no deck is in reach, get off where the rider sat. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L80">source</a></li>
+<li><a id="Exit-call"></a><code>.call(f: impl Fn(&amp;World, u64, u64, Vec3) -&gt; Vec3 + Send + Sync + 'static) -&gt; Exit</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L83">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="gamemodebuilder"><h2><button class="fold" aria-expanded="true">GameModeBuilder</button><a class="anchor" href="#gamemodebuilder">#</a></h2><div class="sec-body">
@@ -248,10 +249,10 @@
 <section class="dsec" id="riderrules"><h2><button class="fold" aria-expanded="true">RiderRules</button><a class="anchor" href="#riderrules">#</a></h2><div class="sec-body">
 <p>What riders of a kind may do, each a test of the world, the mount and the rider, so it can hang on anything (only on the ground, only by day, only its owner). A rule not given lets it.</p>
 <ul>
-<li><a id="RiderRules-new"></a><code>.new() -&gt; RiderRules</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L182">source</a></li>
-<li><a id="RiderRules-hits"></a><code>.hits(f: impl Fn(&amp;World, u64, u64) -&gt; bool + Send + Sync + 'static)</code><span class="d">Whether a rider may hit (<code>|w, mount, rider| ..</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L186">source</a></li>
-<li><a id="RiderRules-builds"></a><code>.builds(f: impl Fn(&amp;World, u64, u64) -&gt; bool + Send + Sync + 'static)</code><span class="d">Whether a rider may place and break blocks. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L191">source</a></li>
-<li><a id="RiderRules-hurt_reaches_riders"></a><code>.hurt_reaches_riders(share: f32)</code><span class="d">Share of what hurts the mount that hurts each rider too (a blast under a boat), 0 for none. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L197">source</a></li>
+<li><a id="RiderRules-new"></a><code>.new() -&gt; RiderRules</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L188">source</a></li>
+<li><a id="RiderRules-hits"></a><code>.hits(f: impl Fn(&amp;World, u64, u64) -&gt; bool + Send + Sync + 'static)</code><span class="d">Whether a rider may hit (<code>|w, mount, rider| ..</code>). <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L192">source</a></li>
+<li><a id="RiderRules-builds"></a><code>.builds(f: impl Fn(&amp;World, u64, u64) -&gt; bool + Send + Sync + 'static)</code><span class="d">Whether a rider may place and break blocks. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L197">source</a></li>
+<li><a id="RiderRules-hurt_reaches_riders"></a><code>.hurt_reaches_riders(share: f32)</code><span class="d">Share of what hurts the mount that hurts each rider too (a blast under a boat), 0 for none. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L203">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="seat"><h2><button class="fold" aria-expanded="true">Seat</button><a class="anchor" href="#seat">#</a></h2><div class="sec-body">
@@ -299,8 +300,8 @@
 <section class="dsec" id="steering"><h2><button class="fold" aria-expanded="true">Steering</button><a class="anchor" href="#steering">#</a></h2><div class="sec-body">
 <p>How a player's keys move a mount: called on that player's client each tick with its keys and the mount as it is, giving what the mount does. <code>steer::*</code> are the usual ones; <code>and</code> puts two together (a walk with a jump).</p>
 <ul>
-<li><a id="Steering-new"></a><code>.new(f: impl Fn(&amp;Keys, &amp;EntityState) -&gt; Steer + Send + Sync + 'static) -&gt; Steering</code><span class="d">Yours from scratch. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L89">source</a></li>
-<li><a id="Steering-and"></a><code>.and(other: Steering) -&gt; Steering</code><span class="d">Both: the first's movement and facing unless it gives none, the higher jump, flying if either flies. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L94">source</a></li>
+<li><a id="Steering-new"></a><code>.new(f: impl Fn(&amp;Keys, &amp;EntityState) -&gt; Steer + Send + Sync + 'static) -&gt; Steering</code><span class="d">Yours from scratch. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L95">source</a></li>
+<li><a id="Steering-and"></a><code>.and(other: Steering) -&gt; Steering</code><span class="d">Both: the first's movement and facing unless it gives none, the higher jump, flying if either flies. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/riding.rs#L100">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="trigger"><h2><button class="fold" aria-expanded="true">Trigger</button><a class="anchor" href="#trigger">#</a></h2><div class="sec-body">
