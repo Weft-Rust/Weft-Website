@@ -35,6 +35,15 @@
     deck.set_block([0, 1, 0], state);
 }</code></pre></div>
 <p>Mods that used <code>on_body</code> can switch to <code>in_space</code>. Rebuild binary mods when upgrading to this host ABI.</p>
+<p>Use <code>point_in</code> to translate a point and <code>vector_in</code> to rotate a direction into another space. For example, a drill can raycast from its front face along its local facing.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">fn drill_hit(w: World, pos: BlockPos, facing: Dir) -&gt; Option&lt;weft_sdk::abi::RayHit&gt; {
+    let dir = facing.offset();
+    let [x, y, z] = [f64::from(dir.x), f64::from(dir.y), f64::from(dir.z)];
+    let from = w.point_in(0, block_center(pos).offset(x * 0.50001, y * 0.50001, z * 0.50001))?;
+    let dir = w.vector_in(0, [x, y, z])?;
+    let hit = w.in_space(0)?.raycast(from, dir, 2.0, Ray::blocks().skip(w.frame().unwrap_or(0)))?;
+    (hit.body == 0).then_some(hit)
+}</code></pre></div>
 </div></section>
 <section class="dsec" id="seeds"><h2><button class="fold" aria-expanded="true">Seeds</button><a class="anchor" href="#seeds">#</a></h2><div class="sec-body">
 <p>The world's seed (<code>seed</code>, and <code>seed_at(pos)</code>, <code>seed_of_cube(pos)</code> for a number that belongs to a place: what a chest holds when first opened, a villager's trades)</p>
