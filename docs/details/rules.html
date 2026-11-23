@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rules - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="liquids.html">Liquids</a><a href="effects.html">Status effects and potions</a><a href="recipes-loot.html">Recipes and loot</a><a href="world-content.html">World content</a><a href="../block_entities.html">Block entities</a><a href="../registration.html">Registration guide</a><a href="editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="conditions.html">Conditions</a><a href="attributes.html">Attributes and modifiers</a><a href="poses-and-modes.html">Poses and game modes</a><a href="commands.html">Commands</a><a href="text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="world-blocks.html">Blocks in the world</a><a href="world-entities.html">Entities in the world</a><a href="hitboxes.html">Raycasts and hitboxes</a><a href="particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group" open><summary>More</summary><a href="components-and-tags.html">Components and tags</a><a href="modifiers.html">Modifiers</a><a class="current" aria-current="page" href="rules.html">Rules</a><a href="../environment.html">Environment sources</a></details><details class="group"><summary>Reference</summary><a href="../reference/index.html">All reference pages</a><a href="../reference/blocks.html">Blocks</a><a href="../reference/client.html">Client</a><a href="../reference/commands.html">Commands</a><a href="../reference/effects.html">Particles and effects</a><a href="../reference/entities.html">Entities</a><a href="../reference/events.html">Events and steps</a><a href="../reference/items.html">Items</a><a href="../reference/other.html">Everything else</a><a href="../reference/recipes.html">Recipes and loot</a><a href="../reference/registration.html">Registration</a><a href="../reference/ui.html">UI</a><a href="../reference/world.html">World</a><a href="../reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Rules</h1><nav class="toc"><span>On this page</span><a href="#when">When</a><a href="#if">If</a><a href="#then">Then</a><a href="#shortcuts">Shortcuts</a><a href="#rules-and-states">Rules and states</a><a href="#several-blocks-in-one-cell">Several blocks in one cell</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>A <strong>rule</strong> is something a block does by itself: <em>when</em> something happens, <em>if</em> a condition holds, <em>then</em> the block changes. Crops drying, sand falling, grass dying under a block and torches breaking off a wall are all rules.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;FARMLAND)
+    .prop("moisture", 0..=7)
+    .rule(Rule::random(300.0)
+        .when(Cond::new("light(..4) &amp; !beside(#water)"))
+        .becomes("moisture=0"));</code></pre></div>
+<p>A rule has three parts, always in this order: <code>Rule::&lt;when&gt;().when(&lt;if&gt;).&lt;then&gt;()</code>. A rule without <code>.when(..)</code> always acts.</p>
+<section class="dsec" id="when"><h2><button class="fold" aria-expanded="true">When</button><a class="anchor" href="#when">#</a></h2><div class="sec-body">
+<ul>
+<li><code>Rule::random(mean_secs)</code>: every <code>mean_secs</code> on average</li>
+<li><code>Rule::neighbor()</code>: when something next to the block changes</li>
+<li><code>Rule::after(secs)</code>: <code>secs</code> after something next to the block changed</li>
+</ul>
+<p>There are no random ticks. Rules, <a href="blocks.html#spreading">spreading</a> and scheduled ticks all run on world time, so an unloaded area catches up on the time it missed when it loads.</p>
+</div></section>
+<section class="dsec" id="if"><h2><button class="fold" aria-expanded="true">If</button><a class="anchor" href="#if">#</a></h2><div class="sec-body">
+<p><code>.when(condition)</code> takes a <a href="details/conditions.html">condition</a> about the block's own cell. Call it again to add more: all of them have to hold. The ones that matter most here:</p>
+<ul>
+<li><code>side(down, #soil)</code>: that side touches a matching block. Without a matcher, it matches any solid block</li>
+<li><code>beside(#water)</code>: a horizontal neighbor is a matching block. <code>beside(down, #water)</code> checks around the cell below</li>
+<li><code>open(down)</code>: that side is air or <a href="blocks.html#plant">replaceable</a></li>
+<li><code>covered</code>: the cell above is opaque</li>
+<li><code>light(9..)</code>: the light level is in that range</li>
+<li><code>state(age=7)</code>: the block is in a state with these properties</li>
+</ul>
+<p><code>side</code> and <code>open</code> name a side of the block's own frame, so they turn with the block (<code>down</code> of a block that lies on its side is not the world's down).</p>
+<p>Conditions combine with <code>&amp;</code>, <code>|</code>, <code>!</code> and parentheses, in text (<code>Cond::new("night &amp; !covered")</code>) or in code (<code>Cond::light(9, 15)</code>, <code>!Cond::covered()</code>).</p>
+</div></section>
+<section class="dsec" id="then"><h2><button class="fold" aria-expanded="true">Then</button><a class="anchor" href="#then">#</a></h2><div class="sec-body">
+<ul>
+<li><code>.becomes("age=0")</code>: sets some of its own properties</li>
+<li><code>.becomes("dirt")</code>: turns into another block. <code>[..]</code> picks a state: <code>"base:farmland[moisture=0]"</code></li>
+<li><code>.grows()</code>: its <code>on_grow</code> runs, or <code>age</code> goes one higher if there is none (<a href="blocks.html#plants-and-growth">Plants and growth</a>)</li>
+<li><code>.breaks()</code>: breaks off, dropping what it drops</li>
+<li><code>.falls()</code>: falls like sand, as a moving block</li>
+<li><code>.sheds("north=false")</code>: a piece comes off: it becomes that, dropping what the piece drops (a side of an <code>on_sides</code> block)</li>
+</ul>
+<p>A name without a namespace in <code>becomes</code> belongs to your mod as usual.</p>
+</div></section>
+<section class="dsec" id="shortcuts"><h2><button class="fold" aria-expanded="true">Shortcuts</button><a class="anchor" href="#shortcuts">#</a></h2><div class="sec-body">
+<p>Many of the block builder's calls are rules written for you. You'll often only need these:</p>
+<ul>
+<li><code>.needs_below("#soil")</code>: <code>Rule::neighbor().when(!Cond::side(Dir::Down, "#soil")).breaks()</code></li>
+<li><code>.needs(Dir::West, "#wall")</code>: the same for another side. An empty matcher (<code>""</code>) means any solid block</li>
+<li><code>.needs_near("#water")</code>: breaks unless the block it stands on has one of these beside it, or is this same block (sugar cane)</li>
+<li><code>.grows(secs, min_light)</code>: <code>Rule::random(secs).when(Cond::light(min_light, 15)).grows()</code></li>
+<li><code>.smothered_into("dirt", secs)</code>: <code>Rule::random(secs).when(Cond::covered()).becomes("dirt")</code></li>
+<li><code>.falling()</code>: <code>Rule::after(0.1).when(Cond::open(Dir::Down)).falls()</code></li>
+</ul>
+<p>A <code>neighbor</code> rule that breaks the block also keeps it from being placed where it would break right away, so <code>needs_below</code> doubles as a placement check.</p>
+<p><a href="blocks.html#spreading"><code>spreads</code></a> works on the cells around the block instead and isn't a rule of the block itself.</p>
+</div></section>
+<section class="dsec" id="rules-and-states"><h2><button class="fold" aria-expanded="true">Rules and states</button><a class="anchor" href="#rules-and-states">#</a></h2><div class="sec-body">
+<p><code>.rule(..)</code> goes on a block (every state) or inside <code>.states(..)</code> (only that state). For a rule that only holds in some states, a condition does the same thing with less code: <code>.when(Cond::state("age=7"))</code>.</p>
+</div></section>
+<section class="dsec" id="several-blocks-in-one-cell"><h2><button class="fold" aria-expanded="true">Several blocks in one cell</button><a class="anchor" href="#several-blocks-in-one-cell">#</a></h2><div class="sec-body">
+<p>Rules hold for every block of a cell, each by its own: a crop in a cell with snow still grows, and breaks off by itself when its soil goes. See <a href="blocks.html#several-blocks-in-one-cell">several blocks in one cell</a>.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/details/rules.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>

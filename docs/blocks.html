@@ -22,83 +22,402 @@
   <aside class="side">
     <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
     <div id="results" hidden></div>
-    <nav class="tree"><details class="group"><summary>Start</summary><a href="index.html">Weft modding quick start</a></details><details class="group" open><summary>Content</summary><a class="current" aria-current="page" href="blocks.html">Blocks</a><a href="items.html">Items</a><a href="entities.html">Entities</a><a href="details/liquids.html">Liquids</a><a href="details/effects.html">Status effects and potions</a><a href="details/recipes-loot.html">Recipes and loot</a><a href="details/world-content.html">World content</a><a href="block_entities.html">Block entities guide</a><a href="registration.html">Registration guide</a><a href="details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="events.html">Events, chains and questions</a><a href="details/conditions.html">Conditions</a><a href="details/attributes.html">Attributes and modifiers</a><a href="details/poses-and-modes.html">Poses and game modes</a><a href="details/commands.html">Commands</a><a href="details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="world-api.html">World API</a><a href="details/world-blocks.html">Blocks in the world</a><a href="details/world-entities.html">Entities in the world</a><a href="details/hitboxes.html">Raycasts and hitboxes</a><a href="details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="client.html">Client side</a><a href="ui.html">UI guide</a><a href="details/camera.html">Camera modes</a><a href="models.html">Models and animations guide</a><a href="shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="textures.html">Textures guide</a><a href="ctm.html">CTM guide</a><a href="sky.html">Sky guide</a><a href="resourcepacks.html">Resource packs guide</a><a href="localization.html">Localization guide</a><a href="redstone.html">redstone.md</a><a href="worldgen.html">Worldgen guide</a></details><details class="group"><summary>More</summary><a href="environment.html">Environment sources</a></details><details class="group"><summary>Reference</summary><a href="reference/index.html">All reference pages</a><a href="reference/blocks.html">Blocks</a><a href="reference/client.html">Client</a><a href="reference/commands.html">Commands</a><a href="reference/effects.html">Particles and effects</a><a href="reference/entities.html">Entities</a><a href="reference/events.html">Events and steps</a><a href="reference/items.html">Items</a><a href="reference/other.html">Everything else</a><a href="reference/recipes.html">Recipes and loot</a><a href="reference/registration.html">Registration</a><a href="reference/ui.html">UI</a><a href="reference/world.html">World</a><a href="reference/worldgen.html">World generation</a></details></nav>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="index.html">Weft modding quick start</a></details><details class="group" open><summary>Content</summary><a class="current" aria-current="page" href="blocks.html">Blocks</a><a href="items.html">Items</a><a href="entities.html">Entities</a><a href="details/liquids.html">Liquids</a><a href="details/effects.html">Status effects and potions</a><a href="details/recipes-loot.html">Recipes and loot</a><a href="details/world-content.html">World content</a><a href="block_entities.html">Block entities</a><a href="registration.html">Registration guide</a><a href="details/editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="events.html">Events, chains and questions</a><a href="details/conditions.html">Conditions</a><a href="details/attributes.html">Attributes and modifiers</a><a href="details/poses-and-modes.html">Poses and game modes</a><a href="details/commands.html">Commands</a><a href="details/text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="world-api.html">World API</a><a href="details/world-blocks.html">Blocks in the world</a><a href="details/world-entities.html">Entities in the world</a><a href="details/hitboxes.html">Raycasts and hitboxes</a><a href="details/particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="client.html">Client side</a><a href="ui.html">UI guide</a><a href="details/camera.html">Camera modes</a><a href="models.html">Models and animations guide</a><a href="shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="textures.html">Textures guide</a><a href="ctm.html">CTM guide</a><a href="sky.html">Sky guide</a><a href="resourcepacks.html">Resource packs guide</a><a href="localization.html">Localization guide</a><a href="redstone.html">redstone.md</a><a href="worldgen.html">Worldgen guide</a></details><details class="group"><summary>More</summary><a href="details/components-and-tags.html">Components and tags</a><a href="details/modifiers.html">Modifiers</a><a href="details/rules.html">Rules</a><a href="environment.html">Environment sources</a></details><details class="group"><summary>Reference</summary><a href="reference/index.html">All reference pages</a><a href="reference/blocks.html">Blocks</a><a href="reference/client.html">Client</a><a href="reference/commands.html">Commands</a><a href="reference/effects.html">Particles and effects</a><a href="reference/entities.html">Entities</a><a href="reference/events.html">Events and steps</a><a href="reference/items.html">Items</a><a href="reference/other.html">Everything else</a><a href="reference/recipes.html">Recipes and loot</a><a href="reference/registration.html">Registration</a><a href="reference/ui.html">UI</a><a href="reference/world.html">World</a><a href="reference/worldgen.html">World generation</a></details></nav>
   </aside>
   <main class="doc">
-    <h1>Blocks</h1><nav class="toc"><span>On this page</span><a href="#the-basics">The basics</a><a href="#faces-and-textures">Faces and textures</a><a href="#models-turning-and-hitboxes">Models, turning and hitboxes</a><a href="#rules-what-a-block-does-by-itself">Rules: what a block does by itself</a><a href="#hazards-sounds-and-particles">Hazards, sounds and particles</a><a href="#plants-and-things-that-spread">Plants and things that spread</a><a href="#callbacks">Callbacks</a><a href="#states">States</a><a href="#blocks-bigger-than-a-cell">Blocks bigger than a cell</a><a href="#stairs-slabs-and-other-shapes-of-a-block">Stairs, slabs and other shapes of a block</a><a href="#blocks-on-the-sides-of-a-cell">Blocks on the sides of a cell</a><a href="#several-blocks-in-one-cell">Several blocks in one cell</a><a href="#sharing-one-model-file">Sharing one model file</a><a href="#reading-what-a-builder-set">Reading what a builder set</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
-<p>Everything a block can be told, in the order you usually need it. <code>r.block(&amp;BLOCK)</code> starts it and each section below is a group of calls on that builder. For the complete list of methods see the <a href="reference/blocks.html">reference</a>.</p>
-<section class="dsec" id="the-basics"><h2><button class="fold" aria-expanded="true">The basics</button><a class="anchor" href="#the-basics">#</a></h2><div class="sec-body">
-<p><code>r.block(&amp;BLOCK)</code> and then:</p>
-<ul>
-<li><code>hardness</code></li>
-<li><code>mined_by("pickaxe", tier)</code>: tag <code>mineable/pickaxe</code> and the <code>harvest_level</code> component (<code>tool_tier::HAND</code> for none); loot pools with <code>Cond::harvested()</code> pass only for a fitting tool of that tier</li>
-<li><code>drops(item, n)</code> or <code>drops_nothing()</code>: shorthand for its loot table (<code>drops</code> puts <code>Cond::harvested()</code> on the pool). Without either the block drops its own item the same way</li>
-<li><code>light(15)</code> or <code>light_rgb(r, g, b)</code></li>
-<li><code>cutout()</code>, <code>translucent()</code></li>
-</ul>
-</div></section>
-<section class="dsec" id="faces-and-textures"><h2><button class="fold" aria-expanded="true">Faces and textures</button><a class="anchor" href="#faces-and-textures">#</a></h2><div class="sec-body">
-<p>faces: <code>texture(t)</code> on all of them, then <code>top</code>, <code>bottom</code>, <code>ends</code> (top and bottom), <code>sides</code> (the four around), <code>north</code>/<code>south</code>/<code>west</code>/<code>east</code>, <code>front</code>/<code>back</code> (north and south: where <code>.facing(..)</code> turns it) for some, the last said wins: <code>.texture("furnace_side").ends("furnace_top").front("furnace_front")</code>. Each picks the faces it set, and <code>layer(t)</code> puts another picture over them, <code>tint(0xRRGGBB)</code> colors their top layer for good (a tinted copy made on load, its frames and connected tiles too: one white wool for every color) and <code>tint_kind(&amp;tints::GRASS)</code> by the biome. A grass block is dirt with green over it: <code>.texture("dirt").top("grass_top").tint_kind(&amp;tints::GRASS).sides("dirt").layer("grass_side_overlay").tint_kind(&amp;tints::GRASS)</code>. Each layer is drawn by itself over the one under it, with its own animation, connected textures and tint; stairs and slabs made of it get the same faces, and its item shows them in the hand and in slots, the biome's colors where the player is. Items are layers the same way, see <a href="items.html">Items</a></p>
-</div></section>
-<section class="dsec" id="models-turning-and-hitboxes"><h2><button class="fold" aria-expanded="true">Models, turning and hitboxes</button><a class="anchor" href="#models-turning-and-hitboxes">#</a></h2><div class="sec-body">
-<ul>
-<li>a model is written once facing north, its top up, and turned with the block: boxes, a model file, hitboxes, a cube's faces, liquid walls and support alike. <code>.facing(..)</code> turns it to its <code>facing</code>, <code>.axis()</code> (a log: an <code>axis</code> property set along the face clicked) along its axis, redstone's <code>attach</code> and <code>front</code> onto that face; <code>.orientation(Orientation::up(p.facing()))</code> in <code>.states</code> for anything else (<code>Orientation::new(attach, front)</code>, <code>front</code>, <code>up</code>, <code>leaning</code>, <code>axis</code>). <code>state_turned(state, o)</code> gives any block's state turned with the world around it (a structure placed turned, a wrench)</li>
-<li><code>model_box(min, max)</code> (faces show the state's textures) or a <code>models/block/&lt;name&gt;.json</code> from Blockbench (<a href="models.html#blocks-and-items">models guide</a>), <code>hitbox(min, max)</code> for its shape in the same 1/16 units, one box a call: what stops a walker, what the crosshair outlines and cracks, only the outline on a block that isn't solid. Without any: the model's boxes, else a plant's cross, else the whole block. <code>turned(..)</code>, <code>tilted(..)</code> and <code>unshaded()</code> change the last box: the last draws it without the shading by side, as a plant's cross is (panels of a tall plant). The order of the other calls doesn't matter (<code>cutout()</code> and <code>light_opacity(2)</code>, say)</li>
-</ul>
-</div></section>
-<section class="dsec" id="rules-what-a-block-does-by-itself"><h2><button class="fold" aria-expanded="true">Rules: what a block does by itself</button><a class="anchor" href="#rules-what-a-block-does-by-itself">#</a></h2><div class="sec-body">
-<p>what happens to a block by itself is rules: when, if, then. <code>.rule(Rule::random(300.0).when(Cond::new("light(..4) &amp; !beside(#water)")).becomes("moisture=0"))</code> dries farmland now and then; <code>Rule::neighbor()</code> acts as soon as something next to it changes and <code>Rule::after(secs)</code> that much later; <code>.when(..)</code> takes <a href="details/conditions.html">conditions</a> about its own cell: <code>side(down, #soil)</code> (a side of its own frame, turning with it; <code>side(down)</code> is solid), <code>beside(down, #water)</code>, <code>open(down)</code>, <code>covered</code>, <code>light(9..)</code>, its <code>state(..)</code>; then <code>.becomes("age=0")</code> (its own properties) or <code>.becomes("dirt")</code> (a block, a state of it with <code>[..]</code>), <code>.grows()</code>, <code>.breaks()</code> (with its drops), <code>.falls()</code>. Rules hold for every block of a cell, a crop in with snow too. <code>needs_below("#soil")</code>, <code>needs(Dir::West, "")</code> for another side, <code>needs_near("#water")</code> (sugar cane), <code>grows</code>, <code>smothered_into</code> and <code>falling</code> are rules: a neighbor rule that breaks a block also keeps it from being placed where it would</p>
-</div></section>
-<section class="dsec" id="hazards-sounds-and-particles"><h2><button class="fold" aria-expanded="true">Hazards, sounds and particles</button><a class="anchor" href="#hazards-sounds-and-particles">#</a></h2><div class="sec-body">
-<ul>
-<li>what a block does to whoever meets it: <code>.hazard(Hazard::touch(1.0, &amp;PRICKED))</code> is a cactus; <code>Hazard::inside</code> (fire, a berry bush), <code>on</code> (magma), <code>head</code> (where the eyes are), with <code>.fire(ticks)</code>, <code>.every(ticks)</code> and <code>.when(..)</code> about the entity there (<code>!Cond::flying()</code>). Every opaque full block suffocates, and a <code>hot</code> one without hazards of its own burns like lava</li>
-<li>what a block sounds and shows: its <code>sound_group</code> gives <code>&lt;group&gt;.break</code>, <code>.place</code>, <code>.step</code>, <code>.hit</code>, and the engine flies pieces of it on breaking, hitting, landing and running; <code>.effect("step", "mymod:squelch", "")</code> changes one event (<code>break</code>, <code>place</code>, <code>step</code>, <code>hit</code>, <code>land</code>, <code>sprint</code>; <code>""</code> keeps what it would be, <code>"none"</code> is nothing). An entity kind takes the same for <code>hurt</code>, <code>death</code>, <code>ambient</code>, <code>step</code></li>
-<li><code>ambient_particle("mymod:spark")</code> for particles the client shows around a block now and then (torch smoke), nothing on the server</li>
-</ul>
-</div></section>
-<section class="dsec" id="plants-and-things-that-spread"><h2><button class="fold" aria-expanded="true">Plants and things that spread</button><a class="anchor" href="#plants-and-things-that-spread">#</a></h2><div class="sec-body">
-<ul>
-<li><code>plant()</code>: a cross like grass and flowers, nothing stops a walker, broken at once; <code>tall_plant("lower", "upper")</code> the same two blocks tall (its two pictures, a <code>tint_kind</code> after it on both)</li>
-<li><code>grows(seconds, min_light)</code> + <code>on_grow(..)</code> for plants (<code>Rule::random(seconds).when(Cond::light(min_light, 15)).grows()</code>)</li>
-<li><code>spreads("#grass_spreads_to", seconds, min_light)</code> for what creeps onto neighbors (grass onto dirt), with <code>spread_reach(min, max)</code> when it reaches otherwise than grass does (moss every way and up walls), <code>smothered_into("dirt", seconds)</code> for what turns when covered (<code>Rule::random(seconds).when(Cond::covered()).becomes("dirt")</code>). There are no random ticks: rules, spreading and scheduled ticks all run on world time, so they catch up on time nobody was there for</li>
-</ul>
-</div></section>
-<section class="dsec" id="callbacks"><h2><button class="fold" aria-expanded="true">Callbacks</button><a class="anchor" href="#callbacks">#</a></h2><div class="sec-body">
-<ul>
-<li><code>on_use</code>, <code>on_neighbor</code>, <code>on_scheduled</code>, <code>on_carried</code> (on a moving body, it came to another cell of the world: a drill, a plow). A sneaking player uses a block as vanilla's only with empty hands; <code>.sneak_use(sneak_use::ALWAYS)</code> sends every sneaking click to <code>on_use</code>, which reads <code>u.sneaking()</code> and passes with <code>false</code> (a sneak-click that does something else), <code>NEVER</code> none</li>
-<li><code>on_place(|w, change| ..)</code>, <code>on_break(..)</code>: <code>actions::PLACE_BLOCK</code> and <code>actions::BREAK_BLOCK</code> for this block only, at the end of the tick</li>
-</ul>
-</div></section>
-<section class="dsec" id="states"><h2><button class="fold" aria-expanded="true">States</button><a class="anchor" href="#states">#</a></h2><div class="sec-body">
-<ul>
-<li><code>prop("lit", ["false", "true"])</code>, <code>prop("age", 0..=7)</code> and <code>facing(Facings::HORIZONTAL, Toward::Player)</code> (or <code>Toward::Face</code>, out of what was clicked, or <code>Toward::Away</code>, where the player looks) for states, like blockstates in modern Minecraft: every combination of values is a state</li>
-<li><code>states(|p, s| ..)</code> to make each state look different (<code>p.facing()</code>, <code>p.is("lit", "true")</code>), <code>placement(|place, p| p.set(..))</code> to pick values when placed</li>
-<li><code>joins(Facings::HORIZONTAL, "#fences")</code> for what connects to its neighbors (fences, panes, pipes, cables): a <code>true</code>/<code>false</code> property per side the engine keeps right as blocks around change, so <code>.states</code> only draws <code>p.is("north", "true")</code>; joining by a shared tag connects other mods' blocks too, the block's own name only its own kind. <code>derived("shape", |n| ..)</code> is the same for any property worked out from <code>n.at(Dir::North)</code> and the rest (stairs' corners are one)</li>
-</ul>
-<p>In code a state is read and changed by name, <code>w.prop(pos, "lit")</code> and <code>w.prop_set(pos, "lit", "true")</code>, the other properties stay as they are. Anywhere a block is named as text, <code>base:furnace[lit=true]</code> picks a state: in structures, <code>r.set(..)</code>, <code>{block:..}</code> and commands (<code>/setblock ~ ~ ~ base:furnace[facing=east]</code>).</p>
-</div></section>
-<section class="dsec" id="blocks-bigger-than-a-cell"><h2><button class="fold" aria-expanded="true">Blocks bigger than a cell</button><a class="anchor" href="#blocks-bigger-than-a-cell">#</a></h2><div class="sec-body">
-<p>A block's hitboxes determine which cells it occupies. Use model boxes or explicit hitboxes in sixteenths, relative to the block's origin. For example, a box from [0, 0, 0] to [16, 8, 32] extends across two cells and rotates with the block. Hitting either half selects the same instance. Clicking an interior face places the next block against that surface, and other parts can occupy the remaining space.</p>
-</div></section>
-<section class="dsec" id="stairs-slabs-and-other-shapes-of-a-block"><h2><button class="fold" aria-expanded="true">Stairs, slabs and other shapes of a block</button><a class="anchor" href="#stairs-slabs-and-other-shapes-of-a-block">#</a></h2><div class="sec-body">
-<p>A block comes in stairs, slabs and vertical slabs by one tag, <code>.tag("has_shapes")</code>: base gives them to every block with it, whichever mod it is from, with its textures, its hardness and sounds, and recipes. Beams (a quarter of a block, 1 x 1/2 x 1/2) and eighths come the same way, several of them sharing a cell, and base's woodcutter cuts a block into all of these with nothing lost (<code>base_api::recipes::WOODCUTTING</code>, one input, its first output shown: add your own cuts to it). To make such blocks yourself, <code>r.stairs("#my_tag")</code>, <code>r.slabs(..)</code>, <code>r.vertical_slabs(..)</code>, <code>r.beams(..)</code> and <code>r.eighths(..)</code> take names and tags, and <code>.tab(..)</code> and the like go on what they return. <code>r.shapes_of("wall", "#my_tag", "_wall")</code> is the same for a shape of your own: <code>.prop(..)</code>, <code>.states(..)</code> and the rest as on any block, each made block being <code>&lt;source&gt;_wall</code>, and <code>shape.wall = {0} Wall</code> in your lang file naming them all. They are tagged <code>wall/&lt;source&gt;</code> and the source <code>wall_of/&lt;source&gt;</code>, so one recipe does for all: <code>r.shaped(C, "#wall/{m}", 6, &amp;["###", "###"], &amp;[('#', "#wall_of/{m}")])</code>. A block with its own name for one, <code>mymod:ruby_stairs</code> when there is a <code>ruby</code>, isn't made twice. Sources use the common matcher; a list containing only exclusions takes every eligible full cube except those excluded. For example, <code>"#logs !#log_not_hollow"</code> leaves out what a mod tagged. What differs per source goes in the values themselves: any text of a made block says <code>{source}</code> for the source's name (<code>base:birch_log</code>), <code>{source.name}</code> and <code>{source.mod}</code> for its parts (<code>birch_log</code>, <code>base</code>: what a file name can have, <code>"mymod:block/{source.name}_inner"</code>) and <code>{source.side}</code> (<code>top</code>, <code>bottom</code>, <code>north</code>..) for its texture there, and <code>a | b</code> takes the first texture that exists: <code>r.shapes_of("hollow_log", "#logs", "_hollow").model_file("hollow_log").model_texture("inside", "{source.side}_inner | {source.top}")</code>.</p>
-</div></section>
-<section class="dsec" id="blocks-on-the-sides-of-a-cell"><h2><button class="fold" aria-expanded="true">Blocks on the sides of a cell</button><a class="anchor" href="#blocks-on-the-sides-of-a-cell">#</a></h2><div class="sec-body">
-<p>A block one pixel thick against the sides of its cell (vines, ladders, glow lichen) is <code>.on_sides(Facings::ALL)</code>: a <code>north</code>..<code>down</code> property per allowed side, it goes against the face clicked, its own item put into the same cell adds a side (up to all six), and a side whose wall goes falls off, and breaking takes one side at a time. The engine runs all of that; redstone wire is the same kind of block. <code>Facings::HORIZONTAL</code> keeps it to walls, as base's ladder; any <code>Facings::only(&amp;[..])</code> works. Its textures are the block's, <code>.states(..)</code> still adds to it.</p>
-<p><code>merge(|place, p| ..)</code> is what its own item does placed in its cell: <code>p</code> is what is there, <code>place.placed("type")</code> how the item would go, and setting a property takes it in (two slabs of one block make it whole). <code>loot_rolls(2)</code> on a state rolls its loot twice. <code>place.hit()</code> is the point just outside what was clicked, from this cell's corner: <code>hit().y &gt; 0.5</code> is the upper half, on a floor, under a ceiling, against a wall or on a slab alike.</p>
-</div></section>
-<section class="dsec" id="several-blocks-in-one-cell"><h2><button class="fold" aria-expanded="true">Several blocks in one cell</button><a class="anchor" href="#several-blocks-in-one-cell">#</a></h2><div class="sec-body">
-<p>A cell can hold any number of blocks. A block goes in with what is there when their hitboxes don't overlap, two slabs of different blocks say, with nothing to declare; <code>.shares_cell_with("#plantable")</code> lets it in though they do (snow over a plant). A liquid fills its whole cell, so <code>.shares_cell_with("#water")</code> is waterlogging: the block keeps a source of water it is placed in and a bucket fills it, while lava stays out; slabs and stairs have it out of the box, and a block whose shapes fill the cell has no room left. The liquid doesn't pass the sides its block's hitbox covers whole (a stair's back holds it, a hollow log lets it out its ends), or the ones <code>.liquid_walls(&amp;[Dir::North, Dir::South])</code> names (written facing north, turned with the block; <code>&amp;[]</code> for none). From code: <code>w.parts(pos)</code> is all that is in a cell, <code>w.part_add(pos, state)</code> adds one whatever its shape, <code>w.part_remove(pos, state)</code> and <code>w.part_replace(pos, old, new)</code> act on one. <code>w.block</code> gives the one the cell stands for, and <code>w.set_block</code> replaces all of it, unless it is the same block, a property changing. <code>w.prop</code> and <code>w.prop_set</code> find the part that has the property. Inside a block's own callback <code>w.block(pos)</code> and <code>w.set_block(pos, ..)</code> mean that block, so it works the same in a cell with others. Each part can have a circuit, shines, grows by its rules, has its own block entity, gets neighbor updates, scheduled ticks, its own support and its own loot, and the player breaks and uses the one aimed at. A state can be made of pieces broken off one at a time: <code>.piece(min, max, left, alone)</code> in its <code>.states(..)</code> says that a hit inside the box leaves the state with the properties <code>left</code> sets and drops what the state with <code>alone</code> would. A double slab's halves and every side of an <code>on_sides</code> block are pieces out of the box; candles or snow layers are a piece each with the whole box (<code>"candles=2"</code>, <code>"candles=1"</code>).</p>
-</div></section>
-<section class="dsec" id="sharing-one-model-file"><h2><button class="fold" aria-expanded="true">Sharing one model file</button><a class="anchor" href="#sharing-one-model-file">#</a></h2><div class="sec-body">
-<p>Several blocks, any mod's, can share one model file: <code>.model_file("othermod:hollow_log")</code>, with <code>.model_texture("inside", "stripped_oak_log")</code> putting this block's own picture where the file says <code>#inside</code>. Both go on a state too, for a state on a model of its own: <code>.states(|p, s| if p.is("filled", "true") { s.model_file("drying_rack_filled") } else { s })</code>, the filled state's textures going over the block's. <code>.hitbox(..)</code> is what stops a walker and is outlined; <code>.outline(..)</code> outlines something else (a hollow log outlined whole). Both take several boxes, one a call.</p>
-</div></section>
-<section class="dsec" id="reading-what-a-builder-set"><h2><button class="fold" aria-expanded="true">Reading what a builder set</button><a class="anchor" href="#reading-what-a-builder-set">#</a></h2><div class="sec-body">
-<p>Everything a builder set is readable from code, any mod's block or item: <code>block_info(state)</code> (its block, mod, <code>solid()</code>, <code>opaque()</code>, light, hardness, friction, model, textures, liquid, item), <code>item_info(item)</code> (mod, stack size, durability, attack, what it places, where it is worn), <code>components_of(entry_kind::BLOCK, state)</code> for every component and tag by name, values then through their handles, and <code>entries_with(entry_kind::BLOCK, "logs")</code> for every state with a tag. That's a WAILA, or hollow logs made for every mod's logs. <code>texture_exists("othermod:block/log_oak_inner")</code> says whether a mod has a picture (its own files, not resource packs), so you make one only where there is one; <code>asset_exists(name, "models", "json")</code> for any other file.</p>
-<p>For a drill reading the block in front of it, use the state from the world. A state can override the block's components and tags. <code>block_info(state).name</code> (after unwrapping the result) is the block's registered name, while <code>name_of(entry_kind::BLOCK, state)</code> includes the state's properties.</p>
+    <h1>Blocks</h1><nav class="toc"><span>On this page</span><a href="#your-first-block">Your first block</a><a href="#quick-navigation">Quick navigation</a><a href="#mining-and-drops">Mining and drops</a><a href="#tags-and-components">Tags and components</a><a href="#textures">Textures</a><a href="#light-transparency-and-sounds">Light, transparency and sounds</a><a href="#shape-and-hitbox">Shape and hitbox</a><a href="#states-blocks-that-change">States: blocks that change</a><a href="#events">Events</a><a href="#hazards">Hazards</a><a href="#plants-and-growth">Plants and growth</a><a href="#stairs-slabs-and-other-shapes">Stairs, slabs and other shapes</a><a href="#connect-to-neighbors">Connect to neighbors</a><a href="#blocks-on-the-sides-of-a-cell">Blocks on the sides of a cell</a><a href="#blocks-bigger-than-one-cell">Blocks bigger than one cell</a><a href="#several-blocks-in-one-cell">Several blocks in one cell</a><a href="#reading-what-a-block-set">Reading what a block set</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<section class="dsec" id="your-first-block"><h2><button class="fold" aria-expanded="true">Your first block</button><a class="anchor" href="#your-first-block">#</a></h2><div class="sec-body">
 <div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">use weft_sdk::*;
 
-static PICKAXE: Tag = Tag::named("mineable/pickaxe");
+declare_mod!(deps: ["base"], init: init);
+
+static RUBY_ORE: Block = Block::named("ruby_ore");
+
+fn init(r: &amp;mut Registry) {
+    r.block(&amp;RUBY_ORE);
+}</code></pre></div>
+<p><code>RUBY_ORE</code> is a handle, and you use it to reference your block throughout the code. You only write a namespace for blocks of other mods (<code>Block::named("base:stone")</code>).</p>
+<p>The block then needs two files:</p>
+<ul>
+<li><code>assets/textures/block/ruby_ore.png</code></li>
+<li>a name in <code>assets/lang/en_us.lang</code> (replace <code>mymod</code> with your mod id):</li>
+</ul>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">block.mymod.ruby_ore = Ruby Ore</code></pre></div>
+<p>Without more calls it gets:</p>
+<ul>
+<li>the texture <code>block/&lt;n&gt;</code> on all six faces</li>
+<li>a new item that places it (<code>.no_item()</code> removes it)</li>
+<li>its own item as its drop</li>
+<li>a place in your mod's <code>misc</code> creative tab (<code>.tab(&amp;base_api::tabs::BUILDING)</code> picks another)</li>
+</ul>
+</div></section>
+<section class="dsec" id="quick-navigation"><h2><button class="fold" aria-expanded="true">Quick navigation</button><a class="anchor" href="#quick-navigation">#</a></h2><div class="sec-body">
+<p>Weft lets multiple blocks coexist at the same position (waterlogging, slabs of different blocks). A position in the world (like -14 92 205) is called a <em>cell</em>, and a cell holds one or more blocks.</p>
+<p>Jump to a section you're interested in, or just read the page top-to-bottom.</p>
+<table><thead><tr><th>I want a block like...</th><th>Section</th></tr></thead><tbody><tr><td>furnace, chest</td><td><a href="block_entities.html">Block entities</a></td></tr><tr><td>flower, grass, crop</td><td><a href="#plants-and-growth">Plants and growth</a></td></tr><tr><td>stairs, slabs, beams</td><td><a href="#stairs-slabs-and-other-shapes">Stairs, slabs and other shapes</a></td></tr><tr><td>fence, pane, pipe, cable</td><td><a href="#connect-to-neighbors">Connect to neighbors</a></td></tr><tr><td>ladder, vine</td><td><a href="#blocks-on-the-sides-of-a-cell">Blocks on the sides of a cell</a></td></tr><tr><td>candles, turtle eggs</td><td><a href="#breaking-in-pieces">Breaking in pieces</a></td></tr></tbody></table>
+<table><thead><tr><th>I want to customize...</th><th>Section</th></tr></thead><tbody><tr><td>texture, tint, layers</td><td><a href="#textures">Textures</a></td></tr><tr><td>mining duration, required tool, drop</td><td><a href="#mining-and-drops">Mining and drops</a></td></tr><tr><td>light, transparency, sounds, particles</td><td><a href="#light-transparency-and-sounds">Light, transparency and sounds</a></td></tr><tr><td>shape, hitbox</td><td><a href="#shape-and-hitbox">Shape and hitbox</a></td></tr><tr><td>multiple looks (on/off, growth stage)</td><td><a href="#states-blocks-that-change">States</a></td></tr><tr><td>what happens on right click, on place, on break</td><td><a href="#events">Events</a></td></tr><tr><td>damage on contact</td><td><a href="#hazards">Hazards</a></td></tr><tr><td>spreading (like grass)</td><td><a href="#spreading">Spreading</a></td></tr><tr><td>what happens by itself (crops drying, sand falling)</td><td><a href="details/rules.html">Rules</a></td></tr><tr><td>waterlogging</td><td><a href="#several-blocks-in-one-cell">Several blocks in one cell</a></td></tr><tr><td>a block from another mod</td><td><a href="details/editing-others.html">Changing something of another mod</a></td></tr></tbody></table>
+</div></section>
+<section class="dsec" id="mining-and-drops"><h2><button class="fold" aria-expanded="true">Mining and drops</button><a class="anchor" href="#mining-and-drops">#</a></h2><div class="sec-body">
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;RUBY_ORE)
+    .hardness(3.0)
+    .mined_by("pickaxe", tool_tier::IRON)
+    .drops("ruby", 1);</code></pre></div>
+<ul>
+<li><code>hardness(h)</code>: breaking takes <code>h</code> × 1.5 s when the tool is allowed to harvest the block and <code>h</code> × 5 s when it is not, divided by the tool's speed. <code>0.0</code> is instant</li>
+<li><code>mined_by(class, level)</code>: tools of that class mine it faster, and it drops nothing to a tool below tier <code>level</code></li>
+<li><code>drops(item, count)</code>, <code>drops_nothing()</code>: changes the default drop or removes it</li>
+</ul>
+<p><strong>Tiers:</strong> <code>WOOD</code> 0, <code>STONE</code> 100, <code>IRON</code> 200 and <code>DIAMOND</code> 300. Other numbers work (testmod has a tier-250 pickaxe). <code>tool_tier::HAND</code> drops for any tool or none: dirt is <code>.mined_by("shovel", tool_tier::HAND)</code>, so a shovel is faster but not required.</p>
+<p>For several possible drops, chances or conditions, use <code>r.loot</code>: see <a href="details/recipes-loot.html">recipes and loot</a>.</p>
+</div></section>
+<section class="dsec" id="tags-and-components"><h2><button class="fold" aria-expanded="true">Tags and components</button><a class="anchor" href="#tags-and-components">#</a></h2><div class="sec-body">
+<p>A <strong>tag</strong> groups things (<code>#sand</code>), and a <strong>component</strong> is a named value on a thing (<code>fuel = 300</code>):</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;RED_SAND)
+    .tag("sand")        // cactus and sugar cane accept anything tagged sand
+    .set(&amp;FUEL, 300);   // burns in a furnace (base_api::components::FUEL)</code></pre></div>
+<p><a href="details/components-and-tags.html">How to find out what tags already exist?</a></p>
+</div></section>
+<section class="dsec" id="textures"><h2><button class="fold" aria-expanded="true">Textures</button><a class="anchor" href="#textures">#</a></h2><div class="sec-body">
+<p>Start with <code>texture(t)</code> to set the texture for all faces, then override some:</p>
+<table><thead><tr><th>call</th><th>faces</th></tr></thead><tbody><tr><td><code>texture(t)</code></td><td>all six</td></tr><tr><td><code>top(t)</code>, <code>bottom(t)</code></td><td>one each</td></tr><tr><td><code>ends(t)</code></td><td>top and bottom</td></tr><tr><td><code>sides(t)</code></td><td>the four around</td></tr><tr><td><code>north(t)</code>, <code>south(t)</code>, <code>west(t)</code>, <code>east(t)</code></td><td>one each</td></tr><tr><td><code>front(t)</code>, <code>back(t)</code></td><td>north and south: the front is where <code>.facing(..)</code> turns it (<a href="#states-blocks-that-change">States</a>)</td></tr></tbody></table>
+<p>When two calls cover the same face, the last one wins. Names are relative to your mod's <code>textures/block/</code>, and <code>"base:stone"</code> borrows <em>base</em>'s.</p>
+<p><em>base</em>'s crafting table:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;CRAFTING_TABLE)
+    .texture("crafting_table_side")
+    .bottom("crafting_table_bottom")
+    .top("crafting_table_top")
+    .north("crafting_table_front")
+    .south("crafting_table_front");</code></pre></div>
+<h3 id="layers-and-tints">Layers and tints <a class="anchor" href="#layers-and-tints">#</a></h3>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;GRASS)  // grass block from base
+    .texture("dirt")
+    .top("grass_top").tint_kind(&amp;tints::GRASS)
+    .sides("dirt").layer("grass_side_overlay").tint_kind(&amp;tints::GRASS);</code></pre></div>
+<p><code>layer(t)</code>, <code>tint(..)</code> and <code>tint_kind(..)</code> apply to the faces picked by the most recent face call (<code>texture</code>, <code>top</code>, <code>sides</code>...).</p>
+<ul>
+<li><code>layer(t)</code>: draws another texture over those faces</li>
+<li><code>tint(0xRRGGBB)</code>: multiplies their top layer by a fixed color</li>
+<li><code>tint_kind(&amp;tints::GRASS)</code>: colors their top layer by the biome instead. The engine provides <code>tints::GRASS</code>, <code>tints::FOLIAGE</code> and <code>tints::WATER</code>. To make your own, see <a href="registration.html#tint-kind">tint kinds</a>.</li>
+</ul>
+<p><code>tint</code> makes a tinted copy on load, with its frames and connected tiles, so one white wool texture serves every color:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;RED_WOOL).texture("wool").tint(0xB02E26);
+r.block(&amp;BLUE_WOOL).texture("wool").tint(0x3C44AA);</code></pre></div>
+<p>Each layer is drawn by itself over the one under it, with its own animation, connected textures and tint: see <a href="textures.html">textures</a> and <a href="ctm.html">CTM</a>.</p>
+<h3 id="flat-item-texture">Flat item texture <a class="anchor" href="#flat-item-texture">#</a></h3>
+<p><code>.item_texture("torch")</code> uses a flat texture from <code>textures/item/</code> instead of the block's model.</p>
+</div></section>
+<section class="dsec" id="light-transparency-and-sounds"><h2><button class="fold" aria-expanded="true">Light, transparency and sounds</button><a class="anchor" href="#light-transparency-and-sounds">#</a></h2><div class="sec-body">
+<h3 id="light">Light <a class="anchor" href="#light">#</a></h3>
+<p><code>.light(15)</code> is full-strength white light. Higher values are allowed and reach further, not brighter. <code>.light_rgb(r, g, b)</code> sets a colored light instead.</p>
+<h3 id="transparency">Transparency <a class="anchor" href="#transparency">#</a></h3>
+<ul>
+<li><code>.cutout()</code>: draws each pixel either fully or not at all (alpha of 0.1 or less is dropped), and by default lets light through (leaves, glass panes). A block made of boxes or a model file is cutout already</li>
+<li><code>.translucent()</code>: draws pixels with partial alpha, so what is behind shows through them, and hides faces between neighbors of the same block (stained glass, ice)</li>
+<li><code>.cull_same()</code>: does only the hiding</li>
+<li><code>.light_opacity(n)</code>: 0 to 15: how much brightness the block removes from light passing through</li>
+<li><code>.light_filter(r, g, b)</code>: instead changes the light's color by absorbing each channel separately (stained glass)</li>
+</ul>
+<p><code>light_opacity</code> is 15 for opaque blocks and 0 for everything else by default, so you only need it for in-between cases: leaves is 1, ice is 2.</p>
+<h3 id="sounds-and-particles">Sounds and particles <a class="anchor" href="#sounds-and-particles">#</a></h3>
+<p>A <strong>particle</strong> is a small visual effect, like smoke or sparks. By default the engine already throws pieces of the block when it is broken, hit, landed on or run on.</p>
+<ul>
+<li><code>.sound_group("base:block.stone")</code>: plays that group's <code>break</code>, <code>place</code>, <code>step</code> and <code>hit</code> sounds. Without a namespace the group is your mod's (<code>"stone"</code> means <code>mymod:block.stone</code>)</li>
+<li><code>.effect(event, sound, particle)</code>: replaces the sound group's sound for one of those events (<code>break</code>, <code>place</code>, <code>step</code>, <code>hit</code>, <code>land</code>, <code>sprint</code>) with a sound event, and the default particles with a particle kind</li>
+<li><code>.ambient_particle("mymod:spark")</code>: shows that particle around the block now and then, on clients only (torch smoke)</li>
+</ul>
+<p>In <code>.effect</code>, <code>""</code> keeps the default of that part and <code>"none"</code> turns it off: <code>.effect("step", "mymod:squelch", "")</code> plays your sound and keeps the default particles.</p>
+<p>To register your own particles, see <a href="details/particles-sounds.html">particles and sounds</a>. That page also covers the same events for entities.</p>
+</div></section>
+<section class="dsec" id="shape-and-hitbox"><h2><button class="fold" aria-expanded="true">Shape and hitbox</button><a class="anchor" href="#shape-and-hitbox">#</a></h2><div class="sec-body">
+<p>A <strong>model</strong> is the block's visible shape. Boxes use 1/16-block units, from <code>[0, 0, 0]</code> (west, bottom, north) to <code>[16, 16, 16]</code>, and each call adds one box:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;CABLE).model_box([5.0, 5.0, 5.0], [11.0, 11.0, 11.0]);</code></pre></div>
+<p>Or use a Blockbench (3D model editor) model at <code>assets/models/block/&lt;n&gt;.json</code> (<a href="models.html#blocks-and-items">models</a>).</p>
+<p>Two calls change the box you just added:</p>
+<p><code>.tilted(origin, axis, degrees)</code> tilts it around a point (in 1/16 units) about an axis. <em>base</em>'s torch:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">.model_box([-1.0, 3.5, 7.0], [1.0, 13.5, 9.0])
+.tilted([0.0, 3.5, 8.0], Dir::South, -22.5)</code></pre></div>
+<p><code>.turned(turns)</code> rotates the texture on each face of the box without moving the box. It takes one number per face, in the order -X, +X, -Y, +Y, -Z, +Z, and each number is a count of quarter turns (90°). <em>base</em>'s piston rod turns its four sides and leaves the top and bottom as they are:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">.model_box([6.0, 12.0, 6.0], [10.0, 28.0, 10.0])
+.turned([1, 1, 0, 0, 1, 1])</code></pre></div>
+<p><strong>Sharing a model file:</strong> blocks can share one with <code>.model_file("some_mod:hollow_log")</code>. The file leaves some textures open as named slots (like <code>#inside</code>), and <code>.model_texture("inside", "stripped_oak_log")</code> fills the slot for this block. See <a href="models.html#blocks-and-items">models</a> for how to define slots. Both calls also work inside <code>.states(..)</code>.</p>
+<h3 id="hitbox">Hitbox <a class="anchor" href="#hitbox">#</a></h3>
+<p>The <strong>hitbox</strong> stops walkers. <code>.hitbox(min, max)</code> adds one box per call, the parameters are two corners in 1/16 units (<code>min</code> is the west, bottom, north corner). A slab:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">.hitbox([0.0, 0.0, 0.0], [16.0, 8.0, 16.0])</code></pre></div>
+<p>The default is the model's boxes, else a plant's cross, else the whole block. On a non-solid block it only sets the outline.</p>
+<p>The crosshair outline and the break cracks follow the hitbox unless you set <code>.outline(min, max)</code>, which takes the same two corners. A hollow log that's stopped by its walls but outlined as a whole cube:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">.outline([0.0, 0.0, 0.0], [16.0, 16.0, 16.0])</code></pre></div>
+</div></section>
+<section class="dsec" id="states-blocks-that-change"><h2><button class="fold" aria-expanded="true">States: blocks that change</button><a class="anchor" href="#states-blocks-that-change">#</a></h2><div class="sec-body">
+<p>A <strong>property</strong> is a named value of a block, and a <strong>state</strong> is one combination of values (<code>facing=north,lit=true</code>). The first value is the default:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">.prop("lit", ["false", "true"])
+.prop("age", 0..=7)</code></pre></div>
+<p><code>.states(|p, s| ..)</code> runs once for every combination of the block's properties.</p>
+<ul>
+<li><code>p</code> (properties) holds that combination's values: <code>p.is("lit", "true")</code>, <code>p.get("age")</code>, <code>p.int("age")</code>.</li>
+<li><code>s</code> (state) builds that one state. Anything set on <code>s</code> goes on top of the block's own settings.</li>
+</ul>
+<p>The <em>base</em> furnace:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;FURNACE)
+    .facing(Facings::HORIZONTAL, Toward::Player)
+    .prop("lit", ["false", "true"])
+    .states(|p, s| {
+        let lit = p.is("lit", "true");
+        let s = s.texture("furnace_side").ends("furnace_top")
+            .front(if lit { "furnace_front_lit" } else { "furnace_front" });
+        if lit { s.light_rgb(13, 11, 8) } else { s }
+    });</code></pre></div>
+<p><code>.states</code> sees only the block's own properties. To change just the states that match some values, including another mod's properties, use <code>.state_where(key, |s| ..)</code>. <code>key</code> is <code>prop=value,..</code> and picks the states that have every value it names. It goes on top of <code>.states(..)</code>:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.edit(&amp;base_api::blocks::FURNACE).state_where("lit=true", |s| s.light(15));</code></pre></div>
+<p><code>r.edit</code> changes a block registered elsewhere: see <a href="details/editing-others.html">changing something of another mod</a>.</p>
+<h3 id="reading-and-changing-properties">Reading and changing properties <a class="anchor" href="#reading-and-changing-properties">#</a></h3>
+<p>From code (<code>w</code> is the world, see the <a href="world-api.html">world API</a>):</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">w.prop(pos, "lit");                 // Some("true")
+w.prop_set(pos, "lit", "false");</code></pre></div>
+<p><code>base:furnace[lit=true]</code> picks states by value wherever a block is written as text: structures, <code>r.set(..)</code>, lang files, commands, etc.</p>
+<p>In r.set:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.set("base:furnace[lit=true]", &amp;HARDNESS, 5.0);</code></pre></div>
+<p>In a lang file:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">item.mymod.ruby.tooltip = Smelts in a {block:base:furnace[lit=true]}.</code></pre></div>
+<p>In a command:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">/setblock ~ ~ ~ base:furnace[lit=true]</code></pre></div>
+<h3 id="facing-and-axis">Facing and axis <a class="anchor" href="#facing-and-axis">#</a></h3>
+<p><code>.facing(allowed, toward)</code> adds a <code>facing</code> property that automatically turns the block when it's placed. <code>allowed</code> is <code>Facings::HORIZONTAL</code>, <code>Facings::ALL</code> or <code>Facings::only(&amp;[Dir::Up, Dir::North])</code>.</p>
+<table><thead><tr><th><code>toward</code></th><th>the block's front looks...</th></tr></thead><tbody><tr><td><code>Toward::Player</code></td><td>at the player (furnaces, chests)</td></tr><tr><td><code>Toward::Face</code></td><td>out of the clicked face (torches, ladders on a wall)</td></tr><tr><td><code>Toward::Away</code></td><td>where the player looks (stairs)</td></tr><tr><td><code>Toward::Hit</code></td><td>away from the side of the cell nearest the click (vertical slabs)</td></tr></tbody></table>
+<p>Build the model as if the block faces north, top up.</p>
+<p><code>.axis()</code> adds an <code>axis</code> property (<code>y</code>, <code>x</code> or <code>z</code>), set from the face the player clicked. Build the model standing up (along <code>y</code>) and the engine lays it along the axis automatically (like a log).</p>
+<h3 id="custom-turns">Custom turns <a class="anchor" href="#custom-turns">#</a></h3>
+<p><code>.facing(..)</code> and <code>.axis()</code> turn the model for you. For any other turn, set the state's <strong>orientation</strong>. You always write the model facing north, top up, and the orientation tells the engine how to turn all of it (boxes, model file, hitboxes, cube faces, liquid walls) from there. <em>base</em>'s piston head points its top the way it faces:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;PISTON_HEAD)
+    .facing(Facings::ALL, Toward::Face)
+    .states(|p, s| s.orientation(Orientation::up(p.facing())));</code></pre></div>
+<p>A state's orientation replaces the one <code>.facing(..)</code> would give, so you only need it where the front is not the part that turns.</p>
+<p><code>Orientation::...</code> turns the model so:</p>
+<ul>
+<li><code>front(dir)</code>: its front looks to <code>dir</code>, top up (what <code>.facing(..)</code> does by default)</li>
+<li><code>up(dir)</code>: its top points to <code>dir</code> (a piston head)</li>
+<li><code>new(attach, front)</code>: its bottom is against <code>attach</code> and its front looks to <code>front</code> (a bed: <code>new(Dir::Down, p.facing().opposite())</code>)</li>
+<li><code>leaning(attach)</code>: it stands upright with its west side against <code>attach</code> (a torch on a wall)</li>
+<li><code>axis("x")</code>: its top lies along the axis <code>x</code>, <code>y</code> or <code>z</code> (a log)</li>
+</ul>
+<p>If <code>front</code> is along <code>attach</code> in <code>new</code>, the engine picks another front. The <a href="reference/blocks.html">reference</a> lists the rest.</p>
+<p><code>state_turned(state, o)</code> returns the state of any block turned by <code>o</code>: its <code>facing</code>, <code>axis</code> or sides are turned for you, and a block that can't turn comes back unchanged. Use it when you place something turned (a structure) or turn a block yourself (a wrench):</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">let turned = state_turned(w.block(pos), Orientation::front(Dir::East));
+w.set_block(pos, turned);</code></pre></div>
+<h3 id="placement">Placement <a class="anchor" href="#placement">#</a></h3>
+<p><code>.placement(|place, props| ..)</code> runs when a player places the block, after <code>.facing(..)</code>, and sets the properties <code>facing</code> doesn't cover. <em>base</em>'s slabs pick the half from where the click landed:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;SHELF)
+    .prop("half", ["bottom", "top"])
+    .placement(|place, props| {
+        props.set("half", if place.hit().y &gt; 0.5 { "top" } else { "bottom" });
+    });</code></pre></div>
+<ul>
+<li><code>place.face()</code>: the face that was clicked</li>
+<li><code>place.hit()</code>: the point just outside that face, from 0 to 1 from the cell's corner. <code>hit().y &gt; 0.5</code> is the upper half whether the click was on a floor, under a ceiling, against a wall or on a slab</li>
+<li><code>place.look_dir()</code>: where the player looks</li>
+<li><code>props</code>: the properties of the block being placed. <code>props.facing()</code> already holds the result of <code>.facing(..)</code>, and <code>props.set(name, value)</code> changes one</li>
+</ul>
+<p><em>base</em>'s door reads <code>hit()</code> this way to choose its hinge side.</p>
+<h3 id="merging-into-a-cell">Merging into a cell <a class="anchor" href="#merging-into-a-cell">#</a></h3>
+<p><code>.merge(|place, p| ..)</code> runs when a player places the block into a cell that already holds that block. <code>p</code> holds the properties of the block already there, and <code>place.placed("type")</code> is the value the new item would have had. Setting a property takes the item in, and leaving <code>p</code> alone places the item as usual. <em>base</em>'s slab:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">.prop("type", ["bottom", "top", "double"])
+.merge(|place, p| {
+    if place.placed("type") != Some(p.get("type")) {
+        p.set("type", "double");
+    }
+})</code></pre></div>
+<p>A top slab placed into a bottom slab's cell makes the block <code>double</code>. A bottom slab placed there has the same <code>type</code> as what's already in the cell, so it is placed as usual.</p>
+</div></section>
+<section class="dsec" id="events"><h2><button class="fold" aria-expanded="true">Events</button><a class="anchor" href="#events">#</a></h2><div class="sec-body">
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;LAMP)
+    .prop("lit", ["false", "true"])
+    .states(|p, s| if p.is("lit", "true") { s.light(15) } else { s })
+    .on_use(|u| {
+        let (w, pos) = (u.world(), u.pos());
+        let next = if w.prop(pos, "lit") == Some("true") { "false" } else { "true" };
+        w.prop_set(pos, "lit", next);
+        true
+    });</code></pre></div>
+<ul>
+<li><code>.on_use(|u| ..)</code>: when a player right-clicks it</li>
+<li><code>.on_place(|w, change| ..)</code>, <code>.on_break(..)</code>: when one of these blocks was placed or broken, handled at the end of the tick (1/20 s)</li>
+<li><code>.on_neighbor(..)</code>, <code>.on_scheduled(..)</code>: when a neighbor changed, or a tick you scheduled arrived</li>
+<li><code>.on_carried(..)</code>: when the block is part of a moving body and the body reached a new cell of the world (a drill, a plow)</li>
+</ul>
+<p>For more hooks, see <a href="events.html">events</a>. This section lists events exclusive to blocks.</p>
+<p><strong><code>on_use</code> details:</strong></p>
+<ul>
+<li><code>u</code> gives <code>u.world()</code>, <code>u.pos()</code>, <code>u.player()</code> and <code>u.sneaking()</code>.</li>
+<li>Return <code>true</code> if you handled the click, <code>false</code> to pass it on (a sneak-click that does something else).</li>
+<li>By default a sneaking player can use a block only with empty hands. <code>.sneak_use(sneak_use::ALWAYS)</code> sends every sneaking click to <code>on_use</code>, and you check <code>u.sneaking()</code> yourself. <code>sneak_use::NEVER</code> sends none even if sneaking with empty hands.</li>
+</ul>
+<p><code>on_place</code> and <code>on_break</code> run for this block only: <code>actions::PLACE_BLOCK</code> and <code>actions::BREAK_BLOCK</code> cover every block.</p>
+</div></section>
+<section class="dsec" id="hazards"><h2><button class="fold" aria-expanded="true">Hazards</button><a class="anchor" href="#hazards">#</a></h2><div class="sec-body">
+<p>A <strong>hazard</strong> lets the block deal damage. <em>base</em>'s cactus (<code>PRICKED</code> is a damage cause registered with <code>r.damage_cause(..)</code>):</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">.hazard(Hazard::touch(1.0, &amp;PRICKED))</code></pre></div>
+<table><thead><tr><th>hazard type</th><th>triggers when the entity is...</th></tr></thead><tbody><tr><td><code>touch</code></td><td>within a sixteenth of the shape</td></tr><tr><td><code>inside</code></td><td>in the shape (fire, a berry bush)</td></tr><tr><td><code>on</code></td><td>on top of it (magma)</td></tr><tr><td><code>head</code></td><td>eyes inside the shape (like suffocation)</td></tr></tbody></table>
+<p>Another example:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;BUSH)
+    .hazard(Hazard::inside(1.0, &amp;PRICKED).every(10).when(Cond::sprinting()));</code></pre></div>
+<ul>
+<li><code>.every(ticks)</code>: deals damage every <code>ticks</code> ticks (every tick by default)</li>
+<li><code>.fire(ticks)</code>: sets the entity on fire for <code>ticks</code> ticks</li>
+<li><code>.when(condition)</code>: only while <code>condition</code> holds for the entity there (see <a href="details/conditions.html">conditions</a>)</li>
+</ul>
+<p>The engine already suffocates anyone whose head is in an opaque full block, and a block tagged <code>hot</code> without hazards of its own burns like lava.</p>
+</div></section>
+<section class="dsec" id="plants-and-growth"><h2><button class="fold" aria-expanded="true">Plants and growth</button><a class="anchor" href="#plants-and-growth">#</a></h2><div class="sec-body">
+<h3 id="plants">Plants <a class="anchor" href="#plants">#</a></h3>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;DANDELION)
+    .texture("flower_dandelion")
+    .plant()
+    .replaceable()
+    .hitbox([5.0, 0.0, 5.0], [11.0, 10.0, 11.0])
+    .needs_below("#plant_soil !#sand"); // Any soil that's not sand</code></pre></div>
+<ul>
+<li><code>.plant()</code>: draws two crossed flat planes. Nothing stops a walker and it breaks instantly</li>
+<li><code>.replaceable()</code>: makes the block count as empty space when someone tries to place a block at this position (grass behavior)</li>
+<li><code>.tall_plant("lower", "upper")</code>: makes it two blocks tall (its two pictures, with a <code>tint_kind</code> after it on both)</li>
+<li><code>.needs_below("#plant_soil")</code>: allows the block only on matching blocks and breaks it off when they are removed</li>
+</ul>
+<h3 id="growing">Growing <a class="anchor" href="#growing">#</a></h3>
+<p><code>.grows(mean_seconds, min_light)</code>: about every <code>mean_seconds</code>, while the light is at least <code>min_light</code>, the block grows once. By default that means moving to the next state, until the last one. <code>.on_grow(|e| ..)</code> replaces that (for example, to grow a tree or place a block on top).</p>
+<p>Growth runs on world time, so unloaded plants catch up when their area loads. <em>base</em>'s wheat:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;WHEAT)
+    .prop("age", 0..=7)
+    .states(|p, s| s.texture(&amp;format!("wheat_stage_{}", p.get("age"))))
+    .plant()
+    .needs_below("#crop_soil")
+    .no_item()
+    .grows(205.0, 9);
+r.loot(&amp;WHEAT)
+    .pool(Pool::new().when(Cond::state("age=7")).item("wheat"))
+    .pool(Pool::new().entry(Entry::item("wheat_seeds")));</code></pre></div>
+<h3 id="spreading">Spreading <a class="anchor" href="#spreading">#</a></h3>
+<p>Blocks that creep onto neighbors:</p>
+<ul>
+<li><code>.spreads("#grass_spreads_to", seconds, min_light)</code>: turns matching blocks in a box around it into this one: by default one block to each side (diagonals too), three down and one up</li>
+<li><code>.spread_reach(min, max)</code>: sets how far it spreads (moss spreads every way and up walls)</li>
+<li><code>.spread_when(cond)</code>: replaces the default condition for a target</li>
+<li><code>.smothered_into("dirt", seconds)</code>: turns it into another block, after about <code>seconds</code>, once something opaque covers it</li>
+</ul>
+<p><strong><code>spread_reach</code>:</strong> <code>min</code> and <code>max</code> are <code>[x, y, z]</code> offsets from the block. <code>min</code> is the furthest west, down and north, <code>max</code> the furthest east, up and south. The default is <code>[-1, -3, -1]</code> to <code>[1, 1, 1]</code>, and each offset is at most 4 either way.</p>
+<p><strong><code>spread_when</code>:</strong> the default condition is enough light above the target, and not covered. Because your condition replaces it, <code>min_light</code> no longer applies unless your condition checks light itself: <code>.spread_when(Cond::new("light(9.., up)"))</code>. See <a href="details/conditions.html">conditions</a>.</p>
+<p><code>.needs_below</code>, <code>.grows</code>, <code>.smothered_into</code> and similar ones are shortcuts for <a href="details/rules.html">rules</a>, and you can make one yourself.</p>
+</div></section>
+<section class="dsec" id="stairs-slabs-and-other-shapes"><h2><button class="fold" aria-expanded="true">Stairs, slabs and other shapes</button><a class="anchor" href="#stairs-slabs-and-other-shapes">#</a></h2><div class="sec-body">
+<p>Tag a block <code>.tag("has_shapes")</code> and base gives it stairs, slabs, vertical slabs, beams and eighths, whichever mod the block is from, with its textures, hardness, sounds and recipes. A beam is a quarter of a block (1 × 1/2 × 1/2).</p>
+<p>Base's woodcutter cuts any of these out of the block with nothing lost. For your own shapes, add recipes to <code>base_api::recipes::WOODCUTTING</code>: see <a href="details/recipes-loot.html">recipes and loot</a>.</p>
+<p>To make some of the shapes yourself, use <code>r.stairs("#my_tag")</code>, <code>r.slabs(..)</code>, <code>r.vertical_slabs(..)</code>, <code>r.beams(..)</code> or <code>r.eighths(..)</code>. If a block named <code>&lt;source&gt;_stairs</code> already exists (for example, if you registered <code>mymod:ruby_stairs</code> yourself), that one shape isn't generated again for that source, so you can hand-make one and let the rest be generated.</p>
+<h3 id="your-own-shape">Your own shape <a class="anchor" href="#your-own-shape">#</a></h3>
+<p><code>r.shapes_of(name, sources, suffix)</code> makes one new block for every full cube that <code>sources</code> matches. Each new block is called <code>&lt;source&gt;&lt;suffix&gt;</code>. It inherits everything (texture, sounds, etc.) from the source, so you only specify what's different:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.shapes_of("wall", "#my_tag", "_wall")
+    .model_box([4.0, 0.0, 4.0], [12.0, 16.0, 12.0]);</code></pre></div>
+<p><code>sources</code> is matched like other block patterns, so it can exclude: <code>"#logs !#log_not_hollow"</code> leaves out what a mod tagged <code>log_not_hollow</code>. A list of only exclusions takes every eligible full cube except those.</p>
+<p>Name them all with one line in your lang file, <code>shape.&lt;name&gt;</code>. <code>{0}</code> stands for the source's name:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-">shape.wall = {0} Wall</code></pre></div>
+<p>The new blocks are tagged <code>wall/&lt;source&gt;</code>, and each source <code>wall_of/&lt;source&gt;</code>, so one recipe covers all of them (see <a href="details/recipes-loot.html">recipes and loot</a> to learn about <code>r.shaped</code>):</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.shaped(C, "#wall/{m}", 6, &amp;["###", "###"], &amp;[('#', "#wall_of/{m}")]);</code></pre></div>
+<h4 id="placeholders">Placeholders <a class="anchor" href="#placeholders">#</a></h4>
+<p>To vary something per source, such as a texture, use a placeholder in the text you pass to the builder calls (texture names, model textures and so on). For the source <code>base:birch_log</code>:</p>
+<table><thead><tr><th>placeholder</th><th>becomes</th></tr></thead><tbody><tr><td><code>{source}</code></td><td><code>base:birch_log</code></td></tr><tr><td><code>{source.name}</code></td><td><code>birch_log</code></td></tr><tr><td><code>{source.mod}</code></td><td><code>base</code></td></tr><tr><td><code>{source.side}</code></td><td>the source's texture on that side (<code>top</code>, <code>bottom</code>, <code>north</code>...)</td></tr></tbody></table>
+<p><code>{source.name}</code> and <code>{source.mod}</code> are what a file name can have: <code>"mymod:block/{source.name}_inner"</code>. Write <code>a | b</code> to take the first texture that exists. For example, this works for any log:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.shapes_of("hollow_log", "#logs", "_hollow")
+    .model_file("hollow_log")
+    .model_texture("inside", "{source.side}_inner | {source.top}");</code></pre></div>
+</div></section>
+<section class="dsec" id="connect-to-neighbors"><h2><button class="fold" aria-expanded="true">Connect to neighbors</button><a class="anchor" href="#connect-to-neighbors">#</a></h2><div class="sec-body">
+<p><code>.joins(Facings::ALL, "my_cable")</code> adds a <code>true</code>/<code>false</code> property per side, so <code>.states</code> can check <code>p.is("north", "true")</code>. The engine keeps the properties right as the blocks around change.</p>
+<ul>
+<li>Joining by the block's own name connects only its own kind.</li>
+<li>Joining by a shared tag (<code>.joins(Facings::HORIZONTAL, "#fences")</code>) also connects other mods' blocks.</li>
+<li>If you just want to change texture but not shape or hitbox, use <a href="ctm.html">connected textures</a> instead.</li>
+</ul>
+<p><code>.derived("part", |n| ..)</code> keeps the property <code>part</code> computed from the neighbors. Your function runs whenever a neighbor changes, looks at the blocks around with <code>n.at(Dir::Up)</code>, and returns the new value for the property (stairs' corners work this way):</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static PILLARS: Tag = Tag::named("pillars");
+
+r.block(&amp;PILLAR)
+    .tag("pillars")
+    .prop("part", ["middle", "top", "bottom", "single"])
+    .states(|p, s| s.texture(&amp;format!("pillar_{}", p.get("part"))))
+    .derived("part", |n| {
+        let above = PILLARS.on_block(n.at(Dir::Up));
+        let below = PILLARS.on_block(n.at(Dir::Down));
+        match (above, below) {
+            (true, true) =&gt; "middle",
+            (false, true) =&gt; "top",
+            (true, false) =&gt; "bottom",
+            (false, false) =&gt; "single",
+        }
+    });</code></pre></div>
+</div></section>
+<section class="dsec" id="blocks-on-the-sides-of-a-cell"><h2><button class="fold" aria-expanded="true">Blocks on the sides of a cell</button><a class="anchor" href="#blocks-on-the-sides-of-a-cell">#</a></h2><div class="sec-body">
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.block(&amp;LADDER)
+    .on_sides(Facings::HORIZONTAL)
+    .climbable()
+    .not_solid();</code></pre></div>
+<p><code>.on_sides(allowed)</code> makes a one-pixel-thick layer that lies against the sides of its cell (vines, ladders).</p>
+<p><code>allowed</code> is <code>Facings::ALL</code> (vines grow everywhere), <code>Facings::HORIZONTAL</code> (walls only) or <code>Facings::only(&amp;[Dir::Down])</code> (the floor only). The block gets one property per allowed side, from <code>north</code> to <code>down</code>, and the value is <code>"true"</code> for each side it lies against, so <code>.states</code> can check <code>p.is("north", "true")</code>.</p>
+</div></section>
+<section class="dsec" id="blocks-bigger-than-one-cell"><h2><button class="fold" aria-expanded="true">Blocks bigger than one cell</button><a class="anchor" href="#blocks-bigger-than-one-cell">#</a></h2><div class="sec-body">
+<p>A block's hitboxes decide which cells it occupies, so a bigger block is one with bigger boxes. Boxes are in 1/16 units from the block's own cell, written as if it faces north (model boxes count too when there is no hitbox). A box from <code>[0, 0, 0]</code> to <code>[16, 8, 32]</code> reaches into the next cell:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">.hitbox([0.0, 0.0, 0.0], [16.0, 8.0, 32.0])</code></pre></div>
+<ul>
+<li>It turns with the block.</li>
+<li>Hitting either half selects the same block.</li>
+<li>Clicking an interior face places the next block against that surface, and other blocks can fill the rest of the space.</li>
+</ul>
+</div></section>
+<section class="dsec" id="several-blocks-in-one-cell"><h2><button class="fold" aria-expanded="true">Several blocks in one cell</button><a class="anchor" href="#several-blocks-in-one-cell">#</a></h2><div class="sec-body">
+<p>Blocks share a cell when their hitboxes don't overlap (for example, two slabs of different blocks). <code>.shares_cell_with("#tag")</code> lets this block share a cell with blocks tagged <code>#tag</code> even if the hitboxes overlap (snow over a plant).</p>
+<h3 id="waterlogging">Waterlogging <a class="anchor" href="#waterlogging">#</a></h3>
+<p><code>.shares_cell_with("#water")</code> makes the block waterloggable. Other liquids, like lava, stay out. Slabs and stairs have this built in.</p>
+<p>Water doesn't flow through the sides the hitbox covers whole (a stair's back holds it, a hollow log lets it out its ends). To choose the sides yourself, use <code>.liquid_walls(&amp;[Dir::North, Dir::South])</code>, written facing north and turned with the block (<code>&amp;[]</code> for none).</p>
+<h3 id="block-entities-and-circuits">Block entities and circuits <a class="anchor" href="#block-entities-and-circuits">#</a></h3>
+<p>Each block in a cell works on its own: it can have a circuit, light, its own growth rules, its own block entity, neighbor updates, scheduled ticks, support and loot. The player breaks and uses the one they aim at.</p>
+<h3 id="changing-a-cell-from-code">Changing a cell from code <a class="anchor" href="#changing-a-cell-from-code">#</a></h3>
+<ul>
+<li><code>w.parts(pos)</code>: lists the blocks in the cell</li>
+<li><code>w.part_add(pos, state)</code>: adds one, whatever its shape. Returns false for a duplicate, an unavailable cell, or when its hitbox would overlap a block in a neighboring cell</li>
+<li><code>w.part_remove(pos, state)</code>: removes one</li>
+<li><code>w.part_replace(pos, old, new)</code>: changes one</li>
+<li><code>w.block(pos)</code>: returns the block the cell stands for</li>
+<li><code>w.set_block(pos, ..)</code>: replaces everything, unless it is the same block and only a property changes</li>
+</ul>
+<p><code>w.prop</code> and <code>w.prop_set</code> find the part that has the property. Inside a block's own callback, <code>w.block(pos)</code> and <code>w.set_block(pos, ..)</code> mean that block, so a callback works the same in a cell with others.</p>
+<h3 id="breaking-in-pieces">Breaking in pieces <a class="anchor" href="#breaking-in-pieces">#</a></h3>
+<p>By default a hit breaks the whole block. <code>.piece(min, max, left, alone)</code> goes inside <code>.states(..)</code> and lets a player break off part of a state:</p>
+<ul>
+<li><code>min</code>, <code>max</code>: a box in 1/16 units: a hit inside it breaks this piece</li>
+<li><code>left</code>: the properties the state is left with (<code>"type=top"</code>)</li>
+<li><code>alone</code>: the properties of the state whose drops the piece gives (<code>"type=bottom"</code> drops a bottom slab)</li>
+</ul>
+<p>A double slab breaks one half at a time:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">.prop("type", ["bottom", "top", "double"])
+.states(|p, s| if p.is("type", "double") {
+    s.piece([0.0, 0.0, 0.0], [16.0, 8.0, 16.0], "type=top", "type=bottom")
+     .piece([0.0, 8.0, 0.0], [16.0, 16.0, 16.0], "type=bottom", "type=top")
+} else { s })</code></pre></div>
+<p>Candles or snow layers use a piece with the whole box, with <code>left</code> one step lower (<code>"candles=2"</code>) and <code>alone</code> a single one (<code>"candles=1"</code>). Every side of an <code>on_sides</code> block is a piece already.</p>
+</div></section>
+<section class="dsec" id="reading-what-a-block-set"><h2><button class="fold" aria-expanded="true">Reading what a block set</button><a class="anchor" href="#reading-what-a-block-set">#</a></h2><div class="sec-body">
+<p>Your code can read what any mod's blocks and items were set up with. This is how a mod like <a href="https://modrinth.com/mod/jade">Jade</a> shows what you're looking at:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">let info = block_info(state)?;
+format!("{} ({}), hardness {}", block_name(state), info.owner, info.hardness)</code></pre></div>
+<p><code>state</code> is a block state's id, and <code>block_info</code> returns <code>None</code> for a state that doesn't exist.</p>
+<p>What each call gives:</p>
+<ul>
+<li><code>block_info(state)</code>: the state's block, mod (<code>owner</code>), <code>solid()</code>, <code>opaque()</code>, light, hardness, friction, model, textures, liquid and item</li>
+<li><code>item_info(item)</code>: the item's mod, stack size, durability, attack, the block it places and the slot it is worn in</li>
+<li><code>components_of(abi::entry_kind::BLOCK, state)</code>: the name and schema of every component and tag on the state</li>
+<li><code>entries_with(abi::entry_kind::BLOCK, "logs")</code>: every state with that tag or component, one per state</li>
+<li><code>texture_exists("othermod:block/log_oak_inner")</code>: whether that mod ships the texture (resource packs don't count)</li>
+<li><code>asset_exists(name, "models", "json")</code>: the same for any other file</li>
+</ul>
+<p><code>components_of</code> lists names only: read a value with the component's handle (<code>Component::on_block</code>). In <code>texture_exists</code> and <code>asset_exists</code>, a name without a namespace is your mod's.</p>
+<p>The last two calls let you make something for every mod's blocks only where the files exist, such as hollow logs for every log that has an <code>_inner</code> texture. See <a href="details/world-content.html">world content</a>.</p>
+<p>A state can override its block's components and tags, so a drill reading the block in front of it should read the state from the world. <code>block_info(state).name</code> is the block's registered name, and <code>name_of(abi::entry_kind::BLOCK, state)</code> also includes the state's properties.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static PICKAXE: Tag = Tag::named("mineable/pickaxe");
 
 fn drill_target(world: &amp;World, pos: BlockPos) -&gt; Option&lt;(&amp;'static str, f32, Option&lt;u32&gt;, bool)&gt; {
     let state = world.block(pos);
@@ -108,7 +427,7 @@ fn drill_target(world: &amp;World, pos: BlockPos) -&gt; Option&lt;(&amp;'static 
     let info = block_info(state)?;
     Some((info.name, info.hardness, HARVEST_LEVEL.on_block(state), PICKAXE.on_block(state)))
 }</code></pre></div>
-<p>Use <code>Component::&lt;T&gt;::named("othermod:property").on_block(state)</code> to read a custom component with its declared type. The same lookup works with <code>HARDNESS.on_block(state)</code> when a machine only needs the configured hardness. For an inspector, <code>components_of(entry_kind::BLOCK, state)</code> returns names and schemas. An empty schema is a tag.</p>
+<p>Read a custom component with <code>Component::&lt;T&gt;::named("othermod:property").on_block(state)</code>. <code>HARDNESS.on_block(state)</code> gives the configured hardness. An empty schema from <code>components_of</code> is a tag.</p>
 </div></section>
     <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/blocks.md">Edit this page on GitHub</a></p>
   </main>

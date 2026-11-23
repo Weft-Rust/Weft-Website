@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modifiers - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="liquids.html">Liquids</a><a href="effects.html">Status effects and potions</a><a href="recipes-loot.html">Recipes and loot</a><a href="world-content.html">World content</a><a href="../block_entities.html">Block entities</a><a href="../registration.html">Registration guide</a><a href="editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="conditions.html">Conditions</a><a href="attributes.html">Attributes and modifiers</a><a href="poses-and-modes.html">Poses and game modes</a><a href="commands.html">Commands</a><a href="text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="world-blocks.html">Blocks in the world</a><a href="world-entities.html">Entities in the world</a><a href="hitboxes.html">Raycasts and hitboxes</a><a href="particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group" open><summary>More</summary><a href="components-and-tags.html">Components and tags</a><a class="current" aria-current="page" href="modifiers.html">Modifiers</a><a href="rules.html">Rules</a><a href="../environment.html">Environment sources</a></details><details class="group"><summary>Reference</summary><a href="../reference/index.html">All reference pages</a><a href="../reference/blocks.html">Blocks</a><a href="../reference/client.html">Client</a><a href="../reference/commands.html">Commands</a><a href="../reference/effects.html">Particles and effects</a><a href="../reference/entities.html">Entities</a><a href="../reference/events.html">Events and steps</a><a href="../reference/items.html">Items</a><a href="../reference/other.html">Everything else</a><a href="../reference/recipes.html">Recipes and loot</a><a href="../reference/registration.html">Registration</a><a href="../reference/ui.html">UI</a><a href="../reference/world.html">World</a><a href="../reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Modifiers</h1><nav class="toc"><span>On this page</span><a href="#the-four-kinds">The four kinds</a><a href="#what-can-have-modifiers">What can have modifiers</a><a href="#order">Order</a><a href="#only-while-a-condition-holds">Only while a condition holds</a><a href="#your-own-attribute">Your own attribute</a><a href="#reading-a-value">Reading a value</a><a href="#represent-new-value-with-code">Represent new value with code</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>A <strong>modifier</strong> changes an <strong>attribute</strong>: a number an entity has, like walking speed, reach or armor points.</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.item(&amp;RUBY_BOOTS)
+    .modifier(Modifier::add(&amp;attribute::MOVEMENT_SPEED, 0.2).worn());</code></pre></div>
+<p>The list of attributes the engine reads (<code>attribute::*</code>) is in <a href="details/attributes.html">attributes</a>. <em>base</em> adds <code>ARMOR</code> and <code>ARMOR_TOUGHNESS</code> (<code>base_api::attributes</code>).</p>
+<section class="dsec" id="the-four-kinds"><h2><button class="fold" aria-expanded="true">The four kinds</button><a class="anchor" href="#the-four-kinds">#</a></h2><div class="sec-body">
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">Modifier::add(&amp;attribute::ATTACK_DAMAGE, 3.0)       // +3
+Modifier::mul(&amp;attribute::MINING_SPEED, 0.5)        // x0.5
+Modifier::percent(&amp;attribute::MOVEMENT_SPEED, 0.2)  // +20%
+Modifier::set(&amp;attribute::GRAVITY, 0.125)           // becomes 0.125</code></pre></div>
+<ul>
+<li><code>percent(&amp;attribute, share)</code>: Percents <strong>add up</strong> instead of multiplying: speed (+20%) and slowness (-15%) together are +5%, not 1.2 x 0.85. This is what base's potions do.</li>
+</ul>
+<p>Each attribute comes with its min and max value.</p>
+<p>For your own math, see <a href="#represent-new-value-with-code">Represent new value with code</a>.</p>
+</div></section>
+<section class="dsec" id="what-can-have-modifiers"><h2><button class="fold" aria-expanded="true">What can have modifiers</button><a class="anchor" href="#what-can-have-modifiers">#</a></h2><div class="sec-body">
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">// Item in the main hand (the off hand doesn't count).
+r.item(&amp;RUBY_SWORD).modifier(Modifier::add(&amp;attribute::ATTACK_DAMAGE, 3.0));
+// `.worn()`: only when in an equipment slot
+r.item(&amp;RUBY_HELMET).modifier(Modifier::add(&amp;ARMOR, 3.0).worn());
+
+// Stack (useful for enchantments), replaces the item's own modifiers
+// so anything not listed again is gone, and `.worn()` has to be repeated for armor.
+// An empty list gives the item's modifiers back.
+let sword = stack.with_modifiers(&amp;[Modifier::add(&amp;attribute::ATTACK_DAMAGE, 5.0)]);
+
+// Effect
+r.entity_effect(&amp;SPEED).modifier(Modifier::percent(&amp;attribute::MOVEMENT_SPEED, 0.2));
+
+// Pose or gamemode
+r.pose(&amp;SIT).modifier(Modifier::mul(&amp;attribute::MOVEMENT_SPEED, 0.3));
+r.game_mode(&amp;GHOST).modifier(Modifier::set(&amp;attribute::VISIBILITY, 0.0));
+
+// Player or kind of entity
+r.edit(&amp;PLAYER).modifier(Modifier::add(&amp;attribute::CAN_SPRINT, -1.0).when(&amp;HUNGRY));
+r.entity(&amp;COW).modifier(Modifier::add(&amp;attribute::MAX_HEALTH, 100.0));
+
+// One specific entity, `200` is ticks (can be 0 to stay until manually removed)
+w.attribute_add_modifier(entity, "spell", &amp;Modifier::mul(&amp;attribute::MOVEMENT_SPEED, 0.5), 200);
+// Remove it manually
+w.attribute_remove_modifier(entity, &amp;attribute::MOVEMENT_SPEED, "spell");</code></pre></div>
+</div></section>
+<section class="dsec" id="order"><h2><button class="fold" aria-expanded="true">Order</button><a class="anchor" href="#order">#</a></h2><div class="sec-body">
+<p>Modifiers don't run in the order you registered them. Each belongs to a <strong>phase</strong>:</p>
+<table><thead><tr><th>#</th><th>Phase</th><th>Used by</th></tr></thead><tbody><tr><td>1</td><td><code>phase::BASE</code></td><td>a weapon's own damage</td></tr><tr><td>2</td><td><code>phase::ADD</code></td><td><code>add</code></td></tr><tr><td>3</td><td><code>phase::PERCENT</code></td><td><code>percent</code></td></tr><tr><td>4</td><td><code>phase::MULTIPLY</code></td><td><code>mul</code></td></tr><tr><td>5</td><td><code>phase::RULES</code></td><td>where questions are answered (not modifiers)</td></tr><tr><td>6</td><td><code>phase::OVERRIDE</code></td><td><code>set</code></td></tr><tr><td>7</td><td><code>phase::FINAL</code></td><td>what has to see the finished value</td></tr></tbody></table>
+<p><code>.phase(&amp;phase::..)</code> moves one modifier to another phase. <code>r.phase</code> makes your own phases.</p>
+</div></section>
+<section class="dsec" id="only-while-a-condition-holds"><h2><button class="fold" aria-expanded="true">Only while a condition holds</button><a class="anchor" href="#only-while-a-condition-holds">#</a></h2><div class="sec-body">
+<p><code>.when(cond)</code> makes a modifier count only while a <a href="details/conditions.html">condition</a>. Multiple conditions should be all true at once (<code>AND</code>).</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">r.condition(&amp;HUNGRY, |c| /* ... */);
+
+r.edit(&amp;PLAYER)
+    .modifier(Modifier::add(&amp;attribute::CAN_SPRINT, -1.0).when(&amp;HUNGRY));</code></pre></div>
+</div></section>
+<section class="dsec" id="your-own-attribute"><h2><button class="fold" aria-expanded="true">Your own attribute</button><a class="anchor" href="#your-own-attribute">#</a></h2><div class="sec-body">
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static MANA: Attribute = Attribute::named("mana");
+
+fn init(r: &amp;mut Registry) {
+    r.attribute(&amp;MANA, 100.0, 0.0, 1000.0); // default, min, max
+}</code></pre></div>
+<ul>
+<li><code>.rule()</code>: base value can be changed as a world rule with <code>/rule</code>, or set for a single entity with <code>/attribute</code>.</li>
+</ul>
+</div></section>
+<section class="dsec" id="reading-a-value"><h2><button class="fold" aria-expanded="true">Reading a value</button><a class="anchor" href="#reading-a-value">#</a></h2><div class="sec-body">
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">let speed = w.attribute(entity, &amp;attribute::MOVEMENT_SPEED);
+
+let (speed, why) = w.attribute_explain(entity, &amp;attribute::MOVEMENT_SPEED);</code></pre></div>
+<p><code>attribute_explain</code> also returns the steps that led to the number, which is the first thing to print when a value isn't what you expected.</p>
+</div></section>
+<section class="dsec" id="represent-new-value-with-code"><h2><button class="fold" aria-expanded="true">Represent new value with code</button><a class="anchor" href="#represent-new-value-with-code">#</a></h2><div class="sec-body">
+<p>Add, multiply and set cover most things. For the rest, create a <strong>step</strong>:</p>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static CAPPED: Step = Step::named("capped");
+
+fn init(r: &amp;mut Registry) {
+    r.step(&amp;CAPPED).phase(&amp;phase::FINAL).run(|m| {
+        m.value = m.value.min(m.arg);
+    });
+}
+
+// A ring that never lets speed go past 1.5:
+r.item(&amp;RING).modifier(Modifier::step(&amp;attribute::MOVEMENT_SPEED, &amp;CAPPED, 1.5).worn());</code></pre></div>
+<p><code>m</code> is a <code>Modify</code>:</p>
+<ul>
+<li><code>m.value</code>: the value so far.</li>
+<li><code>m.base</code>: where the chain began (an attribute's base, or what the caller passed in).</li>
+<li><code>m.start</code>: the value when this phase began (what <code>percent</code> takes its share of).</li>
+<li><code>m.arg</code>: the modifier's number. It is 0 in a step that runs on a chain (see below).</li>
+<li><code>m.world()</code>, <code>m.query()</code>, <code>m.chain()</code>: where, about whom and which chain it runs in.</li>
+</ul>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/details/modifiers.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>

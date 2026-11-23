@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Components and tags - Weft docs</title>
+<meta name="theme-color" content="#14161e">
+<link rel="icon" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs" data-root="../../docs/">
+<header class="bar">
+  <a class="bar-name" href="../../index.html">WEFT</a>
+  <nav class="bar-links">
+    <a href="../../docs/index.html">Docs</a>
+    <a href="https://github.com/Weft-Rust/Weft">GitHub</a>
+    <a href="https://discord.gg/zTEekbrc7U">Discord</a>
+  </nav>
+</header>
+<div class="shell">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Search the docs" autocomplete="off" aria-label="Search the docs">
+    <div id="results" hidden></div>
+    <nav class="tree"><details class="group"><summary>Start</summary><a href="../index.html">Weft modding quick start</a></details><details class="group"><summary>Content</summary><a href="../blocks.html">Blocks</a><a href="../items.html">Items</a><a href="../entities.html">Entities</a><a href="liquids.html">Liquids</a><a href="effects.html">Status effects and potions</a><a href="recipes-loot.html">Recipes and loot</a><a href="world-content.html">World content</a><a href="../block_entities.html">Block entities</a><a href="../registration.html">Registration guide</a><a href="editing-others.html">Changing something of another mod</a></details><details class="group"><summary>Behavior</summary><a href="../events.html">Events, chains and questions</a><a href="conditions.html">Conditions</a><a href="attributes.html">Attributes and modifiers</a><a href="poses-and-modes.html">Poses and game modes</a><a href="commands.html">Commands</a><a href="text.html">Text on the screen</a></details><details class="group"><summary>World from code</summary><a href="../world-api.html">World API</a><a href="world-blocks.html">Blocks in the world</a><a href="world-entities.html">Entities in the world</a><a href="hitboxes.html">Raycasts and hitboxes</a><a href="particles-sounds.html">Particles and sounds</a></details><details class="group"><summary>Client</summary><a href="../client.html">Client side</a><a href="../ui.html">UI guide</a><a href="camera.html">Camera modes</a><a href="../models.html">Models and animations guide</a><a href="../shaders.html">Shaders guide</a></details><details class="group"><summary>Assets</summary><a href="../textures.html">Textures guide</a><a href="../ctm.html">CTM guide</a><a href="../sky.html">Sky guide</a><a href="../resourcepacks.html">Resource packs guide</a><a href="../localization.html">Localization guide</a><a href="../redstone.html">redstone.md</a><a href="../worldgen.html">Worldgen guide</a></details><details class="group" open><summary>More</summary><a class="current" aria-current="page" href="components-and-tags.html">Components and tags</a><a href="modifiers.html">Modifiers</a><a href="rules.html">Rules</a><a href="../environment.html">Environment sources</a></details><details class="group"><summary>Reference</summary><a href="../reference/index.html">All reference pages</a><a href="../reference/blocks.html">Blocks</a><a href="../reference/client.html">Client</a><a href="../reference/commands.html">Commands</a><a href="../reference/effects.html">Particles and effects</a><a href="../reference/entities.html">Entities</a><a href="../reference/events.html">Events and steps</a><a href="../reference/items.html">Items</a><a href="../reference/other.html">Everything else</a><a href="../reference/recipes.html">Recipes and loot</a><a href="../reference/registration.html">Registration</a><a href="../reference/ui.html">UI</a><a href="../reference/world.html">World</a><a href="../reference/worldgen.html">World generation</a></details></nav>
+  </aside>
+  <main class="doc">
+    <h1>Components and tags</h1><nav class="toc"><span>On this page</span><a href="#the-rule">The rule</a><a href="#setting-and-reading">Setting and reading</a><a href="#sharing-types-with-other-mods">Sharing types with other mods</a><a href="#names">Names</a><a href="#how-to-find-out-what-tags-already-exist">How to find out what tags already exist</a><span class="tools"><button id="fold-all">collapse all</button><button id="unfold-all">expand all</button></span></nav>
+<p>A <strong>component</strong> is a named value (<code>fuel = 800</code>), a <strong>tag</strong> says what group a thing belongs to (<code>#sand</code>, <code>#logs</code>). Hardness, light, fuel, food and durability are all components. You them to work nicely with other mods.</p>
+<section class="dsec" id="the-rule"><h2><button class="fold" aria-expanded="true">The rule</button><a class="anchor" href="#the-rule">#</a></h2><div class="sec-body">
+<p>Don't check for content of a specific mod, check for a component or a tag.</p>
+<table><thead><tr><th>instead of</th><th>check</th></tr></thead><tbody><tr><td><code>base:coal</code></td><td>has the component <code>fuel</code></td></tr><tr><td><code>base:sand</code></td><td>has the tag <code>#sand</code></td></tr></tbody></table>
+<p>Do the same for your own content: give it tags and components, so other mods can work with you.</p>
+</div></section>
+<section class="dsec" id="setting-and-reading"><h2><button class="fold" aria-expanded="true">Setting and reading</button><a class="anchor" href="#setting-and-reading">#</a></h2><div class="sec-body">
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">static FUEL: Component&lt;u32&gt; = Component::named("fuel");
+static HOT: Tag = Tag::named("hot");
+
+r.item(&amp;COAL_DUST).set(&amp;FUEL, 800).tag("hot");   // your own content
+r.set("base:stick", &amp;FUEL, 100);                 // someone else's
+r.set("#planks/*", &amp;FUEL, 300);                  // matches `#planks/spruce`, `#planks/oak`, etc.
+
+if let Some(ticks) = FUEL.on_item(stack.item) { /* burns */ }
+if HOT.on_block(state) { /* harm player */ }</code></pre></div>
+<ul>
+<li>Reads go by kind: <code>on_block</code>, <code>on_item</code>, <code>on_entity</code>, <code>on_biome</code>, <code>on_dimension</code>, etc.</li>
+<li><code>.unset(&amp;C)</code> and <code>.untag("t")</code> take them away.</li>
+</ul>
+<h3 id="dont-keep-ids-in-a-saved-value">Don't keep ids in a saved value <a class="anchor" href="#dont-keep-ids-in-a-saved-value">#</a></h3>
+<p>Ids of blocks/items/etc shift after restart, so save to disk stable keys instead (e.g. <code>dimension_key(id)</code> for a dimension).</p>
+</div></section>
+<section class="dsec" id="sharing-types-with-other-mods"><h2><button class="fold" aria-expanded="true">Sharing types with other mods</button><a class="anchor" href="#sharing-types-with-other-mods">#</a></h2><div class="sec-body">
+<p>To agree on layouts, publish a small crate with just your types and handles, as <em>base</em> does with <code>base_api</code>. <code>r.has_mod("othermod")</code> tells whether a mod is loaded.</p>
+</div></section>
+<section class="dsec" id="names"><h2><button class="fold" aria-expanded="true">Names</button><a class="anchor" href="#names">#</a></h2><div class="sec-body">
+<p>Component and tag names are a shared vocabulary, written without a namespace: <code>fuel</code>, <code>sand</code>, <code>ingots/iron</code>. A term only your mod uses carries a prefix, <code>mymod:heat</code>. A <code>/</code> separates a group from a material or class (<code>ores/coal</code>), and <code>#ingots/*</code> matches any of them. See <a href="names-and-references.html">Names, references and handles</a>.</p>
+<p>In <code>r.set</code>, <code>r.tag</code> and <code>r.edit_pattern</code>, a <code>#tag</code> that no block or item has stops the game at load. In rules and matchers it just matches nothing.</p>
+</div></section>
+<section class="dsec" id="how-to-find-out-what-tags-already-exist"><h2><button class="fold" aria-expanded="true">How to find out what tags already exist</button><a class="anchor" href="#how-to-find-out-what-tags-already-exist">#</a></h2><div class="sec-body">
+<ul>
+<li>The built-in recipe viewer has a tags button that lists all existing tags.</li>
+<li>Search all files in <code>mods/base/src/</code> for <code>.tag(</code> or <code>.set(</code>. Do the same for other mods.</li>
+<li><strong>In runtime:</strong></li>
+</ul>
+<div class="code"><button class="cbtn" title="Copy">copy</button><pre><code class="lang-rust">components_of(entry_kind::ITEM, item)         // every (name, schema) on it; empty schema = tag
+entries_with(entry_kind::BLOCK, "logs")       // every block tagged `#logs` or with a component `logs`</code></pre></div>
+<p>Internally, a tag is a component without a value, that's why <code>components_of</code> and <code>entries_with</code> work for tags too.</p>
+<p>A tag you make up costs nothing, but check first that nobody already has one.</p>
+</div></section>
+    <p class="edit"><a href="https://github.com/Weft-Rust/Weft/blob/master/docs/details/components-and-tags.md">Edit this page on GitHub</a></p>
+  </main>
+</div>
+<script src="../search-index.js"></script>
+<script src="../../docs.js"></script>
+</body>
+</html>
