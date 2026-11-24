@@ -18,7 +18,7 @@ function reply(status, body = null, headers = {}) {
   return new Response(body, {
     status,
     headers: {
-      'Cache-Control': 'private, no-store',
+      'Cache-Control': 'private, no-store, no-transform',
       'Cloudflare-CDN-Cache-Control': 'no-store',
       'X-Robots-Tag': 'noindex, nofollow',
       'X-Content-Type-Options': 'nosniff',
@@ -87,6 +87,10 @@ function revision(text) {
   return '"' + createHash('sha256').update(text).digest('hex') + '"';
 }
 
+function requestedRevision(request, header) {
+  return request.headers.get(header)?.match(/^(?:W\/)?("[a-f0-9]{64}")$/)?.[1];
+}
+
 export class BiomeAtlas extends DurableObject {
   constructor(ctx, env) {
     super(ctx, env);
@@ -119,8 +123,8 @@ export class BiomeAtlas extends DurableObject {
   }
 
   async save(request) {
-    const expected = request.headers.get('If-Match');
-    if (!/^"[a-f0-9]{64}"$/.test(expected ?? '')) return reply(428);
+    const expected = requestedRevision(request, 'If-Match');
+    if (!expected) return reply(428);
     const { data, text, error } = await readJson(request, MAX_MAP_BYTES);
     if (error) return reply(error);
     if (!validMap(data)) return reply(400);
@@ -135,7 +139,7 @@ export class BiomeAtlas extends DurableObject {
     if (request.method === 'PUT') return this.save(request);
     const head = request.method === 'HEAD';
     if (path === MAP) {
-      const match = request.headers.get('If-None-Match') ?? '';
+      const match = requestedRevision(request, 'If-None-Match') ?? '';
       const [map] = this.sql.exec(
         'SELECT CASE WHEN revision != ? AND ? = 0 THEN document END AS document, revision FROM atlas WHERE id = 1',
         match, Number(head),
