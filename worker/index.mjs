@@ -136,11 +136,19 @@ export class BiomeAtlas extends DurableObject {
   }
 
   async updateEditor(request) {
-    const { data, error } = await readJson(request, MAX_ASSET_BYTES * 2);
+    const { data, error } = await readJson(request, MAX_ASSET_BYTES * FILES.size * 2);
     if (error) return reply(error);
-    if (typeof data?.script !== 'string' || Buffer.byteLength(data.script) > MAX_ASSET_BYTES) return reply(400);
-    const updated = this.sql.exec('UPDATE files SET contents = ? WHERE name = ?', data.script, 'app.js');
-    return reply(updated.rowsWritten ? 204 : 404);
+    const files = typeof data?.script === 'string' ? { 'app.js': data.script } : data?.files;
+    if (!files || typeof files !== 'object') return reply(400);
+    const entries = Object.entries(files);
+    const allowed = new Set([...FILES.values()].map(([name]) => name));
+    if (!entries.length || entries.some(([name, text]) =>
+      !allowed.has(name) || typeof text !== 'string' || Buffer.byteLength(text) > MAX_ASSET_BYTES)) return reply(400);
+    return this.ctx.storage.transactionSync(() => {
+      if (entries.some(([name]) => !this.sql.exec('SELECT 1 FROM files WHERE name = ?', name).toArray().length)) return reply(404);
+      for (const [name, text] of entries) this.sql.exec('UPDATE files SET contents = ? WHERE name = ?', text, name);
+      return reply(204);
+    });
   }
 
   fetch(request) {
