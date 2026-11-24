@@ -151,8 +151,10 @@
   // Downloads: the release asset for this system, looked up live, /releases/latest if that fails
   function detectOS() {
     const ua = navigator.userAgent;
-    if (/Android|iPhone|iPad|iPod/i.test(ua)) return "mobile";
-    const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || ua;
+    const reported = navigator.userAgentData && navigator.userAgentData.platform;
+    if (/Android/i.test(reported || "") || /Android/i.test(ua)) return "android";
+    if (/iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) return "ios";
+    const platform = reported || navigator.platform || ua;
     if (/Win/i.test(platform)) return "windows";
     if (/Mac/i.test(platform)) return "macos";
     if (/Linux|X11/i.test(platform)) return "linux";
@@ -163,7 +165,7 @@
   const meta = document.querySelector("[data-download-meta]");
   const heroButton = document.querySelector("[data-download]");
 
-  if (mine === "mobile") {
+  if (mine === "ios") {
     heroButton.hidden = true;
     document.querySelector("[data-mobile-note]").hidden = false;
   } else if (mine) {

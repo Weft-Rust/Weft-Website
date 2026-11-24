@@ -52,12 +52,12 @@
 
       <div data-for="player">
         <p class="lead">It plays a lot like Minecraft, with survival and creative, crafting, mobs and caves. It isn't a clone, and it doesn't read Minecraft worlds.</p>
-        <p class="mobile-note" data-mobile-note hidden>Weft runs on Windows, Linux and macOS, so you'll need a computer for it.</p>
+        <p class="mobile-note" data-mobile-note hidden>Weft is available for Android, Windows, Linux and macOS.</p>
         <p class="actions">
           <a class="button" data-download href="https://github.com/Weft-Rust/Weft/releases/latest"><span data-download-label>Download</span><small data-download-meta></small></a>
           <a class="more" href="#download">Other systems</a>
         </p>
-        <p class="note">Unpack it and run it, you need a GPU with Vulkan. It's still early, so the save format can change between versions.</p>
+        <p class="note">A GPU with Vulkan is required. It's still early, so the save format can change between versions.</p>
       </div>
 
       <div data-for="modder">
@@ -215,7 +215,7 @@ r.attribute(&amp;<span class="t">MANA</span>, <span class="n">100.0</span>, <spa
   <section class="sec center short" id="download" data-scene="banner" data-modder-scene="banner">
     <div class="copy wide clear">
       <h2>Download</h2>
-      <p>Windows, Linux and macOS are supported. A GPU with Vulkan is required.</p>
+      <p>Windows, Linux, macOS and Android are supported. A GPU with Vulkan is required.</p>
       <p class="version" data-version></p>
       <div class="systems">
         <div class="system" data-os="windows">
@@ -256,6 +256,11 @@ xattr -dr com.apple.quarantine <span class="t">Weft</span>
           </div>
           <a class="button small" data-asset="macos-arm64.tar.gz" href="https://github.com/Weft-Rust/Weft/releases/latest"><span>Download</span><small></small></a>
         </div>
+        <div class="system" data-os="android">
+          <h3>Android</h3>
+          <div class="how"><p>Requires Android 8 or newer, a 64-bit ARM device and Vulkan 1.1. Open the APK to install it. If prompted, allow installs from your browser or file manager.</p></div>
+          <a class="button small" data-asset="android-arm64.apk" href="https://github.com/Weft-Rust/Weft/releases/latest"><span>Download APK</span><small></small></a>
+        </div>
       </div>
       <p class="after-systems">Weft ships with its own textures. If Minecraft is installed through the official launcher or Prism, Weft builds a resource pack from that copy when it starts. The pack stays on your computer, and you can turn it off in Settings &gt; Resource Packs.</p>
       <div class="after-systems" data-for="modder">
@@ -287,7 +292,7 @@ xattr -dr com.apple.quarantine <span class="t">Weft</span>
   <p class="foot-legal">Not an official Minecraft product. Not approved by or associated with Mojang or Microsoft. Weft contains no Minecraft code or assets.</p>
 </footer>
 
-<script id="i18n" type="application/json">{"js.download": "Download", "js.download_for": "Download for {os}", "js.version": "{version}, {size} MB", "js.latest": "Latest version: {version}", "js.size": "{size} MB", "js.os.windows": "Windows", "js.os.linux": "Linux x64", "js.os.macos": "macOS", "js.mobile": "Weft runs on Windows, Linux and macOS, so you'll need a computer for it.", "js.scroll": "Scroll the code sideways to see the rest."}</script>
+<script id="i18n" type="application/json">{"js.download": "Download", "js.download_for": "Download for {os}", "js.version": "{version}, {size} MB", "js.latest": "Latest version: {version}", "js.size": "{size} MB", "js.os.windows": "Windows", "js.os.linux": "Linux x64", "js.os.macos": "macOS", "js.os.android": "Android", "js.scroll": "Scroll the code sideways to see the rest."}</script>
 <script src="./voxels.js"></script>
 <script src="./site.js"></script>
 </body>
