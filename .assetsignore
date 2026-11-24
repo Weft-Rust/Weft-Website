@@ -1,0 +1,8 @@
+/.git/
+/.github/
+/.idea/
+/.wrangler/
+/.assetsignore
+/worker/
+/wrangler.toml
+/tools/
