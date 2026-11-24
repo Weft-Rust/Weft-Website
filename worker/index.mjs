@@ -2,6 +2,7 @@ import { Buffer } from 'node:buffer';
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { DurableObject } from 'cloudflare:workers';
 import { verifier } from './atlas-password.mjs';
+import { editorVerifier } from './atlas-editor-password.mjs';
 
 const ROOT = '/workspace/biome-atlas';
 const FILES = new Map([
@@ -29,14 +30,15 @@ function reply(status, body = null, headers = {}) {
   });
 }
 
-async function authenticate(request, env) {
-  const [salt, digest] = verifier.split(':');
+async function authenticate(request, env, editorUpdate) {
+  const [salt, digest] = (editorUpdate ? editorVerifier : verifier).split(':');
+  const username = editorUpdate ? 'weft-admin' : 'weft';
   const authorization = request.headers.get('Authorization');
-  const encoded = authorization?.match(/^Basic ([A-Za-z0-9+/]{64})$/i)?.[1];
+  const encoded = authorization?.match(/^Basic ([A-Za-z0-9+/]{64,72}={0,2})$/i)?.[1];
   if (encoded) {
     const login = Buffer.from(encoded, 'base64').toString('utf8');
-    const password = login.match(/^weft:([A-Za-z0-9_-]{43})$/)?.[1];
-    if (password) {
+    const [user, password, extra] = login.split(':');
+    if (user === username && extra === undefined && /^[A-Za-z0-9_-]{43}$/.test(password ?? '')) {
       const actual = createHash('sha256').update(salt + ':' + password).digest();
       if (timingSafeEqual(actual, Buffer.from(digest, 'hex'))) return null;
     }
@@ -47,7 +49,7 @@ async function authenticate(request, env) {
     if (!success) return reply(429, 'Too many attempts.', { 'Retry-After': '60' });
   }
   return reply(401, 'Enter the atlas password.', {
-    'WWW-Authenticate': 'Basic realm="Weft Biome Atlas", charset="UTF-8"',
+    'WWW-Authenticate': 'Basic realm="'+ (editorUpdate ? 'Weft Biome Atlas Administration' : 'Weft Biome Atlas') + '", charset="UTF-8"',
   });
 }
 
@@ -133,9 +135,17 @@ export class BiomeAtlas extends DurableObject {
     return result.rowsWritten ? reply(204, null, { ETag: etag }) : reply(412);
   }
 
+  async updateEditor(request) {
+    const { data, error } = await readJson(request, MAX_ASSET_BYTES * 2);
+    if (error) return reply(error);
+    if (typeof data?.script !== 'string' || Buffer.byteLength(data.script) > MAX_ASSET_BYTES) return reply(400);
+    const updated = this.sql.exec('UPDATE files SET contents = ? WHERE name = ?', data.script, 'app.js');
+    return reply(updated.rowsWritten ? 204 : 404);
+  }
+
   fetch(request) {
     const path = new URL(request.url).pathname;
-    if (path === INSTALL) return this.install(request);
+    if (path === INSTALL) return request.method === 'PUT' ? this.updateEditor(request) : this.install(request);
     if (request.method === 'PUT') return this.save(request);
     const head = request.method === 'HEAD';
     if (path === MAP) {
@@ -165,11 +175,12 @@ export default {
     }
     if (path !== MAP && path !== INSTALL && !FILES.has(path)) return reply(404);
 
-    const denied = await authenticate(request, env);
+    const editorUpdate = path === INSTALL && request.method === 'PUT';
+    const denied = await authenticate(request, env, editorUpdate);
     if (denied) return denied;
 
     const read = request.method === 'GET' || request.method === 'HEAD';
-    const write = (path === INSTALL && request.method === 'POST') || (path === MAP && request.method === 'PUT');
+    const write = editorUpdate || (path === INSTALL && request.method === 'POST') || (path === MAP && request.method === 'PUT');
     if ((!read || path === INSTALL) && !write) return reply(405);
     if (write) {
       if (request.headers.get('Origin') !== url.origin) return reply(403);
