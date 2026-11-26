@@ -29,12 +29,12 @@
 <p>Entity kinds, their AI, riding, status effects, poses, game modes and damage causes.</p>
 <section class="dsec" id="brain"><h2><button class="fold" aria-expanded="true">Brain</button><a class="anchor" href="#brain">#</a></h2><div class="sec-body">
 <ul>
-<li><a id="Brain-new"></a><code>.new()</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L160">source</a></li>
-<li><a id="Brain-rule"></a><code>.rule(rule: Rule)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L164">source</a></li>
-<li><a id="Brain-aggressive"></a><code>.aggressive(range: f64)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L169">source</a></li>
-<li><a id="Brain-sight_when"></a><code>.sight_when(range: f64, condition: impl Fn(&amp;World, &amp;EntityState) -&gt; bool + Send + Sync + 'static)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L173">source</a></li>
-<li><a id="Brain-neutral"></a><code>.neutral(mut self)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L187">source</a></li>
-<li><a id="Brain-timid"></a><code>.timid(secs: f64)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L192">source</a></li>
+<li><a id="Brain-new"></a><code>.new()</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L206">source</a></li>
+<li><a id="Brain-rule"></a><code>.rule(rule: Rule)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L210">source</a></li>
+<li><a id="Brain-aggressive"></a><code>.aggressive(range: f64)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L215">source</a></li>
+<li><a id="Brain-sight_when"></a><code>.sight_when(range: f64, condition: impl Fn(&amp;World, &amp;EntityState) -&gt; bool + Send + Sync + 'static)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L219">source</a></li>
+<li><a id="Brain-neutral"></a><code>.neutral(mut self)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L234">source</a></li>
+<li><a id="Brain-timid"></a><code>.timid(secs: f64)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L239">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="categorybuilder"><h2><button class="fold" aria-expanded="true">CategoryBuilder</button><a class="anchor" href="#categorybuilder">#</a></h2><div class="sec-body">
@@ -45,10 +45,11 @@
 </div></section>
 <section class="dsec" id="context"><h2><button class="fold" aria-expanded="true">Context</button><a class="anchor" href="#context">#</a></h2><div class="sec-body">
 <ul>
-<li><a id="Context-world"></a><code>.world() -&gt; &amp;World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L63">source</a></li>
-<li><a id="Context-id"></a><code>.id() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L66">source</a></li>
-<li><a id="Context-current"></a><code>.current() -&gt; Option&lt;Offer&gt;</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L69">source</a></li>
-<li><a id="Context-next_in"></a><code>.next_in(ticks: u32)</code><span class="d">Ask for another check or step. Zero waits for a signal. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L73">source</a></li>
+<li><a id="Context-world"></a><code>.world() -&gt; &amp;World</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L71">source</a></li>
+<li><a id="Context-id"></a><code>.id() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L74">source</a></li>
+<li><a id="Context-current"></a><code>.current() -&gt; Option&lt;Offer&gt;</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L77">source</a></li>
+<li><a id="Context-observe"></a><code>.observe&lt;T: crate::Value&gt;(source: u64, component: &amp;Component&lt;T&gt;) -&gt; Option&lt;T&gt;</code><span class="d">Read another entity's component and wake this rule on SDK or system writes that change it, or when its owner leaves the region. Call while sensing or making an offer. Each sample replaces the previous subscriptions. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L83">source</a></li>
+<li><a id="Context-next_in"></a><code>.next_in(ticks: u32)</code><span class="d">Ask for another check or step. Zero waits for a signal. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L99">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="damagecausebuilder"><h2><button class="fold" aria-expanded="true">DamageCauseBuilder</button><a class="anchor" href="#damagecausebuilder">#</a></h2><div class="sec-body">
@@ -232,13 +233,13 @@
 <section class="dsec" id="offer"><h2><button class="fold" aria-expanded="true">Offer</button><a class="anchor" href="#offer">#</a></h2><div class="sec-body">
 <p>One candidate action. Keep its target key stable while it pursues the same intent.</p>
 <ul>
-<li><a id="Offer-new"></a><code>.new(target: u64, priority: f32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L20">source</a></li>
-<li><a id="Offer-toward"></a><code>.toward(point: impl Into&lt;Vec3&gt;, speed: f32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L24">source</a></li>
-<li><a id="Offer-keep_at"></a><code>.keep_at(priority: f32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L30">source</a></li>
-<li><a id="Offer-target"></a><code>.target() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L35">source</a></li>
-<li><a id="Offer-point"></a><code>.point() -&gt; Vec3</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L38">source</a></li>
-<li><a id="Offer-speed"></a><code>.speed() -&gt; f32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L41">source</a></li>
-<li><a id="Offer-priority"></a><code>.priority() -&gt; f32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L44">source</a></li>
+<li><a id="Offer-new"></a><code>.new(target: u64, priority: f32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L28">source</a></li>
+<li><a id="Offer-toward"></a><code>.toward(point: impl Into&lt;Vec3&gt;, speed: f32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L32">source</a></li>
+<li><a id="Offer-keep_at"></a><code>.keep_at(priority: f32)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L38">source</a></li>
+<li><a id="Offer-target"></a><code>.target() -&gt; u64</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L43">source</a></li>
+<li><a id="Offer-point"></a><code>.point() -&gt; Vec3</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L46">source</a></li>
+<li><a id="Offer-speed"></a><code>.speed() -&gt; f32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L49">source</a></li>
+<li><a id="Offer-priority"></a><code>.priority() -&gt; f32</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/ai.rs#L52">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="posebuilder"><h2><button class="fold" aria-expanded="true">PoseBuilder</button><a class="anchor" href="#posebuilder">#</a></h2><div class="sec-body">
