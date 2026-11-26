@@ -29,9 +29,9 @@
 <p>Types that belong to no topic above.</p>
 <section class="dsec" id="client"><h2><button class="fold" aria-expanded="true">Client</button><a class="anchor" href="#client">#</a></h2><div class="sec-body">
 <ul>
-<li><a id="Client-environment"></a><code>.environment(layer: &amp;Environment) -&gt; bool</code><span class="d">Adds or replaces a persistent local source. Repeated calls replace its target without restarting its fade. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L153">source</a></li>
-<li><a id="Client-clear_environment"></a><code>.clear_environment(name: &amp;str)</code><span class="d">Removes a local source, retaining its configured fade-out. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L158">source</a></li>
-<li><a id="Client-environment_values"></a><code>.environment_values() -&gt; EnvironmentValues</code><span class="d">The final parameters from the last environment evaluation. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L162">source</a></li>
+<li><a id="Client-environment"></a><code>.environment(layer: &amp;Environment) -&gt; bool</code><span class="d">Adds or replaces a persistent local source. Repeated calls replace its target without restarting its fade. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L161">source</a></li>
+<li><a id="Client-clear_environment"></a><code>.clear_environment(name: &amp;str)</code><span class="d">Removes a local source, retaining its configured fade-out. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L166">source</a></li>
+<li><a id="Client-environment_values"></a><code>.environment_values() -&gt; EnvironmentValues</code><span class="d">The final parameters from the last environment evaluation. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L170">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="declarationbuilder"><h2><button class="fold" aria-expanded="true">DeclarationBuilder</button><a class="anchor" href="#declarationbuilder">#</a></h2><div class="sec-body">
@@ -60,9 +60,10 @@
 <li><a id="Environment-sky_object"></a><code>.sky_object(object: &amp;crate::SkyObject, opacity: f32)</code><span class="d">Visibility of a dimension-qualified object (<code>DIM.sky(&amp;SUN)</code>), including sunset glow. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L105">source</a></li>
 <li><a id="Environment-acoustics"></a><code>.acoustics(cutoff_hz: f32, reverb: f32, volume: f32)</code><span class="d">Low-pass cutoff in Hz, linear reverb send and linear volume gain for all sound categories. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L111">source</a></li>
 <li><a id="Environment-overlay"></a><code>.overlay(texture: &amp;str, opacity: f32)</code><span class="d">Appends a screen texture; relative paths start at this mod's textures directory, without <code>.png</code>. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L118">source</a></li>
-<li><a id="Environment-post"></a><code>.post(shader: &amp;crate::Shader, strength: f32)</code><span class="d">Adds a named post shader at this strength. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L131">source</a></li>
-<li><a id="Environment-replace_overlays"></a><code>.replace_overlays(mut self)</code><span class="d">Crossfades out preceding overlays, even when this layer adds none. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L137">source</a></li>
-<li><a id="Environment-replace_post"></a><code>.replace_post(mut self)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L141">source</a></li>
+<li><a id="Environment-show_overlay_without_hud"></a><code>.show_overlay_without_hud(mut self)</code><span class="d">Keep the last screen overlay visible when the HUD is hidden. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L132">source</a></li>
+<li><a id="Environment-post"></a><code>.post(shader: &amp;crate::Shader, strength: f32)</code><span class="d">Adds a named post shader at this strength. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L139">source</a></li>
+<li><a id="Environment-replace_overlays"></a><code>.replace_overlays(mut self)</code><span class="d">Crossfades out preceding overlays, even when this layer adds none. <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L145">source</a></li>
+<li><a id="Environment-replace_post"></a><code>.replace_post(mut self)</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/environment.rs#L149">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="equipmentslotbuilder"><h2><button class="fold" aria-expanded="true">EquipmentSlotBuilder</button><a class="anchor" href="#equipmentslotbuilder">#</a></h2><div class="sec-body">
@@ -74,7 +75,7 @@
 <section class="dsec" id="gatelogic"><h2><button class="fold" aria-expanded="true">GateLogic</button><a class="anchor" href="#gatelogic">#</a></h2><div class="sec-body">
 <p>Common gate operations, usable through <code>BlockBuilder::logic_gate</code>.</p>
 <ul>
-<li><a id="GateLogic-name"></a><code>.name() -&gt; &amp;'static str</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3641">source</a></li>
+<li><a id="GateLogic-name"></a><code>.name() -&gt; &amp;'static str</code> <a href="https://github.com/Weft-Rust/Weft/blob/master/crates/sdk/src/content.rs#L3652">source</a></li>
 </ul>
 </div></section>
 <section class="dsec" id="generation"><h2><button class="fold" aria-expanded="true">Generation</button><a class="anchor" href="#generation">#</a></h2><div class="sec-body">
